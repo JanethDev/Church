@@ -1,0 +1,109 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\GIT\\Church\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BCB42033-D6C8-408E-849A-8D4F0C22C0B2}|Church\\Church.csproj|C:\\GIT\\Church\\church\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{BCB42033-D6C8-408E-849A-8D4F0C22C0B2}|Church\\Church.csproj|solutionrelative:church\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{451A5DDD-1E2C-4EE7-AB40-04CCAE2D5AC0}|Church.Business\\Church.Business.csproj|C:\\GIT\\Church\\church.business\\purchasesrequestsb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{451A5DDD-1E2C-4EE7-AB40-04CCAE2D5AC0}|Church.Business\\Church.Business.csproj|solutionrelative:church.business\\purchasesrequestsb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCB42033-D6C8-408E-849A-8D4F0C22C0B2}|Church\\Church.csproj|C:\\GIT\\Church\\church\\controllers\\prospectivecustomercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCB42033-D6C8-408E-849A-8D4F0C22C0B2}|Church\\Church.csproj|solutionrelative:church\\controllers\\prospectivecustomercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCB42033-D6C8-408E-849A-8D4F0C22C0B2}|Church\\Church.csproj|C:\\GIT\\Church\\church\\controllers\\customerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCB42033-D6C8-408E-849A-8D4F0C22C0B2}|Church\\Church.csproj|solutionrelative:church\\controllers\\customerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCB42033-D6C8-408E-849A-8D4F0C22C0B2}|Church\\Church.csproj|C:\\GIT\\Church\\church\\views\\ashdeposits\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BCB42033-D6C8-408E-849A-8D4F0C22C0B2}|Church\\Church.csproj|solutionrelative:church\\views\\ashdeposits\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Web.config",
+              "DocumentMoniker": "C:\\GIT\\Church\\Church\\Web.config",
+              "RelativeDocumentMoniker": "Church\\Web.config",
+              "ToolTip": "C:\\GIT\\Church\\Church\\Web.config",
+              "RelativeToolTip": "Church\\Web.config",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAACdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2024-03-12T16:08:00.448Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:11:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:12:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PurchasesRequestsB.cs",
+              "DocumentMoniker": "C:\\GIT\\Church\\Church.Business\\PurchasesRequestsB.cs",
+              "RelativeDocumentMoniker": "Church.Business\\PurchasesRequestsB.cs",
+              "ToolTip": "C:\\GIT\\Church\\Church.Business\\PurchasesRequestsB.cs",
+              "RelativeToolTip": "Church.Business\\PurchasesRequestsB.cs",
+              "ViewState": "AQIAAF4AAAAAAAAAAAAcwHMAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-12T16:08:00.582Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CustomersController.cs",
+              "DocumentMoniker": "C:\\GIT\\Church\\Church\\Controllers\\CustomersController.cs",
+              "RelativeDocumentMoniker": "Church\\Controllers\\CustomersController.cs",
+              "ToolTip": "C:\\GIT\\Church\\Church\\Controllers\\CustomersController.cs",
+              "RelativeToolTip": "Church\\Controllers\\CustomersController.cs",
+              "ViewState": "AQIAAKoAAAAAAAAAAAA1wL4AAAAyAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-12T16:08:01Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ProspectiveCustomerController.cs",
+              "DocumentMoniker": "C:\\GIT\\Church\\Church\\Controllers\\ProspectiveCustomerController.cs",
+              "RelativeDocumentMoniker": "Church\\Controllers\\ProspectiveCustomerController.cs",
+              "ToolTip": "C:\\GIT\\Church\\Church\\Controllers\\ProspectiveCustomerController.cs",
+              "RelativeToolTip": "Church\\Controllers\\ProspectiveCustomerController.cs",
+              "ViewState": "AQIAAFoCAAAAAAAAAAAgwHQCAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-12T16:08:01.002Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\GIT\\Church\\Church\\Views\\AshDeposits\\Index.cshtml",
+              "RelativeDocumentMoniker": "Church\\Views\\AshDeposits\\Index.cshtml",
+              "ToolTip": "C:\\GIT\\Church\\Church\\Views\\AshDeposits\\Index.cshtml",
+              "RelativeToolTip": "Church\\Views\\AshDeposits\\Index.cshtml",
+              "ViewState": "AQIAAHkAAAAAAAAAAADwv5oAAAAfAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002242|",
+              "WhenOpened": "2024-03-12T16:08:01.003Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
