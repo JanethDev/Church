@@ -1,0 +1,111 @@
+﻿@model List<tblSchedule>
+
+@{
+    ViewBag.Title = "Horarios misa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-header card-header-green">
+        <h2>
+            @ViewBag.Title
+        </h2>
+    </div>
+    <div class="card-body">
+        <div id="StatesList">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <tr class="tableStyleHeader">
+                        <th style="color:white">
+                            Lunes
+                            @Html.ActionLink(" ", "Edit", new { DayNumber = 1 }, new { @style="font-size:11px;float:right", @class = "btn btn-default mdi mdi-pencil-outline" })
+                        </th>
+                        <th style="color:white">
+                            Martes
+                            @Html.ActionLink(" ", "Edit", new { DayNumber =2 }, new { @style="font-size:11px;float:right", @class = "btn btn-default mdi mdi-pencil-outline" })
+                        </th>
+                        <th style="color:white">
+                            Miercoles
+                            @Html.ActionLink(" ", "Edit", new { DayNumber = 3 }, new { @style="font-size:11px;float:right", @class = "btn btn-default mdi mdi-pencil-outline" })
+                        </th>
+                        <th style="color:white">
+                            Jueves
+                            @Html.ActionLink(" ", "Edit", new { DayNumber = 4 }, new { @style="font-size:11px;float:right", @class = "btn btn-default mdi mdi-pencil-outline" })
+                        </th>
+                        <th style="color:white">
+                            Viernes
+                            @Html.ActionLink(" ", "Edit", new { DayNumber = 5 }, new { @style="font-size:11px;float:right", @class = "btn btn-default mdi mdi-pencil-outline" })
+                        </th>
+                        <th style="color:white">
+                            Sabado
+                            @Html.ActionLink(" ", "Edit", new { DayNumber = 6 }, new { @style="font-size:11px;float:right", @class = "btn btn-default mdi mdi-pencil-outline" })
+                        </th>
+                        <th style="color:white">
+                            Domingo
+                            @Html.ActionLink(" ", "Edit", new { DayNumber = 7 }, new { @style="font-size:11px;float:right", @class = "btn btn-default mdi mdi-pencil-outline" })
+                        </th>
+                    </tr>
+                    <tr class="tableStylerow">
+                        @for (int i = 1; i < 8; i++)
+                        {
+                        <td>
+                            @foreach (var item in Model.Where(r => r.DayNumber == i).ToList())
+                            {
+                            @item.Hour<br />
+                            }
+                        </td>
+                        }
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <hr />
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @*@Html.DisplayNameFor(model => model.CreatedBy):*@
+                    </span>
+                    <span class="label-detail label-design">
+                        @*@ViewBag.CreatedBy*@
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @*@Html.DisplayNameFor(model => model.CreatedDate):*@
+                    </span>
+                    <span class="label-detail label-design">
+                        @*@Model.CreatedDate*@
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @*@Html.DisplayNameFor(model => model.UpdatedBy):*@
+                    </span>
+                    <span class="label-detail label-design">
+                        @*@ViewBag.UpdatedBy*@
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @*@Html.DisplayNameFor(model => model.UpdatedDate):*@
+                    </span>
+                    <span class="label-detail label-design">
+                        @*@Model.UpdatedDate*@
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

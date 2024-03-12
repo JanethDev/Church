@@ -1,0 +1,102 @@
+﻿@model StaticPagedList<dtoAshDeposits>
+@{
+    ViewBag.Title = "Depositos de ceniza";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("PDF", "AshDeposits", FormMethod.Post, new { id = "FormPDFForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <input type="hidden" name="AshDepositDate" id="hdAshDepositDate" />
+    <input type="hidden" name="Date"  id="hdDate" />
+    <input type="hidden" name="page"  id="hdpage" />
+}
+    @using (Ajax.BeginForm(
+                        new AjaxOptions
+                        {
+                            HttpMethod = "get",
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = "AshDepositsList"
+                        }))
+    {
+        <div class="card">
+            <div class="card-header card-header-green">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h2>@ViewBag.Title</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Fecha de deposito</label>
+                            <input type="search" id="AshDepositDate" name="AshDepositDate" class="form-control datepicker" placeholder="Fecha de deposito" value="@ViewBag.Date" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label>&ensp;</label>
+                        <div class="form-group">
+                            @Html.ActionLink("Limpiar", "Index", new { id = 1 }, htmlAttributes: new { @class = "btn btn-primary btn-large btn-clean" })
+                            <input id="btnSearch" class="btn btn-success btn-large btn-clean" type="submit" value="Buscar" />
+                            <input id="btnPDF" class="btn btn-info btn-large btn-clean" type="button" value="Descargar" />
+                        </div>
+                    </div>
+                </div>
+                @Html.Partial("_IndexCalendar", Model)
+            </div>
+        </div>
+    }
+    <div class="modal fade" id="modalPicture" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"></h5>
+                    <button type="button" class="btn-close btn" data-dismiss="modal" aria-label="Close">x</button>
+                </div>
+                <div class="modal-body" style="text-align:center">
+                    <img id="imgPic" src="" style="max-width:100%;max-height:100%" />
+                    <embed id="pdfPIC" src="files/Brochure.pdf" type="application/pdf" width="100%" height="600px" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <a class="btn btn-primary link-download" href="" target="_blank">Descargar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section scripts {
+        <script src="~/Scripts/ui.datepicker-es-MX.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $.datepicker.setDefaults($.datepicker.regional['es-MX']);
+                $(".datepicker").datepicker();
+            });
+
+            $(".btn-show-picture").click(function () {
+                var aNameFile = $(this).attr("img").split('.');
+                if (aNameFile.length > 0 && aNameFile[(aNameFile.length - 1)] == "pdf") {
+                    $("#pdfPIC").remove();
+                    $(".modal-body").append('<embed id = "pdfPIC" src = "files/Brochure.pdf" type = "application/pdf" width = "100%" height = "600px" />');
+                    $("#pdfPIC").show();
+                    $("#pdfPIC").attr("src", $(this).attr("img"));
+                    $("#imgPic").hide();
+                } else {
+                    $("#imgPic").show();
+                    $("#imgPic").attr("src", $(this).attr("img"));
+                    $("#pdfPIC").hide();
+                }
+                $(".link-download").attr("href", $(this).attr("img"));
+                $('#modalPicture').modal('show');
+            });
+            $("#btnPDF").click(function () {
+                $("#hdAshDepositDate").val($("#AshDepositDate").val());
+                $("#hdDate").val($("#AshDepositDate").val());
+                $("#hdpage").val(1);
+
+                $("#FormPDFForm").submit();
+            });
+        </script>
+    }

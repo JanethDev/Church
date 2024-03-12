@@ -1,0 +1,169 @@
+﻿@model tblCustomers
+
+@{
+    ViewBag.Title = "Cliente prospecto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header card-header-green">
+        <h2>
+            @ViewBag.Title
+        </h2>
+    </div>
+    <div class="card-body">
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.Name):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Html.DisplayFor(model => model.Name)
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.PSurname):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Html.DisplayFor(model => model.PSurname)
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.MSurname):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Html.DisplayFor(model => model.MSurname)
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        Estado:
+                    </span>
+                    <span class="label-detail label-design">
+                        @Html.DisplayFor(model => model.State)
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.Town):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Html.DisplayFor(model => model.Town)
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.Email):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Html.DisplayFor(model => model.Email)
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.Phone):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Html.DisplayFor(model => model.Phone)
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.CelPhone):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Html.DisplayFor(model => model.CelPhone)
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <hr />
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.CreatedBy):
+                    </span>
+                    <span class="label-detail label-design">
+                        @ViewBag.CreatedBy
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.CreatedDate):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Model.CreatedDate
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.UpdatedBy):
+                    </span>
+                    <span class="label-detail label-design">
+                        @ViewBag.UpdatedBy
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.UpdatedDate):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Model.UpdatedDate
+                    </span>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="row" style="padding-top:15px;">
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            @Html.ActionLink("Volver", "Index", null, new { @class = "btn btn-primary", @style = "width:100%;" })
+        </div>
+        <div class="offset-md-6 col-md-2 col-sm-2 col-xs-12" style="text-align:right;">
+
+            @Html.ActionLink("Editar", "Edit", new { id = Model.CustomerID }, new { @class = "btn btn-success", @style = "width:100%;" })
+
+        </div>
+        <div class="col-md-2 col-sm-2 col-xs-12" style="text-align:right;">
+            <input type="button" id="btnDelete" value="Eliminar" class="btn btn-danger" style="width:100%;" />
+        </div>
+    </div>
+</div>
+
+        @section Scripts{
+            <script>
+        $("#btnDelete").click(function () {
+            AlertConfirm("¿Esta seguro que desea eliminar el registro?", "@Url.Action("Delete", new { id = Model.CustomerID })");
+        })
+            </script>
+        }

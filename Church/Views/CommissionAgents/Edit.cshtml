@@ -1,0 +1,172 @@
+﻿@model tblCommissionAgents
+
+@{
+    ViewBag.Title = "Editar comisionista";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "CommissionAgents", FormMethod.Post, new { id = "CommissionAgentEditForm" }))
+{<div class="card">
+    <div class="card-header card-header-green">
+        <h2>
+            @ViewBag.Title
+        </h2>
+    </div>
+    <div class="card-body">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.CommissionAgentID, htmlAttributes: new { @class = "control-label " })
+                @Html.TextBoxFor(model => model.CommissionAgentID, new { @readonly = true, @class = "form-control" })
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })*
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.PSurname, htmlAttributes: new { @class = "control-label" })*
+                @Html.TextBoxFor(model => model.PSurname, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PSurname)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.MSurname, htmlAttributes: new { @class = "control-label" })*
+                @Html.TextBoxFor(model => model.MSurname, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MSurname)
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label" })*
+                @Html.TextBoxFor(model => model.Phone, new { @class = "form-control phone" })
+                @Html.ValidationMessageFor(model => model.Phone)
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.CityID, htmlAttributes: new { @class = "control-label" })*
+                @Html.DropDownListFor(model => model.CityID, new SelectList(ViewBag.Cities, "CityID", "Name", "Ciudad"), "Seleccione", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CityID)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.CathedralID, htmlAttributes: new { @class = "control-label" })*
+                @Html.DropDownListFor(model => model.CathedralID, new SelectList(ViewBag.Cathedrals, "CathedralID", "Name", "Catedral"), "Seleccione", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CathedralID)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <hr />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.CreatedBy):
+                    </span>
+                    <span class="label-detail label-design">
+                        @ViewBag.CreatedBy
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.CreatedDate):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Model.CreatedDate
+                    </span>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.UpdatedBy):
+                    </span>
+                    <span class="label-detail label-design">
+                        @ViewBag.UpdatedBy
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.UpdatedDate):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Model.UpdatedDate
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.CommissionAgentID)
+    @Html.HiddenFor(model => model.Active)
+    @Html.HiddenFor(model => model.CreatedDate)
+    @Html.HiddenFor(model => model.CreatedBy)
+    @Html.HiddenFor(model => model.UpdatedDate)
+    @Html.HiddenFor(model => model.UpdatedBy)
+    @Html.HiddenFor(model => model.DeletedDate)
+    @Html.HiddenFor(model => model.DeletedDate)
+
+    <div class="row" style="padding-top:15px;">
+        <div class="col-md-2 col-sm-2 col-xs-6">
+            @Html.ActionLink("Volver", "Index", null, new { @class = "btn btn-primary", @style = "width:100%;" })
+        </div>
+        <div class="offset-md-8 col-md-2 col-sm-2 col-xs-6">
+            <input type="button" value="Guardar" class="btn btn-success" id="btnSave" style="float:right;width:100%;" />
+        </div>
+    </div>
+</div>
+        }
+
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+
+<script>
+                $(function () {
+                    $('.phone').mask('(000)-0000000');
+
+                    $("#CityID").change(function () {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetCathedralByCityID", "CommissionAgents")',
+                    dataType: "json",
+                    data: JSON.stringify({ 'iCityID': $(this).val() }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data != "") {
+                            var vOption = "<option value='0'>Seleccione</option>";
+                            for (var i = 0; i < data.length; i++) {
+                                vOption += "<option value='" + data[i].CathedralID + "'>" + data[i].Name + "</option>";
+                            }
+                        }
+                        $("#CathedralID option").remove();
+                        $("#CathedralID").append(vOption);
+                    },
+                    error: function () {
+                        AlertMessage('Ocurrio un error.');
+                    }
+                });
+            });
+
+            $("#btnSave").click(function () {
+                var vCathedralID = $("#CathedralID").val();
+
+                if (vCathedralID != "" && vCathedralID != "0") {
+                    $("#CommissionAgentEditForm").submit();
+                }
+                else {
+                    AlertMessage("Debe de seleccionar una parroquia para guardar.")
+                }
+            });
+                });
+</script>
+        }

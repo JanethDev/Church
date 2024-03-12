@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Church.Mobile.Views.PurchaseRequest.TabCrypt"
+             Title="Cripta"
+             xmlns:local="clr-namespace:Church.Mobile"
+             xmlns:Helpers="clr-namespace:Church.Mobile.Helpers"
+             Icon="ic_church.png">
+    <ContentPage.Content>
+        <!--Icon="{local:ImageResource Church.Mobile.Assets.Images.icon_church.png}"-->
+        <StackLayout Padding="10">
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Cliente: " FontSize="20" FontAttributes="Bold" />
+                        <Span Text="{Binding LoggedUser}" FontSize="20" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Clave de cripta: " FontSize="20" FontAttributes="Bold" />
+                        <Span Text="{Binding model.Nicho}" FontSize="20" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Nivel: " FontSize="20" FontAttributes="Bold" />
+                        <Span Text="{Binding model.Level}" FontSize="20" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Area: " FontSize="20" FontAttributes="Bold" />
+                        <Span Text="{Binding model.ClassificationName}" FontSize="20" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Zona: " FontSize="20" FontAttributes="Bold" />
+                        <Span Text="Zona A" FontSize="20" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Tipo de cambio: " FontSize="20" FontAttributes="Bold" />
+                        <Span Text="$" FontSize="20" />
+                        <Span Text="{Binding model.Rate}" FontSize="20" />
+                        <Span Text=" MXN" FontSize="20" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+
+            <ScrollView>
+                <StackLayout Margin="0, 30, 0, 0">
+                    <Frame CornerRadius="5" Padding="5"  BackgroundColor="{x:Static Helpers:Constants.ColorPrimary}">
+                        <Label Text="Fechas de aniversario luctuoso" HorizontalOptions="StartAndExpand" FontSize="22" TextColor="{x:Static Helpers:Constants.ColorWhite}" />
+                    </Frame>
+                    <StackLayout IsVisible="{ Binding ShowAshDeposits }" BindableLayout.ItemsSource="{Binding model.lstAshDeposits, Mode=TwoWay}" >
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Padding="0">
+                                    <Grid ColumnSpacing="10" RowSpacing="2" HorizontalOptions="FillAndExpand" Padding="10">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <ContentView Grid.Row="0" Grid.Column="0" >
+                                            <Label LineBreakMode="TailTruncation" FontSize="16" FontAttributes="Bold">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="{Binding DeathDateFormat}"  />
+                                                        <Span Text=" - "  />
+                                                        <Span Text="{Binding FullName}"  />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </ContentView>
+                                    </Grid>
+                                </Frame>
+
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+                    <StackLayout IsVisible="{ Binding ShowMessageNotAshDeposits }">
+                        <Label Text="No cuenta con aniversarios luctuosos" HorizontalOptions="StartAndExpand"
+                               FontSize="22"/>
+                    </StackLayout>
+
+                </StackLayout>
+            </ScrollView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

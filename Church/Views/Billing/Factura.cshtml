@@ -1,0 +1,208 @@
+﻿@model Tuple<tblPurchasesRequests, tblCustomers>
+
+@{
+    ViewBag.Title = "Factura";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string CFDI = Model.Item2.CFDI;
+}
+
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("Factura", "Billing", FormMethod.Post, new { id = "FacturaForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div class="container-form">
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.Label("CLIENTE", null, htmlAttributes: new { @class = "control-label" })
+                @Html.TextBoxFor(model => model.Item1.Customer, new { @class = "form-control", @readonly = "true" })
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.Item1.RFCCURP, htmlAttributes: new { @class = "control-label" })
+                @if (!String.IsNullOrEmpty(Model.Item1.RFCCURP))
+                {
+                    @Html.TextBoxFor(model => model.Item1.RFCCURP, new { @class = "form-control", @readonly = "true" })
+                }
+                else
+                {
+                    @Html.TextBox("No Capturado", null, new { @class = "form-control", @readonly = "true" })
+                }
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.Item1.PaymentMethod, htmlAttributes: new { @class = "control-label" })
+                @Html.TextBoxFor(model => model.Item1.PaymentMethodName, new { @class = "form-control", @readonly = "true" })
+            </div>
+            @{
+                string FormaPago = "";
+                if (Model.Item1.CashPaymentAmount != null)
+                {
+                    FormaPago = "Efectivo";
+                }
+                else if (Model.Item1.CheckPaymentAmount != null)
+                {
+                    FormaPago = "Cheque";
+                }
+                else
+                {
+                    FormaPago = "Tarjeta";
+                }
+            }
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.Label("FORMA DE PAGO", htmlAttributes: new { @class = "control-label" })
+                <input value="@FormaPago" class="form-control" readonly="true" />
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <input value="@Model.Item1.PurchasesRequestID" name="PurchasesRequestID" type="hidden" />
+                @Html.Label("NUMERO DE FACTURA", null, htmlAttributes: new { @class = "control-label" })
+                @Html.TextBoxFor(model => model.Item1.BillingNumber, new { @class = "form-control only-int", @Name = "BillingNumber" })
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.Item1.Billing, htmlAttributes: new { @class = "control-label" })
+                @Html.TextBox("Billing", Model.Item1.Billing, new { @class = "form-control", @Type = "file" })
+                @Html.ValidationMessageFor(model => model.Item1.Billing)
+            </div>
+            <div class="col-md-12 col-sm-6 col-xs-12" style="text-align:center">
+                @if (Model.Item2.CFDI != null)
+                {
+                    <br /><button type="button" class="btn btn-info btn-xs btn-show-picture" img="@CFDI">Consultar CFDI</button>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <hr />
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.Item1.CreatedBy):
+                    </span>
+                    <span class="label-detail label-design">
+                        @*@ViewBag.CreatedBy*@
+                        @Model.Item1.CreatedByName
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.Item1.CreatedDate):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Model.Item1.CreatedDate
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.Item1.UpdatedBy):
+                    </span>
+                    <span class="label-detail label-design">
+                        @*@ViewBag.UpdatedBy*@
+                        @Model.Item1.UpdatedByName
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.Item1.UpdatedDate):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Model.Item1.UpdatedDate
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding-top:15px;">
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            @Html.ActionLink("Volver", "Facturacion", null, new { @class = "btn btn-primary", @style = "width:100%;" })
+        </div>
+        <div class="offset-md-8 col-md-2 col-sm-2 col-xs-12" style="text-align:right;">
+            <button type="button" id="BtnSave" class="btn btn-success" style="width: 100%;">Guardar</button>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalPicture" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"></h5>
+                    <button type="button" class="btn-close btn" data-dismiss="modal" aria-label="Close">x</button>
+                </div>
+                <div class="modal-body" style="text-align:center">
+                    <img id="imgPic" src="" style="max-width:100%;max-height:100%" />
+                    <embed id="pdfPIC" src="files/Brochure.pdf" type="application/pdf" width="100%" height="600px" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <a class="btn btn-primary link-download" href="" target="_blank">Descargar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Scripts{
+    <script src="~/Scripts/ui.datepicker-es-MX.js"></script>
+    <script type="text/javascript">
+        $("#BtnSave").click(function () {
+            var billingNumberValue = $("#Item1_BillingNumber").val();
+
+            if (billingNumberValue.length === 0 || billingNumberValue === "0") {
+                AlertMessage("Llene todos los campos.");
+            } else {
+                $("#FacturaForm").submit();
+            }
+        });
+
+        $(".only-int").keydown(function (event) {
+            if (event.shiftKey) {
+                event.preventDefault();
+            }
+
+            if (event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 16 || (event.keyCode >= 37 && event.keyCode <= 40)) {
+            }
+            else {
+                if (event.keyCode < 95) {
+                    if (event.keyCode < 48 || event.keyCode > 57) {
+                        event.preventDefault();
+                    }
+                }
+                else {
+                    if (event.keyCode < 96 || event.keyCode > 105) {
+                        event.preventDefault();
+                    }
+                }
+            }
+        });
+
+        $(function () {
+            $.datepicker.setDefaults($.datepicker.regional['es-MX']);
+            $(".datepicker").datepicker();
+
+            $(".btn-show-picture").click(function () {
+                var aNameFile = $(this).attr("img").split('.');
+                if (aNameFile.length > 0 && aNameFile[(aNameFile.length - 1)] == "pdf") {
+                    $("#pdfPIC").remove();
+                    $(".modal-body").append('<embed id = "pdfPIC" src = "files/Brochure.pdf" type = "application/pdf" width = "100%" height = "600px" />');
+                    $("#pdfPIC").show();
+                    $("#pdfPIC").attr("src", $(this).attr("img"));
+                    $("#imgPic").hide();
+                } else {
+                    $("#imgPic").show();
+                    $("#imgPic").attr("src", $(this).attr("img"));
+                    $("#pdfPIC").hide();
+                }
+                $(".link-download").attr("href", $(this).attr("img"));
+                $('#modalPicture').modal('show');
+            });
+        });
+    </script>
+}

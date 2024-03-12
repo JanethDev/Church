@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Pagos"
+             x:Name="Page"
+             xmlns:local="clr-namespace:Church.Mobile"
+              xmlns:Helpers="clr-namespace:Church.Mobile.Helpers"
+             Icon="ic_money.png"
+             x:Class="Church.Mobile.Views.PurchaseRequest.TabPayments">
+    <ContentPage.Content>
+        <!--Icon="{local:ImageResource Church.Mobile.Assets.Images.icon_payment.png}"-->
+
+        <StackLayout>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Tipo de pago: " FontSize="20" FontAttributes="Bold" />
+                        <Span Text="{Binding model.PaymentMethodName}" FontSize="20" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Costo total: " FontSize="20" FontAttributes="Bold" />
+                        <Span Text="{Binding model.CryptPriceFormat}" FontSize="20" />
+                    </FormattedString>
+                </Label.FormattedText>
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding model.Currency}" Value="True">
+                        <Setter Property="FormattedText">
+                            <Setter.Value>
+                                <FormattedString>
+                                    <Span Text="Costo total: " FontSize="20" FontAttributes="Bold" />
+                                    <Span Text="{Binding model.CryptPriceFormat, StringFormat='{}{0} MXN'}" FontSize="20" />
+                                </FormattedString>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                    <DataTrigger TargetType="Label" Binding="{Binding model.Currency}" Value="False">
+                        <Setter Property="FormattedText">
+                            <Setter.Value>
+                                <FormattedString>
+                                    <Span Text="Costo total: " FontSize="20" FontAttributes="Bold" />
+                                    <Span Text="{Binding model.CryptPriceFormat, StringFormat='{}{0} USD'}" FontSize="20" />
+                                </FormattedString>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+
+
+
+
+            <StackLayout IsVisible="{Binding PaymentsVisible}">
+                <Label Text="Filtrar por:" HorizontalOptions="StartAndExpand" FontSize="22" />
+
+                <Picker Title="Filtrar por"  SelectedItem="{Binding FilterEstatus, Mode=TwoWay}">
+                    <Picker.Items>
+                        <x:String>Todos</x:String>
+                        <x:String>Pagados</x:String>
+                        <x:String>Pendientes</x:String>
+                    </Picker.Items>
+                </Picker>
+
+                <Frame CornerRadius="5" Padding="5"  BackgroundColor="{x:Static Helpers:Constants.ColorPrimary}">
+                    <Label Text="Pagos" HorizontalOptions="StartAndExpand" FontSize="22" TextColor="{x:Static Helpers:Constants.ColorWhite}" />
+                </Frame>
+
+                <ScrollView>
+                    <StackLayout Padding="10">
+
+                        <StackLayout BindableLayout.ItemsSource="{Binding lstPayments, Mode=TwoWay}" >
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+
+                                    <Frame Padding="0">
+
+                                        <SwipeView>
+                                            <SwipeView.LeftItems>
+                                                <SwipeItems>
+                                                    <SwipeItem Text="Recibo" IsVisible="{ Binding ShowReceipt }"
+                                                               IconImageSource="{local:ImageResource Church.Mobile.Assets.Images.details_file.png}"
+                                                               CommandParameter="{Binding .}"  Command="{Binding OpenReceiptCommand,Source={x:Reference Page}}"
+                                                               BackgroundColor="DarkBlue"/>
+                                                    <SwipeItem Text="Subir" IsVisible="{ Binding CanUploadFile }"
+                                                               IconImageSource="{local:ImageResource Church.Mobile.Assets.Images.upload_file.png}" BackgroundColor="DarkGreen"
+                                                               CommandParameter="{Binding .}"  Command="{Binding OpenModalToMakePaymentCommand,Source={x:Reference Page}}" />
+                                                </SwipeItems>
+                                            </SwipeView.LeftItems>
+
+                                            <Grid ColumnSpacing="10" RowSpacing="2" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="White">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width=".6*" />
+                                                    <ColumnDefinition Width=".4*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <ContentView Grid.Row="0" Grid.Column="0" >
+                                                    <Label LineBreakMode="TailTruncation" FontSize="18" FontAttributes="Bold">
+                                                        <Label.FormattedText>
+                                                            <FormattedString>
+                                                                <Span Text="Pago #" />
+                                                                <Span Text="{Binding NumPayment}"  />
+                                                            </FormattedString>
+                                                        </Label.FormattedText>
+                                                    </Label>
+                                                </ContentView>
+
+
+                                                <ContentView Grid.Row="0" Grid.Column="1" >
+                                                    <Label LineBreakMode="TailTruncation" HorizontalOptions="End" FontSize="18" FontAttributes="Bold">
+                                                        <Label.FormattedText>
+                                                            <FormattedString>
+                                                                <Span Text="{Binding AmountFormat}" />
+                                                            </FormattedString>
+                                                        </Label.FormattedText>
+                                                    </Label>
+                                                </ContentView>
+
+                                                <ContentView Grid.Row="1" Grid.Column="0" >
+                                                    <Label FontSize="18" FontAttributes="Bold">
+                                                        <Label.FormattedText>
+                                                            <FormattedString>
+                                                                <Span Text="{Binding PaymentDateFormat}" />
+                                                            </FormattedString>
+                                                        </Label.FormattedText>
+                                                    </Label>
+                                                </ContentView>
+
+
+
+                                                <ContentView Grid.Row="1" Grid.Column="1" >
+                                                    <Frame CornerRadius="5" Padding="5" HorizontalOptions="End" BackgroundColor="{Binding BGColor}">
+                                                        <Label Text="{Binding EstatusName}" HorizontalOptions="StartAndExpand" FontSize="20" TextColor="{x:Static Helpers:Constants.ColorWhite}" />
+                                                    </Frame>
+                                                </ContentView>
+
+
+                                                <ContentView Grid.Row="2" Grid.Column="0" IsVisible="{ Binding ShowMessageLatePayment }">
+                                                    <Label Text="Intereses" HorizontalOptions="StartAndExpand"
+                                                       FontSize="18" FontAttributes="Bold"/>
+                                                </ContentView>
+
+                                            </Grid>
+
+                                        </SwipeView>
+                                    </Frame>
+
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+
+                    </StackLayout>
+                </ScrollView>
+
+                <Frame CornerRadius="5" Padding="5"  BackgroundColor="{x:Static Helpers:Constants.ColorPrimary}">
+
+                    <Label HorizontalOptions="End" TextColor="{x:Static Helpers:Constants.ColorWhite}" 
+                       FontSize="20" FontAttributes="Bold">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Total de la deuda: "   />
+                                <Span Text="{Binding TotalToPay}"  />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </Frame>
+            </StackLayout>
+        </StackLayout>
+
+    </ContentPage.Content>
+</ContentPage>

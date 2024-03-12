@@ -1,0 +1,86 @@
+﻿@model StaticPagedList<dtoAnniversary>
+@{
+    ViewBag.Title = "Aniversario luctuoso";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Ajax.BeginForm(
+                    new AjaxOptions
+                    {
+                        HttpMethod = "get",
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "AnniversaryList"
+                    }))
+{
+    <div class="card">
+        <div class="card-header card-header-green">
+            <div class="row">
+                <div class="col-md-10">
+                    <h2>@ViewBag.Title</h2>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-12">
+                    <p style="text-align:right; padding-top:20px">
+                        <a style="width:100%;" href="@Url.Action("Create","Anniversary",null)" class="btn btn-default btn-large">Agregar</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="search" name="Name" class="form-control" data-autocomple="@Url.Action("acName")" placeholder="nombre" value="@ViewBag.Name" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="search" id="Date" name="Date" class="form-control datepicker" placeholder="Fecha" value="@ViewBag.Date" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Hora</label>
+                        <input type="search" name="Hour" class="form-control " placeholder="Hora" value="@ViewBag.Hour" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label>&ensp;</label>
+                    <div class="form-group">
+                        @Html.ActionLink("Limpiar", "Index", new { iCleanFilter = 1 }, htmlAttributes: new { @class = "btn btn-primary btn-large btn-clean" })
+                        <input id="btnSearch" class="btn btn-success btn-large btn-clean" type="submit" value="Buscar" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label>&ensp;</label>
+                    <div class="form-group">
+                        <button type="button" id="btnExportExcel" class="btn btn-success">Exportar Excel</button>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label>&ensp;</label>
+                    <div class="form-group">
+                        <a target="_blank" class="btn btn-info" id="pdf" href="#">Exportar PDF</a>
+                    </div>
+                </div>
+            </div>
+            @Html.Partial("_Anniversary", Model)
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script src="~/Scripts/ui.datepicker-es-MX.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $.datepicker.setDefaults($.datepicker.regional['es-MX']);
+            $(".datepicker").datepicker();
+        });
+
+        $('#btnExportExcel').on('click', function (event) {
+            fnExcelReport('tableExport', 'Reporte de aniversario luctuoso ' + $("#Date").val() + ' ');
+        });
+
+    </script>
+}

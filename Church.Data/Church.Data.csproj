@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{55238D53-46FA-4567-9A59-681C14F6AE30}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Church.Data</RootNamespace>
+    <AssemblyName>Church.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DTOAttribute.cs" />
+    <Compile Include="DTO\Api\tblUsersDTO.cs" />
+    <Compile Include="DTO\dtoAnniversary.cs" />
+    <Compile Include="DTO\dtoAshDeposits.cs" />
+    <Compile Include="DTO\dtoCathedrals.cs" />
+    <Compile Include="DTO\dtoCivilStatus.cs" />
+    <Compile Include="DTO\dtoCommissionAgents.cs" />
+    <Compile Include="DTO\dtoCrypts.cs" />
+    <Compile Include="DTO\dtoCustomers.cs" />
+    <Compile Include="DTO\dtoDiscounts.cs" />
+    <Compile Include="DTO\dtoIntentions.cs" />
+    <Compile Include="DTO\dtoNotificationsByUser.cs" />
+    <Compile Include="DTO\dtoPurchasesRequest.cs" />
+    <Compile Include="DTO\dtoPushNotificationsMessages.cs" />
+    <Compile Include="DTO\dtoStates.cs" />
+    <Compile Include="DTO\dtoTowns.cs" />
+    <Compile Include="Enums\ClientPaymentEnum.cs" />
+    <Compile Include="Enums\ExchangeTypes.cs" />
+    <Compile Include="Enums\PaymentEstatus.cs" />
+    <Compile Include="Enums\CryptTypes.cs" />
+    <Compile Include="Enums\PaymentMethods.cs" />
+    <Compile Include="Enums\CryptsNichos.cs" />
+    <Compile Include="Enums\CryptsSections.cs" />
+    <Compile Include="Enums\EnumHelper.cs" />
+    <Compile Include="Enums\PushNotificationsStatusE.cs" />
+    <Compile Include="Enums\PushNotificationType.cs" />
+    <Compile Include="HelperClasses\AuxCustomerNotifications.cs" />
+    <Compile Include="HelperClasses\AxuEmail.cs" />
+    <Compile Include="HelperClasses\PushNotification.cs" />
+    <Compile Include="tblAllowedApps.cs" />
+    <Compile Include="tblCities.cs" />
+    <Compile Include="tblIntentions.cs" />
+    <Compile Include="tblIntentionsType.cs" />
+    <Compile Include="tblCountedDiscount.cs" />
+    <Compile Include="tblPayments.cs" />
+    <Compile Include="tblPurchaseRequestPayments.cs" />
+    <Compile Include="tblAnniversary.cs" />
+    <Compile Include="tblAshDeposits.cs" />
+    <Compile Include="tblBeneficiaryCustomers.cs" />
+    <Compile Include="tblCathedrals.cs" />
+    <Compile Include="tblCommissionAgents.cs" />
+    <Compile Include="tblContracts.cs" />
+    <Compile Include="tblCryptPrices.cs" />
+    <Compile Include="tblCryptClassifications.cs" />
+    <Compile Include="tblCryptPositionTypes.cs" />
+    <Compile Include="tblCryptsSections.cs" />
+    <Compile Include="tblCrypts.cs" />
+    <Compile Include="tblCurrency.cs" />
+    <Compile Include="tblDiscounts.cs" />
+    <Compile Include="tblExchangeRates.cs" />
+    <Compile Include="tblFederalTax.cs" />
+    <Compile Include="tblMaintenanceFee.cs" />
+    <Compile Include="tblPurchasesRequestsQuotation.cs" />
+    <Compile Include="tblPurchasesRequestsAshDeposits.cs" />
+    <Compile Include="tblPurchasesRequests.cs" />
+    <Compile Include="tblPushNotificationsMessages.cs" />
+    <Compile Include="tblReceipt.cs" />
+    <Compile Include="tblSchedule.cs" />
+    <Compile Include="tblTowns.cs" />
+    <Compile Include="Response.cs" />
+    <Compile Include="tblCivilStatus.cs" />
+    <Compile Include="tblCustomers.cs" />
+    <Compile Include="tblLogin.cs" />
+    <Compile Include="tblRoles.cs" />
+    <Compile Include="tblStates.cs" />
+    <Compile Include="tblUsers.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ChurchDB.cs" />
+    <Compile Include="DTO\dtoUsers.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

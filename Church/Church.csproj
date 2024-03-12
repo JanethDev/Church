@@ -1,0 +1,1169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BCB42033-D6C8-408E-849A-8D4F0C22C0B2}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Church</RootNamespace>
+    <AssemblyName>Church</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <ApplicationInsightsResourceId>/subscriptions/d0c06fd8-1661-4bfa-b843-774ac0b2e0b9/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/Template</ApplicationInsightsResourceId>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <Use64BitIISExpress />
+    <TypeScriptToolsVersion>2.5</TypeScriptToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AutoMapper, Version=10.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.10.1.1\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itextsharp.xmlworker.5.5.13.3\lib\itextsharp.xmlworker.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Report.Viewer.11.0.0.0\lib\net\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Report.Viewer.11.0.0.0\lib\net\Microsoft.ReportViewer.ProcessingObjectModel.DLL</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Report.Viewer.11.0.0.0\lib\net\Microsoft.ReportViewer.WebForms.DLL</HintPath>
+    </Reference>
+    <Reference Include="MvcRazorToPdf, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcRazorToPdf.1.0.2\lib\40\MvcRazorToPdf.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AnniversaryController.cs" />
+    <Compile Include="Controllers\AshDepositsController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BillingController.cs" />
+    <Compile Include="Controllers\CathedralsController.cs" />
+    <Compile Include="Controllers\CivilStatusController.cs" />
+    <Compile Include="Controllers\CommissionAgentsController.cs" />
+    <Compile Include="Controllers\CountedDiscountController.cs" />
+    <Compile Include="Controllers\CryptTypeController.cs" />
+    <Compile Include="Controllers\CryptsController.cs" />
+    <Compile Include="Controllers\CustomersController.cs" />
+    <Compile Include="Controllers\DiscountsController.cs" />
+    <Compile Include="Controllers\ExchangeRatesController.cs" />
+    <Compile Include="Controllers\FederalTaxController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IntentionsController.cs" />
+    <Compile Include="Controllers\MaintenanceFeeController.cs" />
+    <Compile Include="Controllers\NoticePrivacyController.cs" />
+    <Compile Include="Controllers\PaymentsController.cs" />
+    <Compile Include="Controllers\ProspectiveCustomerController.cs" />
+    <Compile Include="Controllers\PushNotificationsMessagesController.cs" />
+    <Compile Include="Controllers\RegulationController.cs" />
+    <Compile Include="Controllers\ScheduleController.cs" />
+    <Compile Include="Controllers\StatesController.cs" />
+    <Compile Include="Controllers\TownsController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\CompressFilter.cs" />
+    <Compile Include="Helpers\ControllerExtensions.cs" />
+    <Compile Include="Helpers\HelperAzure.cs" />
+    <Compile Include="HtmlHelpers\HtmlHelperExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Content Include="Content\bootstrap-grid.css" />
+    <Content Include="Content\bootstrap-grid.min.css" />
+    <Content Include="Content\bootstrap-reboot.css" />
+    <Content Include="Content\bootstrap-reboot.min.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Calendario.css" />
+    <Content Include="Content\crypt-sections\images\btn-section-a.png" />
+    <Content Include="Content\crypt-sections\images\btn-section-b-07.png" />
+    <Content Include="Content\crypt-sections\images\btn-section-b-15.png" />
+    <Content Include="Content\crypt-sections\images\btn-section-b-17.png" />
+    <Content Include="Content\crypt-sections\images\btn-section-b.png" />
+    <Content Include="Content\crypt-sections\images\btn-section-c-11.png" />
+    <Content Include="Content\crypt-sections\images\btn-section-C.png" />
+    <Content Include="Content\crypt-sections\images\espacio.gif" />
+    <Content Include="Content\crypt-sections\images\Sin-titulo-1_01.png" />
+    <Content Include="Content\crypt-sections\images\Sin-titulo-1_02.png" />
+    <Content Include="Content\crypt-sections\images\Sin-titulo-1_04.png" />
+    <Content Include="Content\crypt-sections\images\Sin-titulo-1_07.png" />
+    <Content Include="Content\crypt-sections\images\Sin-titulo-1_09.png" />
+    <Content Include="Content\crypt-sections\images\Sin-titulo-1_11.png" />
+    <Content Include="Content\crypt-sections\images\Sin-titulo-1_12.png" />
+    <Content Include="Content\crypt-sections\images\Sin-titulo-1_13.png" />
+    <Content Include="Content\crypt-sections\images\Sin-titulo-1_15.png" />
+    <Content Include="Content\crypt-sections\images\Sin-titulo-1_17.png" />
+    <Content Include="Content\crypt-sections\images\Sin-titulo-1_18.png" />
+    <Content Include="Content\crypt-sections\images\Sin-titulo-1_19.png" />
+    <Content Include="Content\crypt-sections\images\Sin-titulo-1_20.png" />
+    <Content Include="Content\fancybox\blank.gif" />
+    <Content Include="Content\fancybox\fancybox_buttons.png" />
+    <Content Include="Content\fancybox\fancybox_loading%402x.gif" />
+    <Content Include="Content\fancybox\fancybox_loading.gif" />
+    <Content Include="Content\fancybox\fancybox_overlay.png" />
+    <Content Include="Content\fancybox\fancybox_sprite%402x.png" />
+    <Content Include="Content\fancybox\fancybox_sprite.png" />
+    <Content Include="Content\fullcalendar.css" />
+    <Content Include="Content\fullcalendar.min.css" />
+    <Content Include="Content\fullcalendar.print.css" />
+    <Content Include="Content\fullcalendar.print.min.css" />
+    <Content Include="Content\Images\ChurchLogo.jpg" />
+    <Content Include="Content\Images\cuadro-disabled.png" />
+    <Content Include="Content\Images\cuadro-selected.png" />
+    <Content Include="Content\Images\cuadro.png" />
+    <Content Include="Content\jquery.fancybox-buttons.css" />
+    <Content Include="Content\jquery.fancybox-thumbs.css" />
+    <Content Include="Content\jquery.fancybox.css" />
+    <Content Include="Content\material-icons\css\materialdesignicons.css" />
+    <Content Include="Content\material-icons\css\materialdesignicons.min.css" />
+    <Content Include="Content\nichos\images\1.png" />
+    <Content Include="Content\nichos\images\2.png" />
+    <Content Include="Content\nichos\images\crypts_01.png" />
+    <Content Include="Content\nichos\images\crypts_02.png" />
+    <Content Include="Content\nichos\images\crypts_04.png" />
+    <Content Include="Content\nichos\images\crypts_06.png" />
+    <Content Include="Content\nichos\images\crypts_07.png" />
+    <Content Include="Content\nichos\images\crypts_08.png" />
+    <Content Include="Content\nichos\images\crypts_09.png" />
+    <Content Include="Content\nichos\images\crypts_10.png" />
+    <Content Include="Content\nichos\images\crypts_101.png" />
+    <Content Include="Content\nichos\images\crypts_103.png" />
+    <Content Include="Content\nichos\images\crypts_105.png" />
+    <Content Include="Content\nichos\images\crypts_106.png" />
+    <Content Include="Content\nichos\images\crypts_108.png" />
+    <Content Include="Content\nichos\images\crypts_11.png" />
+    <Content Include="Content\nichos\images\crypts_110.png" />
+    <Content Include="Content\nichos\images\crypts_111.png" />
+    <Content Include="Content\nichos\images\crypts_112.png" />
+    <Content Include="Content\nichos\images\crypts_113.png" />
+    <Content Include="Content\nichos\images\crypts_114.png" />
+    <Content Include="Content\nichos\images\crypts_115.png" />
+    <Content Include="Content\nichos\images\crypts_116.png" />
+    <Content Include="Content\nichos\images\crypts_118.png" />
+    <Content Include="Content\nichos\images\crypts_12.png" />
+    <Content Include="Content\nichos\images\crypts_120.png" />
+    <Content Include="Content\nichos\images\crypts_121.png" />
+    <Content Include="Content\nichos\images\crypts_123.png" />
+    <Content Include="Content\nichos\images\crypts_125.png" />
+    <Content Include="Content\nichos\images\crypts_127.png" />
+    <Content Include="Content\nichos\images\crypts_129.png" />
+    <Content Include="Content\nichos\images\crypts_13.png" />
+    <Content Include="Content\nichos\images\crypts_131.png" />
+    <Content Include="Content\nichos\images\crypts_134.png" />
+    <Content Include="Content\nichos\images\crypts_137.png" />
+    <Content Include="Content\nichos\images\crypts_14.png" />
+    <Content Include="Content\nichos\images\crypts_140.png" />
+    <Content Include="Content\nichos\images\crypts_143.png" />
+    <Content Include="Content\nichos\images\crypts_146.png" />
+    <Content Include="Content\nichos\images\crypts_148.png" />
+    <Content Include="Content\nichos\images\crypts_15.png" />
+    <Content Include="Content\nichos\images\crypts_150.png" />
+    <Content Include="Content\nichos\images\crypts_153.png" />
+    <Content Include="Content\nichos\images\crypts_154.png" />
+    <Content Include="Content\nichos\images\crypts_155.png" />
+    <Content Include="Content\nichos\images\crypts_156.png" />
+    <Content Include="Content\nichos\images\crypts_157.png" />
+    <Content Include="Content\nichos\images\crypts_158.png" />
+    <Content Include="Content\nichos\images\crypts_159.png" />
+    <Content Include="Content\nichos\images\crypts_16.png" />
+    <Content Include="Content\nichos\images\crypts_160.png" />
+    <Content Include="Content\nichos\images\crypts_161.png" />
+    <Content Include="Content\nichos\images\crypts_162.png" />
+    <Content Include="Content\nichos\images\crypts_163.png" />
+    <Content Include="Content\nichos\images\crypts_166.png" />
+    <Content Include="Content\nichos\images\crypts_168.png" />
+    <Content Include="Content\nichos\images\crypts_17.png" />
+    <Content Include="Content\nichos\images\crypts_170.png" />
+    <Content Include="Content\nichos\images\crypts_173.png" />
+    <Content Include="Content\nichos\images\crypts_175.png" />
+    <Content Include="Content\nichos\images\crypts_176.png" />
+    <Content Include="Content\nichos\images\crypts_178.png" />
+    <Content Include="Content\nichos\images\crypts_179.png" />
+    <Content Include="Content\nichos\images\crypts_18.png" />
+    <Content Include="Content\nichos\images\crypts_180.png" />
+    <Content Include="Content\nichos\images\crypts_182.png" />
+    <Content Include="Content\nichos\images\crypts_183.png" />
+    <Content Include="Content\nichos\images\crypts_184.png" />
+    <Content Include="Content\nichos\images\crypts_186.png" />
+    <Content Include="Content\nichos\images\crypts_187.png" />
+    <Content Include="Content\nichos\images\crypts_189.png" />
+    <Content Include="Content\nichos\images\crypts_192.png" />
+    <Content Include="Content\nichos\images\crypts_194.png" />
+    <Content Include="Content\nichos\images\crypts_198.png" />
+    <Content Include="Content\nichos\images\crypts_199.png" />
+    <Content Include="Content\nichos\images\crypts_200.png" />
+    <Content Include="Content\nichos\images\crypts_201.png" />
+    <Content Include="Content\nichos\images\crypts_202.png" />
+    <Content Include="Content\nichos\images\crypts_204.png" />
+    <Content Include="Content\nichos\images\crypts_206.png" />
+    <Content Include="Content\nichos\images\crypts_208.png" />
+    <Content Include="Content\nichos\images\crypts_21.png" />
+    <Content Include="Content\nichos\images\crypts_210.png" />
+    <Content Include="Content\nichos\images\crypts_211.png" />
+    <Content Include="Content\nichos\images\crypts_213.png" />
+    <Content Include="Content\nichos\images\crypts_214.png" />
+    <Content Include="Content\nichos\images\crypts_216.png" />
+    <Content Include="Content\nichos\images\crypts_218.png" />
+    <Content Include="Content\nichos\images\crypts_22.png" />
+    <Content Include="Content\nichos\images\crypts_220.png" />
+    <Content Include="Content\nichos\images\crypts_222.png" />
+    <Content Include="Content\nichos\images\crypts_24.png" />
+    <Content Include="Content\nichos\images\crypts_27.png" />
+    <Content Include="Content\nichos\images\crypts_28.png" />
+    <Content Include="Content\nichos\images\crypts_29.png" />
+    <Content Include="Content\nichos\images\crypts_32.png" />
+    <Content Include="Content\nichos\images\crypts_33.png" />
+    <Content Include="Content\nichos\images\crypts_34.png" />
+    <Content Include="Content\nichos\images\crypts_36.png" />
+    <Content Include="Content\nichos\images\crypts_37.png" />
+    <Content Include="Content\nichos\images\crypts_38.png" />
+    <Content Include="Content\nichos\images\crypts_39.png" />
+    <Content Include="Content\nichos\images\crypts_40.png" />
+    <Content Include="Content\nichos\images\crypts_41.png" />
+    <Content Include="Content\nichos\images\crypts_42.png" />
+    <Content Include="Content\nichos\images\crypts_43.png" />
+    <Content Include="Content\nichos\images\crypts_44.png" />
+    <Content Include="Content\nichos\images\crypts_45.png" />
+    <Content Include="Content\nichos\images\crypts_46.png" />
+    <Content Include="Content\nichos\images\crypts_47.png" />
+    <Content Include="Content\nichos\images\crypts_48.png" />
+    <Content Include="Content\nichos\images\crypts_49.png" />
+    <Content Include="Content\nichos\images\crypts_50.png" />
+    <Content Include="Content\nichos\images\crypts_51.png" />
+    <Content Include="Content\nichos\images\crypts_52.png" />
+    <Content Include="Content\nichos\images\crypts_53.png" />
+    <Content Include="Content\nichos\images\crypts_54.png" />
+    <Content Include="Content\nichos\images\crypts_56.png" />
+    <Content Include="Content\nichos\images\crypts_58.png" />
+    <Content Include="Content\nichos\images\crypts_59.png" />
+    <Content Include="Content\nichos\images\crypts_61.png" />
+    <Content Include="Content\nichos\images\crypts_62.png" />
+    <Content Include="Content\nichos\images\crypts_63.png" />
+    <Content Include="Content\nichos\images\crypts_64.png" />
+    <Content Include="Content\nichos\images\crypts_65.png" />
+    <Content Include="Content\nichos\images\crypts_67.png" />
+    <Content Include="Content\nichos\images\crypts_68.png" />
+    <Content Include="Content\nichos\images\crypts_69.png" />
+    <Content Include="Content\nichos\images\crypts_72.png" />
+    <Content Include="Content\nichos\images\crypts_73.png" />
+    <Content Include="Content\nichos\images\crypts_76.png" />
+    <Content Include="Content\nichos\images\crypts_77.png" />
+    <Content Include="Content\nichos\images\crypts_80.png" />
+    <Content Include="Content\nichos\images\crypts_82.png" />
+    <Content Include="Content\nichos\images\crypts_84.png" />
+    <Content Include="Content\nichos\images\crypts_86.png" />
+    <Content Include="Content\nichos\images\crypts_87.png" />
+    <Content Include="Content\nichos\images\crypts_89.png" />
+    <Content Include="Content\nichos\images\crypts_90.png" />
+    <Content Include="Content\nichos\images\crypts_91.png" />
+    <Content Include="Content\nichos\images\crypts_92.png" />
+    <Content Include="Content\nichos\images\crypts_93.png" />
+    <Content Include="Content\nichos\images\crypts_97.png" />
+    <Content Include="Content\nichos\images\espacio.gif" />
+    <Content Include="Content\nichos\images\id_1-166.png" />
+    <Content Include="Content\nichos\images\id_1-32.png" />
+    <Content Include="Content\nichos\images\id_1.png" />
+    <Content Include="Content\nichos\images\id_10-172.png" />
+    <Content Include="Content\nichos\images\id_10.png" />
+    <Content Include="Content\nichos\images\id_11-140.png" />
+    <Content Include="Content\nichos\images\id_11-192.png" />
+    <Content Include="Content\nichos\images\id_11-21.png" />
+    <Content Include="Content\nichos\images\id_11-46.png" />
+    <Content Include="Content\nichos\images\id_11.png" />
+    <Content Include="Content\nichos\images\id_12 - Copy.png" />
+    <Content Include="Content\nichos\images\id_12-146.png" />
+    <Content Include="Content\nichos\images\id_12-196.png" />
+    <Content Include="Content\nichos\images\id_12-27.png" />
+    <Content Include="Content\nichos\images\id_12-50.png" />
+    <Content Include="Content\nichos\images\id_12.png" />
+    <Content Include="Content\nichos\images\id_13-153.png" />
+    <Content Include="Content\nichos\images\id_13-198.png" />
+    <Content Include="Content\nichos\images\id_13.png" />
+    <Content Include="Content\nichos\images\id_14.png" />
+    <Content Include="Content\nichos\images\id_15.png" />
+    <Content Include="Content\nichos\images\id_16-194.png" />
+    <Content Include="Content\nichos\images\id_16-48.png" />
+    <Content Include="Content\nichos\images\id_16.png" />
+    <Content Include="Content\nichos\images\id_17.png" />
+    <Content Include="Content\nichos\images\id_18-197.png" />
+    <Content Include="Content\nichos\images\id_18.png" />
+    <Content Include="Content\nichos\images\id_2-170.png" />
+    <Content Include="Content\nichos\images\id_2-36.png" />
+    <Content Include="Content\nichos\images\id_2.png" />
+    <Content Include="Content\nichos\images\id_20.png" />
+    <Content Include="Content\nichos\images\id_21.png" />
+    <Content Include="Content\nichos\images\id_22.png" />
+    <Content Include="Content\nichos\images\id_23.png" />
+    <Content Include="Content\nichos\images\id_24.png" />
+    <Content Include="Content\nichos\images\id_25.png" />
+    <Content Include="Content\nichos\images\id_26.png" />
+    <Content Include="Content\nichos\images\id_27.png" />
+    <Content Include="Content\nichos\images\id_28.png" />
+    <Content Include="Content\nichos\images\id_29.png" />
+    <Content Include="Content\nichos\images\id_3-173.png" />
+    <Content Include="Content\nichos\images\id_3.png" />
+    <Content Include="Content\nichos\images\id_31.png" />
+    <Content Include="Content\nichos\images\id_32.png" />
+    <Content Include="Content\nichos\images\id_33.png" />
+    <Content Include="Content\nichos\images\id_34.png" />
+    <Content Include="Content\nichos\images\id_35.png" />
+    <Content Include="Content\nichos\images\id_36.png" />
+    <Content Include="Content\nichos\images\id_38-72.png" />
+    <Content Include="Content\nichos\images\id_38.png" />
+    <Content Include="Content\nichos\images\id_4-139.png" />
+    <Content Include="Content\nichos\images\id_4-178.png" />
+    <Content Include="Content\nichos\images\id_4-20.png" />
+    <Content Include="Content\nichos\images\id_4-39.png" />
+    <Content Include="Content\nichos\images\id_4.png" />
+    <Content Include="Content\nichos\images\id_40-71.png" />
+    <Content Include="Content\nichos\images\id_40.png" />
+    <Content Include="Content\nichos\images\id_41.png" />
+    <Content Include="Content\nichos\images\id_42-30.png" />
+    <Content Include="Content\nichos\images\id_42.png" />
+    <Content Include="Content\nichos\images\id_43.png" />
+    <Content Include="Content\nichos\images\id_44.png" />
+    <Content Include="Content\nichos\images\id_45.png" />
+    <Content Include="Content\nichos\images\id_46.png" />
+    <Content Include="Content\nichos\images\id_47.png" />
+    <Content Include="Content\nichos\images\id_48.png" />
+    <Content Include="Content\nichos\images\id_49.png" />
+    <Content Include="Content\nichos\images\id_5-145.png" />
+    <Content Include="Content\nichos\images\id_5-182.png" />
+    <Content Include="Content\nichos\images\id_5-26.png" />
+    <Content Include="Content\nichos\images\id_5-43.png" />
+    <Content Include="Content\nichos\images\id_5.png" />
+    <Content Include="Content\nichos\images\id_50.png" />
+    <Content Include="Content\nichos\images\id_51.png" />
+    <Content Include="Content\nichos\images\id_52-49.png" />
+    <Content Include="Content\nichos\images\id_52.png" />
+    <Content Include="Content\nichos\images\id_53-53.png" />
+    <Content Include="Content\nichos\images\id_53.png" />
+    <Content Include="Content\nichos\images\id_54-58.png" />
+    <Content Include="Content\nichos\images\id_54.png" />
+    <Content Include="Content\nichos\images\id_55.png" />
+    <Content Include="Content\nichos\images\id_56.png" />
+    <Content Include="Content\nichos\images\id_57.png" />
+    <Content Include="Content\nichos\images\id_6-152.png" />
+    <Content Include="Content\nichos\images\id_6-186.png" />
+    <Content Include="Content\nichos\images\id_6.png" />
+    <Content Include="Content\nichos\images\id_7-206.png" />
+    <Content Include="Content\nichos\images\id_7-208.png" />
+    <Content Include="Content\nichos\images\id_7-210.png" />
+    <Content Include="Content\nichos\images\id_7-213.png" />
+    <Content Include="Content\nichos\images\id_7-216.png" />
+    <Content Include="Content\nichos\images\id_7-218.png" />
+    <Content Include="Content\nichos\images\id_7-220.png" />
+    <Content Include="Content\nichos\images\id_7.png" />
+    <Content Include="Content\nichos\images\id_8-165.png" />
+    <Content Include="Content\nichos\images\id_8-31.png" />
+    <Content Include="Content\nichos\images\id_8.png" />
+    <Content Include="Content\nichos\images\id_9-168.png" />
+    <Content Include="Content\nichos\images\id_9-34.png" />
+    <Content Include="Content\nichos\images\id_9.png" />
+    <Content Include="Content\pretty-checkbox.min.css" />
+    <Content Include="Content\timepicker.css" />
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\colorpicker-master\css\demo.css" />
+    <Content Include="Scripts\colorpicker-master\css\evol-colorpicker.css" />
+    <Content Include="Scripts\colorpicker-master\css\evol-colorpicker.min.css" />
+    <Content Include="Scripts\colorpicker-master\index.html" />
+    <Content Include="Scripts\colorpicker-master\screenshot1.png" />
+    <Content Include="Scripts\colorpicker-master\screenshot2.png" />
+    <Content Include="Scripts\colorpicker-master\screenshot3.png" />
+    <Content Include="Scripts\jquery.fancybox-buttons.js" />
+    <Content Include="Scripts\jquery.fancybox-media.js" />
+    <Content Include="Scripts\jquery.fancybox-thumbs.js" />
+    <Content Include="Scripts\jquery.fancybox.js" />
+    <Content Include="Scripts\jquery.fancybox.pack.js" />
+    <Content Include="Scripts\jquery.mask.js" />
+    <Content Include="Scripts\fullcalendar\locales-all.js" />
+    <Content Include="Scripts\fullcalendar\locales-all.min.js" />
+    <Content Include="Scripts\fullcalendar\locales\af.js" />
+    <Content Include="Scripts\fullcalendar\locales\ar-dz.js" />
+    <Content Include="Scripts\fullcalendar\locales\ar-kw.js" />
+    <Content Include="Scripts\fullcalendar\locales\ar-ly.js" />
+    <Content Include="Scripts\fullcalendar\locales\ar-ma.js" />
+    <Content Include="Scripts\fullcalendar\locales\ar-sa.js" />
+    <Content Include="Scripts\fullcalendar\locales\ar-tn.js" />
+    <Content Include="Scripts\fullcalendar\locales\ar.js" />
+    <Content Include="Scripts\fullcalendar\locales\az.js" />
+    <Content Include="Scripts\fullcalendar\locales\bg.js" />
+    <Content Include="Scripts\fullcalendar\locales\bn.js" />
+    <Content Include="Scripts\fullcalendar\locales\bs.js" />
+    <Content Include="Scripts\fullcalendar\locales\ca.js" />
+    <Content Include="Scripts\fullcalendar\locales\cs.js" />
+    <Content Include="Scripts\fullcalendar\locales\cy.js" />
+    <Content Include="Scripts\fullcalendar\locales\da.js" />
+    <Content Include="Scripts\fullcalendar\locales\de-at.js" />
+    <Content Include="Scripts\fullcalendar\locales\de.js" />
+    <Content Include="Scripts\fullcalendar\locales\el.js" />
+    <Content Include="Scripts\fullcalendar\locales\en-au.js" />
+    <Content Include="Scripts\fullcalendar\locales\en-gb.js" />
+    <Content Include="Scripts\fullcalendar\locales\en-nz.js" />
+    <Content Include="Scripts\fullcalendar\locales\eo.js" />
+    <Content Include="Scripts\fullcalendar\locales\es-us.js" />
+    <Content Include="Scripts\fullcalendar\locales\es.js" />
+    <Content Include="Scripts\fullcalendar\locales\et.js" />
+    <Content Include="Scripts\fullcalendar\locales\eu.js" />
+    <Content Include="Scripts\fullcalendar\locales\fa.js" />
+    <Content Include="Scripts\fullcalendar\locales\fi.js" />
+    <Content Include="Scripts\fullcalendar\locales\fr-ca.js" />
+    <Content Include="Scripts\fullcalendar\locales\fr-ch.js" />
+    <Content Include="Scripts\fullcalendar\locales\fr.js" />
+    <Content Include="Scripts\fullcalendar\locales\gl.js" />
+    <Content Include="Scripts\fullcalendar\locales\he.js" />
+    <Content Include="Scripts\fullcalendar\locales\hi.js" />
+    <Content Include="Scripts\fullcalendar\locales\hr.js" />
+    <Content Include="Scripts\fullcalendar\locales\hu.js" />
+    <Content Include="Scripts\fullcalendar\locales\hy-am.js" />
+    <Content Include="Scripts\fullcalendar\locales\id.js" />
+    <Content Include="Scripts\fullcalendar\locales\is.js" />
+    <Content Include="Scripts\fullcalendar\locales\it.js" />
+    <Content Include="Scripts\fullcalendar\locales\ja.js" />
+    <Content Include="Scripts\fullcalendar\locales\ka.js" />
+    <Content Include="Scripts\fullcalendar\locales\kk.js" />
+    <Content Include="Scripts\fullcalendar\locales\km.js" />
+    <Content Include="Scripts\fullcalendar\locales\ko.js" />
+    <Content Include="Scripts\fullcalendar\locales\ku.js" />
+    <Content Include="Scripts\fullcalendar\locales\lb.js" />
+    <Content Include="Scripts\fullcalendar\locales\lt.js" />
+    <Content Include="Scripts\fullcalendar\locales\lv.js" />
+    <Content Include="Scripts\fullcalendar\locales\mk.js" />
+    <Content Include="Scripts\fullcalendar\locales\ms.js" />
+    <Content Include="Scripts\fullcalendar\locales\nb.js" />
+    <Content Include="Scripts\fullcalendar\locales\ne.js" />
+    <Content Include="Scripts\fullcalendar\locales\nl.js" />
+    <Content Include="Scripts\fullcalendar\locales\nn.js" />
+    <Content Include="Scripts\fullcalendar\locales\pl.js" />
+    <Content Include="Scripts\fullcalendar\locales\pt-br.js" />
+    <Content Include="Scripts\fullcalendar\locales\pt.js" />
+    <Content Include="Scripts\fullcalendar\locales\ro.js" />
+    <Content Include="Scripts\fullcalendar\locales\ru.js" />
+    <Content Include="Scripts\fullcalendar\locales\si-lk.js" />
+    <Content Include="Scripts\fullcalendar\locales\sk.js" />
+    <Content Include="Scripts\fullcalendar\locales\sl.js" />
+    <Content Include="Scripts\fullcalendar\locales\sm.js" />
+    <Content Include="Scripts\fullcalendar\locales\sq.js" />
+    <Content Include="Scripts\fullcalendar\locales\sr-cyrl.js" />
+    <Content Include="Scripts\fullcalendar\locales\sr.js" />
+    <Content Include="Scripts\fullcalendar\locales\sv.js" />
+    <Content Include="Scripts\fullcalendar\locales\ta-in.js" />
+    <Content Include="Scripts\fullcalendar\locales\th.js" />
+    <Content Include="Scripts\fullcalendar\locales\tr.js" />
+    <Content Include="Scripts\fullcalendar\locales\ug.js" />
+    <Content Include="Scripts\fullcalendar\locales\uk.js" />
+    <Content Include="Scripts\fullcalendar\locales\uz.js" />
+    <Content Include="Scripts\fullcalendar\locales\vi.js" />
+    <Content Include="Scripts\fullcalendar\locales\zh-cn.js" />
+    <Content Include="Scripts\fullcalendar\locales\zh-tw.js" />
+    <Content Include="Content\fullcalendar\main.css" />
+    <Content Include="Scripts\fullcalendar\main.js" />
+    <Content Include="Content\fullcalendar\main.min.css" />
+    <Content Include="Scripts\fullcalendar\main.min.js" />
+    <Content Include="Scripts\qTip\jquery.qtip.css" />
+    <Content Include="Scripts\qTip\jquery.qtip.js" />
+    <Content Include="Scripts\qTip\jquery.qtip.min.css" />
+    <Content Include="Scripts\qTip\jquery.qtip.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ar-AR.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ar-AR.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ar-AR.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-az-AZ.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-az-AZ.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-az-AZ.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-bg-BG.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-bg-BG.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-bg-BG.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ca-ES.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ca-ES.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ca-ES.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-cs-CZ.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-cs-CZ.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-cs-CZ.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-da-DK.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-da-DK.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-da-DK.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-de-DE.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-de-DE.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-de-DE.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-el-GR.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-el-GR.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-el-GR.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-es-ES.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-es-ES.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-es-ES.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-es-EU.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-es-EU.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-es-EU.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-fa-IR.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-fa-IR.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-fa-IR.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-fi-FI.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-fi-FI.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-fi-FI.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-fr-FR.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-fr-FR.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-fr-FR.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-gl-ES.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-gl-ES.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-gl-ES.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-he-IL.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-he-IL.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-he-IL.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-hr-HR.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-hr-HR.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-hr-HR.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-hu-HU.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-hu-HU.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-hu-HU.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-id-ID.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-id-ID.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-id-ID.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-it-IT.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-it-IT.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-it-IT.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ja-JP.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ja-JP.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ja-JP.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ko-KR.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ko-KR.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ko-KR.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-lt-LT.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-lt-LT.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-lt-LT.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-lt-LV.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-lt-LV.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-lt-LV.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-mn-MN.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-mn-MN.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-mn-MN.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-nb-NO.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-nb-NO.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-nb-NO.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-nl-NL.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-nl-NL.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-nl-NL.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-pl-PL.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-pl-PL.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-pl-PL.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-pt-BR.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-pt-BR.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-pt-BR.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-pt-PT.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-pt-PT.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-pt-PT.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ro-RO.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ro-RO.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ro-RO.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ru-RU.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ru-RU.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ru-RU.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sk-SK.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sk-SK.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sk-SK.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sl-SI.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sl-SI.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sl-SI.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sr-RS-Latin.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sr-RS-Latin.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sr-RS-Latin.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sr-RS.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sr-RS.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sr-RS.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sv-SE.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sv-SE.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-sv-SE.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ta-IN.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ta-IN.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-ta-IN.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-th-TH.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-th-TH.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-th-TH.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-tr-TR.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-tr-TR.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-tr-TR.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-uk-UA.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-uk-UA.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-uk-UA.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-uz-UZ.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-uz-UZ.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-uz-UZ.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-vi-VN.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-vi-VN.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-vi-VN.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-zh-CN.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-zh-CN.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-zh-CN.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-zh-TW.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-zh-TW.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\lang\summernote-zh-TW.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\plugin\databasic\summernote-ext-databasic.css" />
+    <Content Include="Scripts\SUMMERNOTE\plugin\databasic\summernote-ext-databasic.js" />
+    <Content Include="Scripts\SUMMERNOTE\plugin\hello\summernote-ext-hello.js" />
+    <Content Include="Scripts\SUMMERNOTE\plugin\specialchars\summernote-ext-specialchars.js" />
+    <Content Include="Scripts\SUMMERNOTE\summernote-bs4.css" />
+    <Content Include="Scripts\SUMMERNOTE\summernote-bs4.js" />
+    <Content Include="Scripts\SUMMERNOTE\summernote-bs4.min.css" />
+    <Content Include="Scripts\SUMMERNOTE\summernote-bs4.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\summernote-bs4.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\summernote-lite.css" />
+    <Content Include="Scripts\SUMMERNOTE\summernote-lite.js" />
+    <Content Include="Scripts\SUMMERNOTE\summernote-lite.min.css" />
+    <Content Include="Scripts\SUMMERNOTE\summernote-lite.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\summernote-lite.min.js.LICENSE.txt" />
+    <Content Include="Scripts\SUMMERNOTE\summernote.css" />
+    <Content Include="Scripts\SUMMERNOTE\summernote.js" />
+    <Content Include="Scripts\SUMMERNOTE\summernote.min.css" />
+    <Content Include="Scripts\SUMMERNOTE\summernote.min.js" />
+    <Content Include="Scripts\SUMMERNOTE\summernote.min.js.LICENSE.txt" />
+    <Content Include="Scripts\sweetalert\sweetalert2.min.css" />
+    <Content Include="Scripts\sweetalert\sweetalert2.min.js" />
+    <Content Include="Scripts\timepicker.js" />
+    <Content Include="Views\Anniversary\Create.cshtml" />
+    <Content Include="Views\Anniversary\Details.cshtml" />
+    <Content Include="Views\Anniversary\Edit.cshtml" />
+    <Content Include="Views\Anniversary\Index.cshtml" />
+    <Content Include="Views\Anniversary\_Anniversary.cshtml" />
+    <Content Include="Scripts\qTip\jquery.qtip.min.js.map" />
+    <Content Include="Scripts\SUMMERNOTE\font\summernote.eot" />
+    <Content Include="Scripts\SUMMERNOTE\font\summernote.ttf" />
+    <Content Include="Scripts\SUMMERNOTE\font\summernote.woff" />
+    <Content Include="Scripts\SUMMERNOTE\font\summernote.woff2" />
+    <Content Include="Scripts\SUMMERNOTE\summernote-bs4.js.map" />
+    <Content Include="Scripts\SUMMERNOTE\summernote-bs4.min.js.map" />
+    <Content Include="Scripts\SUMMERNOTE\summernote-lite.js.map" />
+    <Content Include="Scripts\SUMMERNOTE\summernote-lite.min.js.map" />
+    <Content Include="Scripts\SUMMERNOTE\summernote.js.map" />
+    <Content Include="Scripts\SUMMERNOTE\summernote.min.js.map" />
+    <Content Include="Views\Anniversary\AnniversaryPDF.cshtml" />
+    <Content Include="Views\Billing\Solicitudes.cshtml" />
+    <Content Include="Views\Billing\SolicitudDetails.cshtml" />
+    <Content Include="Views\Billing\Facturacion.cshtml" />
+    <Content Include="Views\Billing\Factura.cshtml" />
+    <Content Include="Views\AshDeposits\Index.cshtml" />
+    <Content Include="Views\AshDeposits\Details.cshtml" />
+    <Content Include="Views\AshDeposits\Edit.cshtml" />
+    <Content Include="Views\Cathedrals\_Cathedrals.cshtml" />
+    <Content Include="Views\Cathedrals\Create.cshtml" />
+    <Content Include="Views\Cathedrals\Details.cshtml" />
+    <Content Include="Views\Cathedrals\Edit.cshtml" />
+    <Content Include="Views\Cathedrals\Index.cshtml" />
+    <Content Include="Views\AshDeposits\Formato.cshtml" />
+    <Content Include="Content\material-icons\css\materialdesignicons.css.map" />
+    <Content Include="Content\material-icons\css\materialdesignicons.min.css.map" />
+    <Content Include="Content\material-icons\fonts\materialdesignicons-webfont.eot" />
+    <Content Include="Content\material-icons\fonts\materialdesignicons-webfont.ttf" />
+    <Content Include="Content\material-icons\fonts\materialdesignicons-webfont.woff" />
+    <Content Include="Content\material-icons\fonts\materialdesignicons-webfont.woff2" />
+    <Content Include="fonts\Lato-Black.ttf" />
+    <Content Include="fonts\Lato-BlackItalic.ttf" />
+    <Content Include="fonts\Lato-Bold.ttf" />
+    <Content Include="fonts\Lato-BoldItalic.ttf" />
+    <Content Include="fonts\Lato-Italic.ttf" />
+    <Content Include="fonts\Lato-Light.ttf" />
+    <Content Include="fonts\Lato-LightItalic.ttf" />
+    <Content Include="fonts\Lato-Regular.ttf" />
+    <Content Include="fonts\Lato-Thin.ttf" />
+    <Content Include="fonts\Lato-ThinItalic.ttf" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\bootstrap-reboot.css.map" />
+    <Content Include="Content\bootstrap-grid.min.css.map" />
+    <Content Include="Content\bootstrap-grid.css.map" />
+    <None Include="Properties\PublishProfiles\CriptasCatedral - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\CriptasCatedral - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Views\AshDeposits\IndexCalendar.cshtml" />
+    <Content Include="Views\AshDeposits\_IndexCalendar.cshtml" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <None Include="Views\CivilStatus\_CivilStatus.cshtml" />
+    <Content Include="Views\Towns\_Towns.cshtml" />
+    <Content Include="Views\Towns\Create.cshtml" />
+    <Content Include="Views\Towns\Details.cshtml" />
+    <Content Include="Views\Towns\Edit.cshtml" />
+    <Content Include="Views\Towns\Index.cshtml" />
+    <Content Include="Views\FederalTax\Edit.cshtml" />
+    <Content Include="Views\MaintenanceFee\Edit.cshtml" />
+    <Content Include="Views\ExchangeRates\Edit.cshtml" />
+    <Content Include="Views\Crypts\_Crypts.cshtml" />
+    <Content Include="Views\Crypts\Create.cshtml" />
+    <Content Include="Views\Crypts\Details.cshtml" />
+    <Content Include="Views\Crypts\Edit.cshtml" />
+    <Content Include="Views\Crypts\Index.cshtml" />
+    <Content Include="Views\Shared\_LayoutPDF.cshtml" />
+    <Content Include="Views\ProspectiveCustomer\_ProspectiveCustomers.cshtml" />
+    <Content Include="Views\ProspectiveCustomer\Create.cshtml" />
+    <Content Include="Views\ProspectiveCustomer\Details.cshtml" />
+    <Content Include="Views\ProspectiveCustomer\Edit.cshtml" />
+    <Content Include="Views\ProspectiveCustomer\Index.cshtml" />
+    <Content Include="Views\ProspectiveCustomer\PurchaseRequest.cshtml" />
+    <Content Include="Views\Shared\EmailTemplates\Welcome.cshtml" />
+    <Content Include="Views\Crypts\Solicitud.cshtml" />
+    <Content Include="Views\Crypts\_SelectCrypto.cshtml" />
+    <Content Include="Views\Customers\Solicitudes.cshtml" />
+    <Content Include="Views\Customers\SolicitudDetails.cshtml" />
+    <Content Include="Views\Discounts\_Discounts.cshtml" />
+    <Content Include="Views\Discounts\Create.cshtml" />
+    <Content Include="Views\Discounts\Details.cshtml" />
+    <Content Include="Views\Discounts\Edit.cshtml" />
+    <Content Include="Views\Discounts\Index.cshtml" />
+    <Content Include="Views\CommissionAgents\_CommissionAgents.cshtml" />
+    <Content Include="Views\CommissionAgents\Create.cshtml" />
+    <Content Include="Views\CommissionAgents\Details.cshtml" />
+    <Content Include="Views\CommissionAgents\Edit.cshtml" />
+    <Content Include="Views\CommissionAgents\Index.cshtml" />
+    <Content Include="Views\Crypts\_CryptMaps.cshtml" />
+    <Content Include="Views\CryptType\Manage.cshtml" />
+    <Content Include="Views\CryptType\_Crypts.cshtml" />
+    <Content Include="Views\CryptType\_SelectCrypto.cshtml" />
+    <Content Include="Views\Crypts\_CryptsNichos.cshtml" />
+    <Content Include="Views\ProspectiveCustomer\Quotation.cshtml" />
+    <Content Include="Views\Intentions\Create.cshtml" />
+    <Content Include="Views\Intentions\Index.cshtml" />
+    <Content Include="Views\Intentions\_Intentions.cshtml" />
+    <Content Include="Views\Intentions\Details.cshtml" />
+    <Content Include="Views\Intentions\Edit.cshtml" />
+    <Content Include="Views\CountedDiscount\Edit.cshtml" />
+    <Content Include="Views\Schedule\Details.cshtml" />
+    <Content Include="Views\Schedule\Edit.cshtml" />
+    <Content Include="Views\Payments\Validate.cshtml" />
+    <Content Include="Views\PushNotificationsMessages\_PushNotificationsMessages.cshtml" />
+    <Content Include="Views\PushNotificationsMessages\Create.cshtml" />
+    <Content Include="Views\PushNotificationsMessages\Details.cshtml" />
+    <Content Include="Views\PushNotificationsMessages\Edit.cshtml" />
+    <Content Include="Views\PushNotificationsMessages\Index.cshtml" />
+    <Content Include="Views\Crypts\CryptPayments.cshtml" />
+    <Content Include="Views\Crypts\_CryptDetails.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Templates\EmailRecovery.txt" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\Images\LogoParroquia.png" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
+    <None Include="Properties\PublishProfiles\Template.pubxml" />
+    <Content Include="Scripts\esm\popper-utils.js" />
+    <Content Include="Scripts\esm\popper-utils.min.js" />
+    <Content Include="Scripts\esm\popper.js" />
+    <Content Include="Scripts\esm\popper.min.js" />
+    <Content Include="Scripts\index.js.flow" />
+    <Content Include="Scripts\esm\popper.min.js.map" />
+    <Content Include="Scripts\esm\popper.js.map" />
+    <Content Include="Scripts\esm\popper-utils.min.js.map" />
+    <Content Include="Scripts\esm\popper-utils.js.map" />
+    <None Include="Scripts\jquery-3.6.0.intellisense.js" />
+    <Content Include="Scripts\jquery-3.6.0.js" />
+    <Content Include="Scripts\jquery-3.6.0.min.js" />
+    <Content Include="Scripts\jquery-3.6.0.slim.js" />
+    <Content Include="Scripts\jquery-3.6.0.slim.min.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
+    <Content Include="Scripts\jquery-3.6.0.slim.min.map" />
+    <Content Include="Scripts\jquery-3.6.0.min.map" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\popper-utils.js" />
+    <Content Include="Scripts\popper-utils.min.js" />
+    <Content Include="Scripts\popper.js" />
+    <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\Services\Services.js" />
+    <Content Include="Scripts\ChurchScript.js" />
+    <Content Include="Scripts\src\index.js" />
+    <Content Include="Scripts\src\methods\defaults.js" />
+    <Content Include="Scripts\src\methods\destroy.js" />
+    <Content Include="Scripts\src\methods\disableEventListeners.js" />
+    <Content Include="Scripts\src\methods\enableEventListeners.js" />
+    <Content Include="Scripts\src\methods\placements.js" />
+    <Content Include="Scripts\src\methods\update.js" />
+    <Content Include="Scripts\src\modifiers\applyStyle.js" />
+    <Content Include="Scripts\src\modifiers\arrow.js" />
+    <Content Include="Scripts\src\modifiers\computeStyle.js" />
+    <Content Include="Scripts\src\modifiers\flip.js" />
+    <Content Include="Scripts\src\modifiers\hide.js" />
+    <Content Include="Scripts\src\modifiers\index.js" />
+    <Content Include="Scripts\src\modifiers\inner.js" />
+    <Content Include="Scripts\src\modifiers\keepTogether.js" />
+    <Content Include="Scripts\src\modifiers\offset.js" />
+    <Content Include="Scripts\src\modifiers\preventOverflow.js" />
+    <Content Include="Scripts\src\modifiers\shift.js" />
+    <Content Include="Scripts\src\utils\clockwise.js" />
+    <Content Include="Scripts\src\utils\computeAutoPlacement.js" />
+    <Content Include="Scripts\src\utils\debounce.js" />
+    <Content Include="Scripts\src\utils\find.js" />
+    <Content Include="Scripts\src\utils\findCommonOffsetParent.js" />
+    <Content Include="Scripts\src\utils\findIndex.js" />
+    <Content Include="Scripts\src\utils\getBordersSize.js" />
+    <Content Include="Scripts\src\utils\getBoundaries.js" />
+    <Content Include="Scripts\src\utils\getBoundingClientRect.js" />
+    <Content Include="Scripts\src\utils\getClientRect.js" />
+    <Content Include="Scripts\src\utils\getFixedPositionOffsetParent.js" />
+    <Content Include="Scripts\src\utils\getOffsetParent.js" />
+    <Content Include="Scripts\src\utils\getOffsetRect.js" />
+    <Content Include="Scripts\src\utils\getOffsetRectRelativeToArbitraryNode.js" />
+    <Content Include="Scripts\src\utils\getOppositePlacement.js" />
+    <Content Include="Scripts\src\utils\getOppositeVariation.js" />
+    <Content Include="Scripts\src\utils\getOuterSizes.js" />
+    <Content Include="Scripts\src\utils\getParentNode.js" />
+    <Content Include="Scripts\src\utils\getPopperOffsets.js" />
+    <Content Include="Scripts\src\utils\getReferenceNode.js" />
+    <Content Include="Scripts\src\utils\getReferenceOffsets.js" />
+    <Content Include="Scripts\src\utils\getRoot.js" />
+    <Content Include="Scripts\src\utils\getRoundedOffsets.js" />
+    <Content Include="Scripts\src\utils\getScroll.js" />
+    <Content Include="Scripts\src\utils\getScrollParent.js" />
+    <Content Include="Scripts\src\utils\getStyleComputedProperty.js" />
+    <Content Include="Scripts\src\utils\getSupportedPropertyName.js" />
+    <Content Include="Scripts\src\utils\getViewportOffsetRectRelativeToArtbitraryNode.js" />
+    <Content Include="Scripts\src\utils\getWindow.js" />
+    <Content Include="Scripts\src\utils\getWindowSizes.js" />
+    <Content Include="Scripts\src\utils\includeScroll.js" />
+    <Content Include="Scripts\src\utils\index.js" />
+    <Content Include="Scripts\src\utils\isBrowser.js" />
+    <Content Include="Scripts\src\utils\isFixed.js" />
+    <Content Include="Scripts\src\utils\isFunction.js" />
+    <Content Include="Scripts\src\utils\isIE.js" />
+    <Content Include="Scripts\src\utils\isModifierEnabled.js" />
+    <Content Include="Scripts\src\utils\isModifierRequired.js" />
+    <Content Include="Scripts\src\utils\isNumeric.js" />
+    <Content Include="Scripts\src\utils\isOffsetContainer.js" />
+    <Content Include="Scripts\src\utils\removeEventListeners.js" />
+    <Content Include="Scripts\src\utils\runModifiers.js" />
+    <Content Include="Scripts\src\utils\setAttributes.js" />
+    <Content Include="Scripts\src\utils\setStyles.js" />
+    <Content Include="Scripts\src\utils\setupEventListeners.js" />
+    <Content Include="Scripts\ui.datepicker-es-MX.js" />
+    <Content Include="Scripts\umd\popper-utils.js" />
+    <Content Include="Scripts\umd\popper-utils.min.js" />
+    <Content Include="Scripts\umd\popper.js" />
+    <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Shared\Lockout.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Users\_Users.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\Services\Index.cshtml" />
+    <Content Include="Views\Services\_Services.cshtml" />
+    <Content Include="Views\Services\Create.cshtml" />
+    <Content Include="Views\Services\Details.cshtml" />
+    <Content Include="Scripts\umd\popper.min.js.map" />
+    <Content Include="Scripts\umd\popper.js.map" />
+    <Content Include="Scripts\umd\popper.js.flow" />
+    <Content Include="Scripts\umd\popper-utils.min.js.map" />
+    <Content Include="Scripts\umd\popper-utils.js.map" />
+    <Content Include="Scripts\README.md" />
+    <Content Include="Scripts\popper.min.js.map" />
+    <Content Include="Scripts\popper.js.map" />
+    <Content Include="Scripts\popper-utils.min.js.map" />
+    <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\CivilStatus\Index.cshtml" />
+    <Content Include="Views\CivilStatus\Details.cshtml" />
+    <Content Include="Views\CivilStatus\Create.cshtml" />
+    <Content Include="Views\CivilStatus\Edit.cshtml" />
+    <Content Include="Views\Customers\Create.cshtml" />
+    <Content Include="Views\Customers\Details.cshtml" />
+    <Content Include="Views\Customers\Edit.cshtml" />
+    <Content Include="Views\Customers\Index.cshtml" />
+    <Content Include="Views\States\Create.cshtml" />
+    <Content Include="Views\States\Details.cshtml" />
+    <Content Include="Views\States\Edit.cshtml" />
+    <Content Include="Views\States\Index.cshtml" />
+    <Content Include="Views\States\_States.cshtml" />
+    <Content Include="Views\Customers\_Customers.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Church.Business\Church.Business.csproj">
+      <Project>{451a5ddd-1e2c-4ee7-ab40-04ccae2d5ac0}</Project>
+      <Name>Church.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Church.Data\Church.Data.csproj">
+      <Project>{55238d53-46fa-4567-9a59-681c14f6ae30}</Project>
+      <Name>Church.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Church.Docs\Church.Docs.csproj">
+      <Project>{75295E36-374E-4964-A28F-779F458AC10D}</Project>
+      <Name>Church.Docs</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Reports\" />
+    <Folder Include="Scripts\colorpicker-master\js\" />
+    <Folder Include="Scripts\jquery-base64-master\" />
+    <Folder Include="Views\Base\" />
+    <Folder Include="Views\NoticePrivacy\" />
+    <Folder Include="Views\Regulation\" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\index.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>45290</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:45290/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

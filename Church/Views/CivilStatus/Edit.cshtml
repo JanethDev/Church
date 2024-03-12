@@ -1,0 +1,105 @@
+﻿@model tblCivilStatus
+
+@{
+    ViewBag.Title = "Editar estado civil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "CivilStatus", FormMethod.Post, new { id = "CivilStatusEditForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+<div class="card">
+    <div class="card-header card-header-green">
+        <h2>
+            @ViewBag.Title
+        </h2>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.CivilStatusID, htmlAttributes: new { @class = "control-label " })
+                @Html.TextBoxFor(model => model.CivilStatusID, new { @readonly = true, @class = "form-control" })
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })*
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <hr />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.CreatedBy):
+                    </span>
+                    <span class="label-detail label-design">
+                        @ViewBag.CreatedBy
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.CreatedDate):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Model.CreatedDate
+                    </span>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.UpdatedBy):
+                    </span>
+                    <span class="label-detail label-design">
+                        @ViewBag.UpdatedBy
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                <div class="label-design">
+                    <span class="label-detail-header label-designInside">
+                        @Html.DisplayNameFor(model => model.UpdatedDate):
+                    </span>
+                    <span class="label-detail label-design">
+                        @Model.UpdatedDate
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.CivilStatusID)
+    @Html.HiddenFor(model => model.Active)
+    @Html.HiddenFor(model => model.CreatedDate)
+    @Html.HiddenFor(model => model.CreatedBy)
+    @Html.HiddenFor(model => model.UpdatedDate)
+    @Html.HiddenFor(model => model.UpdatedBy)
+    @Html.HiddenFor(model => model.DeletedDate)
+    @Html.HiddenFor(model => model.DeletedDate)
+
+    <div class="row" style="padding-top:15px;">
+        <div class="col-md-2 col-sm-2 col-xs-6">
+            @Html.ActionLink("Volver", "Index", null, new { @class = "btn btn-primary", @style = "width:100%;" })
+        </div>
+        <div class="offset-md-8 col-md-2 col-sm-2 col-xs-6">
+            <input type="submit" value="Guardar" class="btn btn-success" style="float:right;width:100%;" />
+        </div>
+    </div>
+</div>
+        }
+
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+
+        }

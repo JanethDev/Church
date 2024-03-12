@@ -1,0 +1,165 @@
+﻿@model List<tblSchedule>
+
+@{
+    ViewBag.Title = "Editar horario del";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string Day = "";
+    int? DayNumber = ViewBag.DayNumber != null? ViewBag.DayNumber as int?:0;
+    switch (DayNumber)
+    {
+        case 1:
+            Day = "Lunes";
+            break;
+        case 2:
+            Day = "Martes";
+            break;
+        case 3:
+            Day = "Miercoles";
+            break;
+        case 4:
+            Day = "Jueves";
+            break;
+        case 5:
+            Day = "Viernes";
+            break;
+        case 6:
+            Day = "Sabado";
+            break;
+        case 7:
+            Day = "Domingo";
+            break;
+    }
+    }
+<style>
+    .my-timepicker-div,.hours-timepicker {
+        z-index: 9999999;
+    }
+</style>
+@using (Html.BeginForm("Edit", "Schedule", FormMethod.Post, new { id = "EditForm", enctype = "multipart/form-data" }))
+{
+    <div class="card">
+        <div class="card-header card-header-green">
+            <h2>
+                @ViewBag.Title @Day
+                <input type="hidden" name="DayNumber" value="@DayNumber"/>
+                <input type="hidden" name="Day" value="@Day"/>
+            </h2>
+        </div>
+        <div class="card-body">
+            <div id="StatesList">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hours">
+                        <tr class="tableStyleHeader">
+                            <th style="color:white">
+                                Hora
+                            </th>
+                            <th style="color: white; text-align: center">
+                                <button type="button" class="btn btn-success mdi mdi-plus-box btn-add-row"></button>
+                            </th>
+                        </tr> @foreach (var item in Model)
+                        {
+                            <tr class="tableStylerow">
+
+                                <td style="text-align:center">
+                                    @Html.Hidden("ScheduleID", item.ScheduleID)
+                                    @Html.TextBox("Hour", item.Hour, new { @class = "form-control hours-timepicker" })
+                                </td>
+                                <td style="text-align:center">
+                                    <button type="button" class="btn btn-danger mdi mdi-trash-can-outline btn-remove-row"></button>
+                                </td>
+                            </tr>
+                        }
+                        </table>
+                </div>
+            </div>
+            <div class="row">
+                <hr />
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                    <div class="label-design">
+                        <span class="label-detail-header label-designInside">
+                            @*@Html.DisplayNameFor(model => model.CreatedBy):*@
+                        </span>
+                        <span class="label-detail label-design">
+                            @*@ViewBag.CreatedBy*@
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                    <div class="label-design">
+                        <span class="label-detail-header label-designInside">
+                            @*@Html.DisplayNameFor(model => model.CreatedDate):*@
+                        </span>
+                        <span class="label-detail label-design">
+                            @*@Model.CreatedDate*@
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                    <div class="label-design">
+                        <span class="label-detail-header label-designInside">
+                            @*@Html.DisplayNameFor(model => model.UpdatedBy):*@
+                        </span>
+                        <span class="label-detail label-design">
+                            @*@ViewBag.UpdatedBy*@
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12" style="padding-bottom:5px;">
+                    <div class="label-design">
+                        <span class="label-detail-header label-designInside">
+                            @*@Html.DisplayNameFor(model => model.UpdatedDate):*@
+                        </span>
+                        <span class="label-detail label-design">
+                            @*@Model.UpdatedDate*@
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding-top:15px;">
+            <div class="offset-md-10 col-md-2 col-sm-2 col-xs-12" style="text-align:right;">
+                <input type="submit" value="Guardar" class="btn btn-success" style="float:right;width:100%;" />
+            </div>
+        </div>
+    </div>
+}
+    @section Scripts {
+        <script src="~/Scripts/timepicker.js"></script>
+        <script>
+            $(".hours-timepicker").timepicker({
+                use12HourClock: true,
+                timeFormat: "%h:%i %a",
+                minTime: "13:15",
+                maxTime: "12:59"
+            });
+
+            $(".btn-add-row").click(function () {
+                var row = `<tr class="tableStylerow">
+                                <td style="text-align:center">
+                                        <input type="hidden" name="ScheduleID" id="ScheduleID" class="form-control" value="0">
+                                        <input type="text" name="Hour" id="Hour" class="form-control hours-timepicker">
+                                </td>
+                                <td style="text-align:center">
+                                    <button type="button" class="btn btn-danger mdi mdi-trash-can-outline btn-remove-row"></button>
+                                </td>
+                            </tr>`;
+
+                $(".table-hours").append(row);
+
+                $(".hours-timepicker").timepicker({
+                    use12HourClock: true,
+                    timeFormat: "%h:%i %a",
+                    minTime: "13:15",
+                    maxTime: "12:59"
+                });
+            })
+
+            $(document).on("click", ".btn-remove-row", function () {
+                $(this).parent().parent().remove();
+            })
+        </script>
+    }

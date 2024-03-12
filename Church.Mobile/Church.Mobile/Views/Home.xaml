@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="{ Binding Title }"
+             xmlns:Helpers="clr-namespace:Church.Mobile.Helpers"
+             xmlns:local="clr-namespace:Church.Mobile"
+             Visual="Material"
+             x:Class="Church.Mobile.Views.Home">
+    <ContentPage.Content>
+
+
+        <StackLayout Padding="6">
+            <Label FontSize="20" HorizontalOptions="CenterAndExpand" Text="Clave de la cripta:"></Label>
+            <ListView ItemsSource="{Binding Models}" SelectionMode="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <StackLayout Padding="6">
+                                    <Button TextColor="{x:Static Helpers:Constants.ColorWhite}" BackgroundColor="{x:Static Helpers:Constants.ColorPrimary}" 
+                            HorizontalOptions="FillAndExpand" Text="{Binding Nicho}" Clicked="OnButtonClicked" CommandParameter="{Binding .}" />
+                                </StackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+
+            <Frame CornerRadius="30" Margin="0,16" Padding="0" VerticalOptions="End">
+                <StackLayout>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="66"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid  Grid.Row="0" Padding="16">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding LogOffCommand}" NumberOfTapsRequired="1"/>
+                            </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.2*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                                <ColumnDefinition Width="0.2*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Column="0"  Text="&#xf343;"
+                                     FontSize="22" 
+                                     TextColor="{x:Static Helpers:Constants.ColorPrimary}" 
+                                     FontFamily="{StaticResource MaterialFontFamily}"
+                                     HorizontalTextAlignment="Start" 
+                                     VerticalTextAlignment="Center"/>
+
+
+                            <Label Grid.Column="1"  Text="Cerrar sesion"
+                                     FontSize="18" 
+                                     TextColor="Black" 
+                                     HorizontalTextAlignment="Start" 
+                                     VerticalTextAlignment="Center"/>
+
+
+                            <Label Grid.Column="2"  
+                                  Text="&#xfb0f;"
+                                     FontSize="20" 
+                                     TextColor="#babdbe" 
+                                     FontFamily="{StaticResource MaterialFontFamily}"
+                                     HorizontalTextAlignment="End" 
+                                     VerticalTextAlignment="Center"/>
+                        </Grid>
+                    </Grid>
+                </StackLayout>
+            </Frame>
+
+
+
+        </StackLayout>
+
+    </ContentPage.Content>
+</ContentPage>

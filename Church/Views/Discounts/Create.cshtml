@@ -1,0 +1,73 @@
+﻿@model tblDiscounts
+
+@{
+    ViewBag.Title = "Nuevo descuento";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Create", "Discounts", FormMethod.Post, new { id = "DiscountCreateForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+<div class="card">
+    <div class="card-header card-header-green">
+        <h2>
+            @ViewBag.Title
+        </h2>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label" })*
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Description)
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.Percentage, htmlAttributes: new { @class = "control-label" })*
+                @Html.TextBoxFor(model => model.Percentage, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Percentage)
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.InitDate, htmlAttributes: new { @class = "control-label " })*
+                @Html.TextBoxFor(model => model.InitDate, new { @class = "form-control datepicker", @Value = Model.InitDate.ToShortDateString() })
+                @Html.ValidationMessageFor(model => model.InitDate)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label" })*
+                @Html.TextBoxFor(model => model.EndDate, new { @class = "form-control datepicker", @Value = Model.EndDate.ToShortDateString() })
+                @Html.ValidationMessageFor(model => model.EndDate)
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.Active)
+    @Html.HiddenFor(model => model.CreatedDate)
+    @Html.HiddenFor(model => model.CreatedBy)
+    @Html.HiddenFor(model => model.UpdatedDate)
+    @Html.HiddenFor(model => model.UpdatedBy)
+    @Html.HiddenFor(model => model.DeletedDate)
+    @Html.HiddenFor(model => model.DeletedDate)
+
+    <div class="row" style="padding-top:15px;">
+        <div class="col-md-2 col-sm-2 col-xs-6">
+            @Html.ActionLink("Volver", "Index", null, new { @class = "btn btn-primary", @style = "width:100%;" })
+        </div>
+        <div class="offset-md-8 col-md-2 col-sm-2 col-xs-6">
+            <input type="submit" value="Guardar" class="btn btn-success" style="float:right;width:100%;" />
+        </div>
+    </div>
+</div>
+            }
+
+            @section Scripts {
+                @Scripts.Render("~/bundles/jqueryval")
+                <script src="~/Scripts/ui.datepicker-es-MX.js"></script>
+                <script type="text/javascript">
+                    $(function () {
+                        $.datepicker.setDefaults($.datepicker.regional['es-MX']);
+                        $(".datepicker").datepicker();
+                    });
+                </script>
+            }

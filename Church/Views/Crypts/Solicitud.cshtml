@@ -1,0 +1,442 @@
+﻿
+
+@{
+    ViewBag.Title = "Solicitud de cripta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var vDiscount = ViewBag.Discount as tblDiscounts;
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("SendToRequest", null, FormMethod.Post, new { id = "frmCryptRequest" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-zona-tab" data-toggle="tab" href="#nav-zona" role="tab" aria-controls="nav-zona" aria-selected="true">Zonas</a>
+            <a class="nav-item nav-link" id="nav-area-tab" data-toggle="tab" href="#nav-area" role="tab" aria-controls="nav-area" aria-selected="false">Areas</a>
+            <a class="nav-item nav-link" id="nav-criptas-tab" data-toggle="tab" href="#nav-criptas" role="tab" aria-controls="nav-criptas" aria-selected="false">Criptas</a>
+            <a class="nav-item nav-link" id="nav-forma-pago-tab" data-toggle="tab" href="#nav-forma-pago" role="tab" aria-controls="nav-forma-pago" aria-selected="false">Forma de pago</a>
+        </div>
+    </nav>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="nav-zona" role="tabpanel" aria-labelledby="nav-zona-tab">
+            @Html.Partial("_CryptMaps")
+        </div>
+        <div class="tab-pane fade" id="nav-area" role="tabpanel" aria-labelledby="nav-area-tab">
+            @Html.Partial("_CryptsNichos")
+        </div>
+        <div class="tab-pane fade" id="nav-criptas" role="tabpanel" aria-labelledby="nav-criptas-tab">
+            <div class="mt-5" id="CryptSection"></div>
+        </div>
+        <div class="tab-pane fade" id="nav-forma-pago" role="tabpanel" aria-labelledby="nav-forma-pago-tab">
+            <div class="row mt-5">
+                <div class="col-md-3">
+                    <h5>Urna: <span id="sSelectedUrnaModal"></span></h5>
+                </div>
+                <div class="col-md-3">
+                    <h5>Tipo: <span id="sTypeUrnaModal"></span></h5>
+                </div>
+                <div class="col-md-3">
+                    <h5>Precio: <span id="sTotalPriceUrnaModal"></span></h5>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <h5 id="divPercentage">Descuento: <span id="spanPercentage"></span></h5>
+                    @Html.DropDownList("DiscountID", new SelectList(ViewBag.DiscountID, "DiscountID", "Description", "DiscountID"), "Seleccionar opción", new { @class = "form-control" })
+                </div>
+                <div class="offset-md-3 col-md-3">
+                    <h5>Descuento/Precio: <span id="sPriceDiscount"></span></h5>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <h5>Plan de venta: <span id=""></span></h5>
+                    @{
+                        //var enumPaym = PaymentMethods.Contado;
+                        var enumPaym = new PaymentMethods();
+                    }
+                    @Html.EnumDropDownListFor(m => enumPaym, "Seleccionar opción", new { @class = "form-control selectPay", id = "enumPaym" })
+                </div>
+                @*<div class="col-md-3">
+                        <div class="pretty p-icon p-smooth">
+                            <input type="checkbox" id="bApplyDiscount" />
+                            <div class="state p-success">
+                                <i class="icon mdi mdi-check"></i>
+                                <label>Aplicar descuento</label>
+                            </div>
+                        </div>
+                    </div>*@
+                <div class="col-md-3 divEnganche" style="display: none;">
+                    <h5>Enganche </h5>
+                    <input type="text" class="form-control just-decimal" id="tbEnganche" placeholder="Enganche" />
+                </div>
+                <div class="col-md-3 divEnganche" style="display: none;">
+                    <label class="" id="lMensualidades"></label><br />
+                    <label class="" id="lInteres"></label>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="offset-md-6 col-md-3">
+                    <h5>Total: <span id="sPriceUrnaModal"></span></h5>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-primary" id="btnAcceptContinue">Aceptar y continuar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <input type="hidden" name="iCryptSectionId" id="iCryptSectionId" />
+    <input type="hidden" name="sPosition" id="sPosition" />
+    <input type="hidden" name="sPrice" id="sPrice" />
+    <input type="hidden" name="sOriginalPrice" id="sOriginalPrice" />
+    <input type="hidden" name="sLevel" id="sLevel" />
+    <input type="hidden" name="sPaymentMethod" id="sPaymentMethod" />
+    <input type="hidden" name="sEnganche" id="sEnganche" />
+    <input type="hidden" name="sMensualidades" id="sMensualidades" />
+    <input type="hidden" name="eType" id="eType" />
+    <input type="hidden" name="dDiscount" id="dDiscount" />
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        var vImgSelectedUrna = "@Url.Content("~/Content/Images/cuadro-selected.png")";
+        var vImgUrna = "@Url.Content("~/Content/Images/cuadro.png")";
+        var vSelectedCripta = "";
+        var vSelectedLevel = "";
+        var vSelectedPrice = "";
+        var vSelectedPriceFormat = "";
+        var vCryptSectionId = 0;
+        var vSelectedType = '';
+        var vMensualidadCrypta = "";
+        var vMensualidadFija = 0;
+        var vLastPrice = 0;
+        var vLastPriceFormat = "";
+
+
+        $(function () {
+            ResizeTables();
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                //e.target // newly activated tab
+                //e.relatedTarget // previous active tab
+                var vId = $(this).prop('id');
+                if (vId == 'nav-area-tab')
+                    ResizeTables();
+            })
+
+            $('#tableNichos').hide();
+            $("a[href^='btn-section']").each(function (index, element) {
+                var $aImg = $(element).find('img');
+                $aImg.tooltip();
+            })
+
+
+            $("a[href^='btn-section']").click(function (event) {
+                event.preventDefault();
+                var vHref = $(this).prop('href');
+                var vSeccion = vHref.substr(vHref.length - 1)
+                if (vSeccion == "a") {
+                    $('#tableNichos').show();
+                    $('#nav-area-tab').tab('show');
+                } else {
+                    MyAlert('Notificación', 'Sección no disponible por el momento.', 'warning');
+                }
+            })
+
+            $("a[href^='id_']").click(function (event) {
+                event.preventDefault();
+                var vHref = $(this).prop('href').split('_');
+
+                vCryptSectionId = vHref[1]; //vHref.substr(vHref.length - 1);
+
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("GetCryptSectionById")',
+                    dataType: "html",
+                    data: {
+                        'iId': vCryptSectionId
+                    },
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $('#CryptSection').html(data);
+                        vSelectedCripta = "";
+                        $('#nav-criptas-tab').tab('show');
+
+                    },
+                    error: function () {
+                        MyAlert('Notificación', 'Ocurrio un error.', 'error');
+                    }
+                });
+            })
+
+            $('#btnAcceptContinue').click(function () {
+                $('#frmCryptRequest').submit();
+            })
+            $('#frmCryptRequest').submit(function () {
+                if (vSelectedCripta.length == 0 || vCryptSectionId <= 0)
+                    return false;
+                var vPaymentMethod = $("#enumPaym").val();
+                var vEnganche = $("#tbEnganche").val();
+
+                if (vPaymentMethod.length == 0 || (vPaymentMethod != 1 && vEnganche.length == 0)) {
+                    MyAlert('Notificación', "Metodo de pago y enganche son obligatorios.");
+                    return false;
+                }
+
+                if (vPaymentMethod == 4 && parseFloat(vEnganche) < parseFloat(vSelectedPrice / 2)) {
+                    MyAlert('Notificación', "El enganche debe ser al menos la mitad del precio de la cripta.");
+                    return false;
+                }
+
+                if ((vPaymentMethod == 2 || vPaymentMethod == 3 || vPaymentMethod == 5) && parseFloat(vEnganche) < parseFloat(vMensualidadFija)) {
+                    MyAlert('Notificación', "El enganche debe ser al menos de $" + vMensualidadFija);
+                    return false;
+                }
+
+                $('#iCryptSectionId').val(vCryptSectionId);
+                $('#sPosition').val(vSelectedCripta);
+                $('#sPrice').val(vSelectedPrice);
+                $('#sOriginalPrice').val(vLastPrice);
+                $('#eType').val(vSelectedType);
+                $('#sLevel').val(vSelectedLevel);
+                $('#sPaymentMethod').val(vPaymentMethod);
+                $('#sEnganche').val(vEnganche);
+                $('#sMensualidades').val(vMensualidadCrypta);
+                return true;
+            })
+
+            $('#enumPaym').change(function () {
+                var vValue = $(this).val();
+                if (vValue == 1) {
+                    CalcularDescuentoContado();
+                    $('.divEnganche').hide();
+                } else {
+                    CalcularMensualidad(false);
+                    $('.divEnganche').show();
+                    $('#sPriceUrnaModal').text(vSelectedPriceFormat);
+                }
+            })
+
+            $('#tbEnganche').change(function () {
+                CalcularMensualidad(true);
+            })
+
+
+            $('#DiscountID').change(function () {
+                var DiscountID = $(this).val();
+                vSelectedPrice = vLastPrice
+                vLastPriceFormat = $('#sPriceUrnaModal').text();
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("GetDiscountByID", "Discounts")',
+                    dataType: "json",
+                    data: {
+                        dCurrentPrice: vSelectedPrice, DiscountID: DiscountID
+                    },
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        vSelectedPrice = data.NewPrice;
+                        vSelectedPriceFormat = data.NewPriceFormat;
+                        $('#sPriceUrnaModal').text(data.NewPriceFormat);
+                        if (data.Found) {
+                            $('#dDiscount').val(data.Percentage);
+                            $('#spanPercentage').text(data.Percentage + '%');
+                            $('#sPriceDiscount').text('$' + ((data.Total * data.Percentage) / 100));
+                            //$('#spanPercentage').parents('#divPercentage').show();
+                        } else {
+                            $('#bApplyDiscount').prop('checked', false);
+                            $('#sPriceDiscount').text('');
+                            $('#spanPercentage').text('');
+                        }
+                        CalcularMensualidad(true);
+                    },
+                    error: function () {
+                        MyAlert('Notificación', 'Ocurrio un error.', 'error');
+                    }
+                });
+
+            });
+
+            $('#bApplyDiscount').click(function () {
+                var $Checked = $(this);
+
+                if ($Checked.prop('checked')) {
+                    vLastPrice = vSelectedPrice;
+                    vLastPriceFormat = $('#sPriceUrnaModal').text();
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("GetCurrentDiscount", "Discounts")',
+                        dataType: "json",
+                        data: {
+                            dCurrentPrice: vSelectedPrice
+                        },
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            if (data.Found) {
+                                vSelectedPrice = data.NewPrice;
+                                vSelectedPriceFormat = data.NewPriceFormat;
+                                $('#sPriceUrnaModal').text(data.NewPriceFormat);
+                                $('#dDiscount').val(data.Percentage);
+                                $('#spanPercentage').text(data.Percentage + '%');
+                                //$('#spanPercentage').parents('#divPercentage').show();
+                            } else {
+                                $('#bApplyDiscount').prop('checked', false);
+                                //$('#spanPercentage').parents('#divPercentage').hide();
+                                MyAlert('Notificación', 'No hay descuentos activos.', 'warning');
+                            }
+                        },
+                        error: function () {
+                            MyAlert('Notificación', 'Ocurrio un error.', 'error');
+                        }
+                    });
+                } else {
+                    vSelectedPrice = vLastPrice;
+                    $('#sPriceUrnaModal').text(vLastPriceFormat);
+                    $('#dDiscount').val("");
+                    //$('#spanPercentage').parents('#divPercentage').hide();
+                }
+            })
+        })
+
+        var CalcularMensualidad = function (fromInput) {
+            var vValue = $('#enumPaym').val();
+            var vEnganche = $('#tbEnganche').val().length > 0 ? parseFloat($('#tbEnganche').val()) : 0;
+            var vLevel = parseInt($('#sLevel').text());
+
+            var vIntereses = 0;
+
+            var vMeses = vValue == 3 ? 24 : vValue == 2 ? 12 : vValue == 5 ? 18 : vValue == 6 ? 36 : vValue == 7 ? 48 : 12;
+
+            var vMesesText = vMeses;
+            vMeses = fromInput ? vMeses - 1 : vMeses;
+            vMensualidadFija = (vSelectedPrice / vMeses).toFixed(2);
+            var vPrice = fromInput ? vSelectedPrice - vEnganche : vSelectedPrice;
+            vPrice = parseFloat(vPrice) + parseFloat(vIntereses);
+
+            vMensualidadCrypta = (vPrice / vMeses).toFixed(2);
+
+            var vEngancheUsoInmediato = 0;
+            var InteresMensual = 0;
+
+            if (vValue == 4) {
+                vEngancheUsoInmediato = vSelectedPrice / 2;
+                vMensualidadCrypta = (vEngancheUsoInmediato / (vMeses - 1)).toFixed(2);
+            }
+
+            if (vValue == 2) {
+                InteresMensual = 0;
+            }
+            if (vValue == 3) {
+                InteresMensual = vMensualidadCrypta * 0.10;
+            }
+            if (vValue == 5) {
+                InteresMensual = vMensualidadCrypta * 0.065;
+            }
+            if (vValue == 6 && vLevel >= 7) {
+                InteresMensual = 0;
+            }
+            if (vValue == 6 && vLevel <= 6) {
+                InteresMensual = vMensualidadCrypta * 0.145;
+            }
+            if (vValue == 7) {
+                InteresMensual = 0;
+            }
+
+
+            $('#lMensualidades').text((vMesesText - 1) + ' Mensualidades de $' + vMensualidadCrypta);
+            $('#lInteres').text('Interes de $' + InteresMensual.toFixed(2));
+            if (!fromInput)
+                $('#tbEnganche').val(vMensualidadCrypta);
+
+            if (vValue == 4)
+                $('#tbEnganche').val(vEngancheUsoInmediato);
+        }
+
+        function CalcularDescuentoContado() {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetCountedDiscount", "CountedDiscount")',
+                dataType: "json",
+                data: { Price: vSelectedPrice },
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log(data)
+                    $('#sPriceUrnaModal').text(data);
+                },
+                error: function () {
+                    MyAlert('Notificación', 'Ocurrio un error.', 'error');
+                }
+            });
+        }
+
+
+        $(document).on('click', '.p-select-urna', function () {
+            var $Image = $(this).parent().find('.select-urna').trigger('click');
+        })
+
+        $(document).on('click', '.select-urna', function () {
+            if ($(this).hasClass('disabled')) {
+                MyAlert('Notificación', 'La cripta seleccionada no esta disponible.', 'warning');
+                return;
+            }
+
+            if ($(this).hasClass('selected')) {
+                return;
+            }
+            $('img.select-urna:not(.disabled)').each(function (index, element) {
+                $(element).attr('src', vImgUrna);
+            })
+            $(this).attr('src', vImgSelectedUrna);
+            vSelectedCripta = $(this).data('position');
+            vSelectedPrice = $(this).data('price');
+            vSelectedLevel = $(this).data('level');
+            vSelectedType = $(this).data('type');
+            vLastPrice = $(this).data('price');
+            var vSelectedPriceFormat = $(this).data('price-format');
+            $('#sSelectedUrna, #sSelectedUrnaModal').text(vSelectedCripta);
+            $('#sPriceUrna, #sPriceUrnaModal').text(vSelectedPriceFormat);
+            $('#sTypeUrna, #sTypeUrnaModal').text(vSelectedType);
+            $('#sTotalPriceUrnaModal').text(vSelectedPriceFormat);
+            $('#sLevel').text(vSelectedLevel);
+
+            var enumPayDropdown = $('#enumPaym');
+
+            if (vSelectedLevel >= 7) {
+                enumPayDropdown.find('option[value="7"]').show();
+            }
+            else {
+                enumPayDropdown.find('option[value="7"]').hide();
+            }
+
+            if (vSelectedType == "Individual") {
+                $("#enumPaym").val(1);
+                $("#enumPaym").prop("disabled", true);
+
+                CalcularDescuentoContado();
+                $('.divEnganche').hide();
+            }
+            else {
+                $("#enumPaym").prop("disabled", false);
+            }
+        })
+
+    $(document).on('click', '#btnPaymentMethod', function () {
+        $('#nav-forma-pago-tab').tab('show');
+    })
+    </script>
+}

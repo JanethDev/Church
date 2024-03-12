@@ -1,0 +1,26 @@
+﻿@model StaticPagedList<tblServices>
+
+@{
+    ViewBag.Title = "Services";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Ajax.BeginForm(new AjaxOptions
+{
+    HttpMethod = "get",
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "PagedServices"
+}))
+{
+    <div class="row">
+        <div class="col-md-10 col-sm-10 col-xs-12">
+            <h2>@ViewBag.Title</h2>
+        </div>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            <p style="text-align:right; padding-top:20px">
+                <a style="width:100%;" href="@Url.Action("Create","Services",null)" class="btn btn-default btn-large">Nuevo</a>
+            </p>
+        </div>
+    </div>
+    @Html.Partial("_Services", Model)
+}

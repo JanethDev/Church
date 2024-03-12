@@ -1,0 +1,103 @@
+﻿@model tblCryptsSections
+@{
+    var vPrices = ViewBag.CryptPrices as List<tblCryptPrices>;
+    var vCryptPositionTypes = ViewBag.CryptPositionTypes as List<tblCryptPositionTypes>;
+    var vDisabledCrypts = ViewBag.DisabledCrypts as List<string>;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Nicho seleccionado: @Model.ClassificationName, Codigo: @Model.Code</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Detalles de la urna</h3>
+    </div>
+    <div class="col-md-3">
+        <h5>Urna: <span id="sSelectedUrna"></span></h5>
+    </div>
+    <div class="col-md-3">
+        <h5>Tipo: <span id="sTypeUrna"></span></h5>
+    </div>
+    <div class="col-md-3">
+        <h5>Precio: <span id="sPriceUrna"></span></h5>
+    </div>
+    <div class="col-md-3">
+        <button type="button" class="btn btn-success" id="btnPaymentMethod" style="width: 100%;">Forma de pago</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @if (Model != null)
+        {
+            <div class="table-responsive">
+                <table>
+                    @{
+                        int iIndexAbecedario = HtmlHelperExtensions.lstAbecedario.IndexOf(Model.StartLetter);
+                    }
+                    @for (int i = 1; i <= Model.Levels; i++)
+                    {
+                        if (i == 1)
+                        {
+                            <tr>
+                                <td></td>
+                                @for (int j = 1; j <= Model.Quantity; j++)
+                                {
+
+                                    <td align="center" valign="middle">
+                                        @(j)
+                                    </td>
+                                }
+                            </tr>
+                        }
+
+                        iIndexAbecedario = iIndexAbecedario > (HtmlHelperExtensions.lstAbecedario.Count - 1) ? 0 : iIndexAbecedario;
+                        string sLetter = HtmlHelperExtensions.lstAbecedario[iIndexAbecedario];
+                        int iLevel = Model.Levels - (i - 1);
+
+                        var vPrice = vPrices.Where(r => r.CryptClassificationID == Model.CryptClassificationID && r.Level == iLevel).FirstOrDefault();
+                        <tr>
+                            <td align="center" valign="middle">@(sLetter)</td>
+                            @for (int j = 1; j <= Model.Quantity; j++)
+                            {
+                                iIndexAbecedario = iIndexAbecedario > (HtmlHelperExtensions.lstAbecedario.Count - 1) ? 0 : iIndexAbecedario;
+                                sLetter = HtmlHelperExtensions.lstAbecedario[iIndexAbecedario];
+                                    string sPosition = sLetter + "" + j;
+                                int iCountCrypts = vDisabledCrypts.Where(r => r == sPosition).Count();
+                                var vCryptTypePosition = vCryptPositionTypes.Where(r => r.CryptKey == sPosition).FirstOrDefault();
+                                var vType = vCryptTypePosition != null ? vCryptTypePosition.Type : CryptTypes.Familiar;
+
+                                bool bIsDisabled = vType == CryptTypes.Familiar && iCountCrypts == 1 || vType == CryptTypes.Individual && iCountCrypts == 4;
+                                string sImageUrna = !bIsDisabled ? "cuadro.png" : "cuadro-disabled.png";
+                                string sCursor = !bIsDisabled ? "pointer" : "not-allowed";
+                                string sDisabledClass = !bIsDisabled ? "" : "disabled";
+
+                                string sTypeName = EnumHelper<CryptTypes>.GetDisplayValue(vType);
+                                decimal dPrice = vType == CryptTypes.Familiar ? vPrice.Price : vPrice.UnitPrice;
+                                string sStyleTD = vType == CryptTypes.Individual ? "position: relative;text-align: center;" : "";
+                                string sStyleImage = vType == CryptTypes.Individual ? "margin-bottom: 34px;" : "";
+                                <td align="center" valign="middle" style="@sStyleTD">
+                                    <img src="@Url.Content("~/Content/Images/" + sImageUrna)" style="width: 50px;margin:10px; cursor: @sCursor; @sStyleImage" data-type="@sTypeName" data-price-format="@dPrice.ToString("C2")" data-level="@iLevel" data-price="@dPrice" data-position="@(vType == CryptTypes.Familiar ? sPosition : sPosition + "-" + (iCountCrypts + 1))" class="select-urna @sDisabledClass" />
+                                    @{
+                                        string sStyleText = vType == CryptTypes.Individual ? "position: absolute; top: 74%; left: 50%; transform: translate(-50%, -50%);" : "";
+                                    }
+                                    <p style="@sStyleText">@sPosition</p>
+                                    @if (vType == CryptTypes.Individual)
+                                    {
+                                        <p></p>
+                                        <p class="p-select-urna" style="position: absolute; top: 32%; left: 50%; transform: translate(-50%, -50%); color: #fff;cursor: @sCursor;">@iCountCrypts/4</p>
+                                    }
+                                </td>
+                            }
+
+                        </tr>
+                        iIndexAbecedario++;
+                    }
+                </table>
+            </div>
+        }
+    </div>
+</div>

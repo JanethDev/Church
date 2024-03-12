@@ -1,0 +1,97 @@
+﻿@model List<tblPurchasesRequests>
+@{
+    ViewBag.Title = "Solicitudes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header card-header-green">
+        <div class="row">
+            <div class="col-md-10">
+                <h2>@ViewBag.Title de @ViewBag.Customer</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="SolicitudesList">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <tr class="tableStyleHeader">
+                        <th>
+                            <label style="color:white;">Clave cripta</label>
+                        </th>
+                        <th>
+                            <label style="color:white;">Zona</label>
+                        </th>
+                        <th>
+                            <label style="color:white;">Area</label>
+                        </th>
+                        <th>
+                            <label style="color:white;">Fecha solicitud</label>
+                        </th>
+                        <th style="color:white">Tipo</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+
+                    @if (Model.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="9" style="text-align:center"><label>No se encontraron resultados</label></td>
+                        </tr>
+                    }
+
+                    @foreach (var item in Model)
+                    {
+                        <tr class="tableStylerow">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nicho)
+                            </td>
+                            <td>
+                                ZONA A
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.tblCryptsSections.ClassificationName)
+                            </td>
+                            <td>
+                                @item.CreatedDate.ToString("dd/MM/yyyy")
+                            </td>
+                            <td align="center">
+                                @if (item.Quotation)
+                                {
+                                    @: Cotización pendiente
+                                }
+                                else { 
+                                    @: Solicitud @item.CryptType
+                                }
+                            </td>
+                            <td align="center">
+                                @if (item.Quotation)
+                                {
+                                    @Html.ActionLink("Ver Registro", "SolicitudDetails", new { id = item.PurchasesRequestQuotationID, Quotation = item.Quotation }, new { @class = "" });
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Ver Registro", "SolicitudDetails", new { id = item.PurchasesRequestID, Quotation = item.Quotation }, new { @class = "" });
+                                }
+                            </td>
+                            <td align="center">
+                                @if (!item.Quotation)
+                                {
+                                    @Html.ActionLink("Depositos de ceniza", "Index", "AshDeposits", new { id = item.PurchasesRequestID }, new { @class = "" })
+                                }
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+
+        <div class="row" style="padding-top:15px;">
+            <div class="col-md-2 col-sm-2 col-xs-6">
+                @Html.ActionLink("Volver", "Index", null, new { @class = "btn btn-primary", @style = "width:100%;" })
+            </div>
+        </div>
+
+    </div>
+</div>

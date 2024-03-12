@@ -1,0 +1,349 @@
+﻿@model tblPurchasesRequests
+
+@{
+    ViewBag.Title = "solicitud de compra";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var vCryptPosition = ViewBag.CryptPosition;
+    var vCryptSectionId = ViewBag.CryptSectionId;
+    var vPrice = ViewBag.Price;
+    var vPaymentMethod = ViewBag.PaymentMethod;
+    var vEnganche = ViewBag.Enganche;
+    var vMensualidades = ViewBag.Mensualidades;
+
+    var vCryptSection = ViewBag.CryptSection as tblCryptsSections;
+
+}
+<h2>@ViewBag.Title</h2>
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.PaymentMethod)
+    @Html.HiddenFor(model => model.CryptKey)
+    @Html.HiddenFor(model => model.CryptSectionID)
+    @Html.HiddenFor(model => model.Enganche)
+    @Html.HiddenFor(model => model.Mensualidades)
+    @Html.HiddenFor(model => model.FirstPaymentDate)
+    @Html.HiddenFor(model => model.LastPaymentDate)
+    @Html.HiddenFor(model => model.CryptPrice)
+    <input type="hidden" name="Date" id="Date" value="@Model.Date" />
+    <input type="hidden" name="CreatedDate" id="CreatedDate" value="@Model.CreatedDate" />
+    <input type="hidden" name="UpdatedDate" id="UpdatedDate" value="@Model.UpdatedDate" />
+    <input type="hidden" name="CreatedBy" id="CreatedBy" value="@Model.CreatedBy" />
+    <input type="hidden" name="UpdatedBy" id="UpdatedBy" value="@Model.UpdatedBy" />
+    <input type="hidden" name="Active" id="Active" value="True" />
+    <div class="container-form">
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <table class="table table-bordered" style="background-color: white">
+                    <tr><td colspan="3" style="text-align:center;">Fecha</td></tr>
+                    <tr>
+                        <td>@Model.Date.Day</td>
+                        <td>@Model.Date.Month</td>
+                        <td>@Model.Date.Year</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="offset-4 col-md-4 col-sm-6 col-xs-12">
+                <table class="table table-bordered" style="background-color: white">
+                    <tr>
+                        <td style="width:50%">SOLICITUD No.</td>
+                        <td>@Model.PurchasesRequestID</td>
+                    </tr>
+                    <tr>
+                        <td style="width:50%">CONTRATO No.</td>
+                        <td>@Model.ContractID</td>
+                    </tr>
+                    <tr>
+                        <td style="width:50%">VENDEDOR No.</td>
+                        <td>@Model.CreatedBy</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-6 col-xs-12">
+                <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
+                    <tr><td colspan="3" style="text-align:center"><strong>DATOS DEL SOLICITANTE</strong></td></tr>
+                    <tr class="tr-new-customer">
+                        <td>APELLIDO PATERNO</td>
+                        <td>APELLIDO MATERNO</td>
+                        <td>NOMBRES</td>
+                    </tr>
+                    <tr class="tr-new-customer">
+                        <td><input type="text" disabled="disabled" class="form-control" id="PSurname" name="PSurname" value="@Model.PSurname" /></td>
+                        <td><input type="text" disabled="disabled" class="form-control" id="MSurname" name="MSurname" value="@Model.MSurname" /></td>
+                        <td><input type="text" disabled="disabled" class="form-control" id="Name" name="Name" value="@Model.Name" /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-6 col-xs-12">
+                <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
+                    <tr><td colspan="3" style="text-align:center"><strong>DOMICILIO PARTICULAR</strong></td></tr>
+                    <tr>
+                        <td style="width:60%">CALLE, AV., BLDV. CALZ.</td>
+                        <td>NUMERO</td>
+                        <td>INTERIOR</td>
+                    </tr>
+                    <tr>
+                        <td style="width:60%"><input type="text" disabled="disabled" class="form-control" style="max-width: 100%" id="Address" name="Address" value="@Model.Address" /></td>
+                        <td><input type="text" disabled="disabled" class="form-control" id="AddressNumber" name="AddressNumber" value="@Model.AddressNumber" /></td>
+                        <td><input type="text" disabled="disabled" class="form-control" id="AdressInteriorNumber" name="AdressInteriorNumber" value="@Model.AdressInteriorNumber" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">COLONIA</td>
+                        <td>CODIGO POSTAL</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><input type="text" disabled="disabled" class="form-control" style="max-width: 100%" id="Neighborhood" name="Neighborhood" value="@Model.Neighborhood" /></td>
+                        <td><input type="text" disabled="disabled" class="form-control" id="ZipCode" name="ZipCode" value="@Model.ZipCode" /></td>
+                    </tr>
+                </table>
+                <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
+                    <tr>
+                        <td>ESTADO</td>
+                        @*<td>DELEGACIÓN</td>*@
+                        <td>CIUDAD</td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" disabled="disabled" class="form-control" style="max-width: 100%" value="@Model.State" /></td>
+                        <td><input type="text" disabled="disabled" class="form-control" style="max-width: 100%" value="@Model.Town" /></td>
+                    </tr>
+                </table>
+                <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
+                    <tr>
+                        <td>TELEFONO PARTICULAR</td>
+                        <td>CORREO ELECTRONICO</td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" disabled="disabled" class="form-control" id="CelPhone" name="CelPhone" value="@Model.CelPhone" /></td>
+                        <td>
+                            @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Email)
+                        </td>
+                    </tr>
+                </table>
+                <table class="table table-bordered" style="background-color: white">
+                    <tr>
+                        <td style="width:25%">C.U.R.P</td>
+                        <td><input type="text" disabled="disabled" class="form-control" id="RFCCURP" name="RFCCURP" value="@Model.RFCCURP" /></td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%">FECHA DE NACIMIENTO</td>
+                        <td><input type="text" disabled="disabled" class="form-control datepicker" id="DateOfBirth" name="DateOfBirth" value="@(Model.DateOfBirth!=null?Model.DateOfBirth.Value.ToShortDateString():"")" /></td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%">LUGAR DE NACIMIENTO</td>
+                        <td><input type="text" disabled="disabled" class="form-control" id="CityOfBirth" name="CityOfBirth" value="@Model.CityOfBirth" /></td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%">ESTADO CIVIL</td>
+                        <td><input type="text" disabled="disabled" class="form-control" id="CivilStatus" name="CivilStatus" value="@Model.CivilStatus" /></td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%">OCUPACION</td>
+                        <td><input type="text" disabled="disabled" class="form-control" id="Occupation" name="Occupation" value="@Model.Occupation" /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-6 col-xs-12">
+                <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
+                    <tr><td colspan="3" style="text-align:center"><strong>DATOS DE LA EMPRESA DONDE PRESTA SUS SERVICIO</strong></td></tr>
+                    <tr>
+                        <td>NOMBRE DE LA COMPAÑIA</td>
+                        <td style="width:70%"><input type="text" disabled="disabled" class="form-control" id="Company" name="Company" value="@Model.Company" /></td>
+                    </tr>
+                </table>
+                <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
+                    <tr>
+                        <td style="width:70%">DOMICILIO</td>
+                        <td>TELEFONO</td>
+                        <td><input type="text" disabled="disabled" class="form-control" id="PhoneCompany" name="PhoneCompany" value="@Model.PhoneCompany" /></td>
+                    </tr>
+                    <tr>
+                        <td style="width:70%"><input type="text" disabled="disabled" class="form-control" id="AddressCompany" name="AddressCompany" value="@Model.AddressCompany" /></td>
+                        <td>EXT.</td>
+                        <td><input type="text" disabled="disabled" class="form-control" id="ExtPhoneCompany" name="ExtPhoneCompany" value="@Model.ExtPhoneCompany" /></td>
+                    </tr>
+                </table>
+                <table class="table table-bordered" style="background-color: white">
+                    <tr>
+                        <td>CIUDAD</td>
+                        <td>DELEGACION</td>
+                        <td>ESTADO</td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" disabled="disabled" class="form-control" id="TownAddressCompany" name="TownAddressCompany" value="@Model.TownAddressCompany" /></td>
+                        <td><input type="text" disabled="disabled" class="form-control" id="DelegationAddressCompany" name="DelegationAddressCompany" value="@Model.DelegationAddressCompany" /></td>
+                        <td><input type="text" disabled="disabled" class="form-control" id="StateAddressCompany" name="StateAddressCompany" value="@Model.StateAddressCompany" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">INGRESO PROMEDIO MENSUAL (incluye su conyuge)</td>
+
+                        <td>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">$</span>
+                                </div>
+                                <input type="text" disabled="disabled" class="form-control" id="Income" name="Income" value="@Model.Income" aria-describedby="basic-addon1" />
+                            </div>
+
+                        </td>
+                    </tr>
+                </table>
+                <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
+                    <tr><td colspan="4" style="text-align:center"><strong>REFERENCIAS</strong></td></tr>
+                    <tr>
+                        <td>1</td>
+                        <td><input type="text" disabled="disabled" class="form-control control-reference" id="ReferenceCustomer1" name="ReferenceCustomer1" value="@Model.ReferenceCustomer1" /></td>
+                        <td>TEL.</td>
+                        <td><input type="text" disabled="disabled" class="form-control control-reference" id="ReferenceCustomerPhone1" name="ReferenceCustomerPhone1" value="@Model.ReferenceCustomerPhone1" /></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><input type="text" disabled="disabled" class="form-control control-reference" id="ReferenceCustomer2" name="ReferenceCustomer2" value="@Model.ReferenceCustomer2" /></td>
+                        <td>TEL.</td>
+                        <td><input type="text" disabled="disabled" class="form-control control-reference" id="ReferenceCustomerPhone2" name="ReferenceCustomerPhone2" value="@Model.ReferenceCustomerPhone2" /></td>
+                    </tr>
+                </table>
+                <table class="table table-bordered" id="tableBeneficiary" style="background-color: white;margin-bottom: 0px;">
+                    <tr><td colspan="4" style="text-align:center"><strong>BENEFICIARIOS</strong></td></tr>
+                    <tr>
+                        <td>Nombres</td>
+                        <td>Apellidos</td>
+                        <td>Fecha nac.</td>
+                        <td>Parentesco</td>
+                    </tr>
+                    @if (ViewBag.BeneficiaryCustomers == null || ViewBag.BeneficiaryCustomers.Count == 0)
+                    {
+                        <tr class="tr">
+                            <td><input type="text" disabled="disabled" class="form-control control-beneficiary" name="BeneficiaryName" value="" /></td>
+                            <td><input type="text" disabled="disabled" class="form-control control-beneficiary" name="BeneficiarySurnames" value="" /></td>
+                            <td><input type="text" disabled="disabled" class="form-control datepicker control-beneficiary" name="BeneficiaryBirthdate" value="" /></td>
+                            <td><input type="text" disabled="disabled" class="form-control control-beneficiary" name="BeneficiaryRelationship" value="" /><input type="hidden" name="BeneficiaryCustomerID" value="0" /></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        List<tblBeneficiaryCustomers> ListBeneficiaryCustomer = ViewBag.BeneficiaryCustomers as List<tblBeneficiaryCustomers>;
+                        foreach (var item in ListBeneficiaryCustomer)
+                        {
+                            <tr class="tr">
+                                <td><input type="text" disabled="disabled" class="form-control control-beneficiary" name="BeneficiaryName" value="@item.Name" /></td>
+                                <td><input type="text" disabled="disabled" class="form-control control-beneficiary" name="BeneficiarySurnames" value="@item.Surnames" /></td>
+                                <td><input type="text" disabled="disabled" class="form-control datepicker control-beneficiary" name="BeneficiaryBirthdate" value="@item.Birthdate.ToShortDateString()" /></td>
+                                <td><input type="text" disabled="disabled" class="form-control control-beneficiary" name="BeneficiaryRelationship" value="@item.Relationship" /><input type="hidden" name="BeneficiaryCustomerID" value="@item.BeneficiaryCustomerID" /></td>
+                            </tr>
+                        }
+                    }
+                </table>
+
+                <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
+                    <tr><td colspan="4" style="text-align:center"><strong>CONDICIONES ECONOMICAS DE LA OPERACION</strong></td></tr>
+                    <tr>
+                        <td>PLAN DE VENTA</td>
+                        <td>CLAVE DE LA CRIPTA</td>
+                        <td>AREA</td>
+                        <td>ZONA</td>
+                    </tr>
+                    <tr>
+                        <td>@Model.PaymentMethodName</td>
+                        <td>@Model.CryptKey</td>
+                        <td>@Model.tblCryptsSections.ClassificationName</td>
+                        <td>ZONA A</td>
+                    </tr>
+                </table>
+                <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
+                    <tr>
+                        <td>IMPORTE TOTAL</td>
+                        <td>PAGO INICIAL</td>
+                        <td>SALDO</td>
+                    </tr>
+                    @{
+                        var vSaldo = Model.CryptPrice - Model.Enganche;
+                    }
+                    <tr>
+                        <td>@Model.CryptPrice.ToString("C2") DLLS.</td>
+                        <td>@Model.Enganche.ToString("C2") DLLS.</td>
+                        <td>@vSaldo.ToString("C2") DLLS.</td>
+                    </tr>
+                    @if (Model.PaymentMethod != PaymentMethods.Contado)
+                    {
+                        int iMeses = Model.PaymentMethod == PaymentMethods.Meses12 || Model.PaymentMethod == PaymentMethods.UsoInmediato ? 11 : 23;
+                        <tr>
+                            <td colspan="3">EL SALDO SERA LIQUIDADO EN @iMeses ABONOS DE: @Model.Mensualidades.ToString("C2") DLLS. C/U</td>
+                        </tr>
+                    }
+                </table>
+
+                @if (Model.PaymentMethod != PaymentMethods.Contado)
+                {
+                    <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
+                        <tr>
+                            <td style="border: none;"></td>
+                            <td style="border: none;"></td>
+                            <td>DIA</td>
+                            <td>MES</td>
+                            <td>AÑO</td>
+                            <td style="border: none;"></td>
+                            <td style="border: none;"></td>
+                            <td>DIA</td>
+                            <td>MES</td>
+                            <td>AÑO</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">SIENDO EL PRIMERO DE ELLOS EN</td>
+                            <td>@Model.FirstPaymentDate.Value.Day</td>
+                            <td>@Model.FirstPaymentDate.Value.Month</td>
+                            <td>@Model.FirstPaymentDate.Value.Year</td>
+                            <td colspan="2">Y EL ULTIMO EN</td>
+                            <td>@Model.LastPaymentDate.Value.Day</td>
+                            <td>@Model.LastPaymentDate.Value.Month</td>
+                            <td>@Model.LastPaymentDate.Value.Year</td>
+                        </tr>
+                    </table>
+                }
+                <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
+                    <tr>
+                        <td class="text-center align-middle" rowspan="4">FORMA DEL PAGO INICIAL</td>
+                        <td colspan="2">EFECTIVO</td>
+                        <td colspan="3">@Html.TextBoxFor(model => model.CashPaymentAmount, htmlAttributes: new { @class = "form-control just-decimal" })</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>CANTIDAD</td>
+                        <td>No. DE CHEQUE</td>
+                        <td>No. DE CUENTA</td>
+                        <td>BANCO</td>
+                    </tr>
+                    <tr>
+                        <td>CHEQUE</td>
+                        <td><input type="text" disabled="disabled" class="form-control" style="max-width: 100%" value="@Model.CheckPaymentAmount" /></td>
+                        <td><input type="text" disabled="disabled" class="form-control" style="max-width: 100%" value="@Model.CheckPaymentNo" /></td>
+                        <td><input type="text" disabled="disabled" class="form-control" style="max-width: 100%" value="@Model.CheckPaymentAccount" /></td>
+                        <td><input type="text" disabled="disabled" class="form-control" style="max-width: 100%" value="@Model.CheckPaymentBank" /></td>
+                    </tr>
+                    <tr>
+                        <td>T. DE CREDITO</td>
+                        <td><input type="text" disabled="disabled" class="form-control" style="max-width: 100%" value="@Model.CreditCardPaymentAmount" /></td>
+                        <td><input type="text" disabled="disabled" class="form-control" style="max-width: 100%" value="@Model.CreditCardPaymentNo" /></td>
+                        <td><input type="text" disabled="disabled" class="form-control" style="max-width: 100%" value="@Model.CreditCardPaymentAccount" /></td>
+                        <td><input type="text" disabled="disabled" class="form-control" style="max-width: 100%" value="@Model.CreditCardPaymentBank" /></td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row" style="padding-top:15px;">
+        <div class="col-md-2 col-sm-2 col-xs-6">
+            @Html.ActionLink("Volver", "Solicitudes", new {id =Model.CustomerID }, new { @class = "btn btn-primary", @style = "width:100%;" })
+        </div>
+    </div>
+

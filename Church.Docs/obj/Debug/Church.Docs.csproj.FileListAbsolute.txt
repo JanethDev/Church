@@ -1,0 +1,17 @@
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\bin\Debug\Church.Docs.dll
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\bin\Debug\Church.Docs.pdb
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\bin\Debug\BouncyCastle.Crypto.dll
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\bin\Debug\Church.Data.dll
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\bin\Debug\itextsharp.dll
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\bin\Debug\Xceed.Document.NET.dll
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\bin\Debug\Xceed.Words.NET.dll
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\bin\Debug\EntityFramework.dll
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\bin\Debug\Church.Data.pdb
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\bin\Debug\Church.Data.dll.config
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\bin\Debug\itextsharp.xml
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\bin\Debug\EntityFramework.xml
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\obj\Debug\Church.Docs.csproj.AssemblyReference.cache
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\obj\Debug\Church.Docs.csproj.CoreCompileInputs.cache
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\obj\Debug\Church.Docs.csproj.CopyComplete
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\obj\Debug\Church.Docs.dll
+C:\Users\dmcad\source\Workspaces\Church\Church\church\Church.Docs\obj\Debug\Church.Docs.pdb

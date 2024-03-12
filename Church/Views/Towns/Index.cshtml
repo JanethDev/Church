@@ -1,0 +1,69 @@
+﻿@model StaticPagedList<dtoTowns>
+@{
+    ViewBag.Title = "Ciudades";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Ajax.BeginForm(
+                    new AjaxOptions
+                    {
+                        HttpMethod = "get",
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "TownsList"
+                    }))
+{
+<div class="card">
+    <div class="card-header card-header-green">
+        <div class="row">
+            <div class="col-md-10">
+                <h2>@ViewBag.Title</h2>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+                <p style="text-align:right; padding-top:20px">
+                    <a style="width:100%;" href="@Url.Action("Create","Towns",null)" class="btn btn-default btn-large">Agregar</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Ciudad</label>
+                    <input type="search" name="Name" class="form-control" data-autocomple="@Url.Action("acName")" placeholder="Ciudad" value="@ViewBag.Name" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Estado</label>
+                    <input type="search" name="State" class="form-control" data-autocomple="@Url.Action("acState")" placeholder="Estado" value="@ViewBag.State" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Fecha de creación</label>
+                    <input type="search" name="Date" class="form-control datepicker" placeholder="Fecha de creación" value="@ViewBag.Date" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label>&ensp;</label>
+                <div class="form-group">
+                    @Html.ActionLink("Limpiar", "Index", new { iCleanFilter = 1 }, htmlAttributes: new { @class = "btn btn-primary btn-large btn-clean" })
+                    <input id="btnSearch" class="btn btn-success btn-large btn-clean" type="submit" value="Buscar" />
+                </div>
+            </div>
+        </div>
+        @Html.Partial("_Towns", Model)
+    </div>
+</div>
+            }
+
+            @section scripts {
+                <script src="~/Scripts/ui.datepicker-es-MX.js"></script>
+                <script type="text/javascript">
+                    $(function () {
+                        $.datepicker.setDefaults($.datepicker.regional['es-MX']);
+                        $(".datepicker").datepicker();
+                    });
+                </script>
+            }

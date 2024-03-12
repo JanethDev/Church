@@ -1,0 +1,75 @@
+﻿@model StaticPagedList<dtoCommissionAgents>
+@{
+    ViewBag.Title = "Comisionistas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Ajax.BeginForm(
+                    new AjaxOptions
+                    {
+                        HttpMethod = "get",
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "CommissionAgentsList"
+                    }))
+{<div class="card">
+    <div class="card-header card-header-green">
+        <div class="row">
+            <div class="col-md-10 col-sm-10 col-xs-12">
+                <h2>@ViewBag.Title</h2>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+                <p style="text-align:right; padding-top:20px">
+                    <a style="width:100%;" href="@Url.Action("Create","CommissionAgents",null)" class="btn btn-default btn-large">Agregar</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="search" name="Name" class="form-control" data-autocomple="@Url.Action("acName")" placeholder="Nombre" value="@ViewBag.Name" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Apellido</label>
+                    <input type="search" name="PSurname" class="form-control" data-autocomple="@Url.Action("acPSurname")" placeholder="Apellido" value="@ViewBag.PSurname" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Catedral</label>
+                    @Html.DropDownList("CathedralID", (SelectList)ViewBag.Cathedrals, "Catedral", new { @class = "form-control", @selected = ViewBag.Cathedral })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Fecha de creación</label>
+                    <input type="search" name="Date" class="form-control datepicker" placeholder="Fecha de creación" value="@ViewBag.Date" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label>&ensp;</label>
+                <div class="form-group">
+                    @Html.ActionLink("Limpiar", "Index", new { iCleanFilter = 1 }, htmlAttributes: new { @class = "btn btn-primary btn-large btn-clean" })
+                    <input id="btnSearch" class="btn btn-success btn-large btn-clean" type="submit" value="Buscar" />
+                </div>
+            </div>
+        </div>
+        @Html.Partial("_CommissionAgents", Model)
+    </div>
+</div>
+}
+
+@section scripts {
+    <script src="~/Scripts/ui.datepicker-es-MX.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $.datepicker.setDefaults($.datepicker.regional['es-MX']);
+            $(".datepicker").datepicker();
+        });
+    </script>
+}

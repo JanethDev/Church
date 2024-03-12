@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<script src="~/Scripts/fullcalendar/main.js"></script>
+<link href="~/Content/fullcalendar/main.css" rel="stylesheet" />
+<script src="~/Scripts/fullcalendar/locales-all.js"></script>
+<div class="text-danger">@ViewBag.ErrorMessage</div>
+<div id='calendar'></div>
+
+@section scripts {
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth' }, editable: true,
+            locale:"es"
+        });
+        calendar.render();
+    });
+        $(function () {
+            var now = new Date();
+            GetAnniversary(now.getFullYear(), now.getMonth() + 1);
+            GetIntentions(now.getFullYear(), now.getMonth() + 1);
+            GetAshDeposits(now.getFullYear(), now.getMonth() + 1);
+        });
+        $(document).on("click", ".fc-prev-button", function () {
+            $(".fc-daygrid-day-events").html("");
+            $(".fc-daygrid-day").each(function (idx) {
+                if (!$(this).hasClass("fc-day-other")) {
+                    var arrDate = $(this).attr("data-date").split("-");
+                    GetAnniversary(arrDate[0], arrDate[1]);
+                    GetIntentions(arrDate[0], arrDate[1]);
+                    GetAshDeposits(arrDate[0], arrDate[1]);
+                    return false;
+                }
+            })
+        });
+        $(document).on("click", ".fc-next-button", function () {
+            $(".fc-daygrid-day-events").html("");
+            $(".fc-daygrid-day").each(function (idx) {
+                if (!$(this).hasClass("fc-day-other")) {
+                    var arrDate = $(this).attr("data-date").split("-");
+                    GetAnniversary(arrDate[0], arrDate[1]);
+                    GetIntentions(arrDate[0], arrDate[1]);
+                    GetAshDeposits(arrDate[0], arrDate[1]);
+                    return false;
+                }
+            })
+        });
+    function GetAnniversary(Year, Month) {
+        $.ajax({
+            url: '@Url.Action("GetListAnniversaryByYearAndMonth", "Home")',
+            dataType: "json",
+            data: ({
+                'Year': Year,
+                'Month': Month,
+            }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data != null) {
+                    $(".fc-daygrid-day").each(function (idx) {
+                        var arrDate = $(this).attr("data-date").split("-");
+                        if (Month == arrDate[1]) {
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].Day == arrDate[2]) {
+                                    var sDate = data[i].Day + "/" + Month + "/" + Year;
+                                    $(this).children().children().eq(1).append("<a href='@Url.Action("Index", "Anniversary")?Date=" + sDate +"'>Aniv. luctuoso</a><br>");
+                                }
+                            }
+                        }
+                    });
+                }
+            },
+            error: function (error) {
+                alert(error);
+            }
+        })
+    };
+    function GetIntentions(Year, Month) {
+        $.ajax({
+            url: '@Url.Action("GetListIntentionsByYearAndMonth", "Home")',
+            dataType: "json",
+            data: ({
+                'Year': Year,
+                'Month': Month,
+            }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data != null) {
+                    $(".fc-daygrid-day").each(function (idx) {
+                        var arrDate = $(this).attr("data-date").split("-");
+                        if (Month == arrDate[1]) {
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].Day == arrDate[2]) {
+                                    var sDate = data[i].Day + "/" + Month + "/" + Year;
+                                    $(this).children().children().eq(1).append("<a href='@Url.Action("Index", "Intentions")?IntentionDate=" + sDate +"'>Intenciones</a><br>");
+                                }
+                            }
+                        }
+                    });
+                }
+            },
+            error: function (error) {
+                alert(error);
+            }
+        })
+    };
+    function GetAshDeposits(Year, Month) {
+        $.ajax({
+            url: '@Url.Action("GetListAshDepositByYearAndMonth", "Home")',
+            dataType: "json",
+            data: ({
+                'Year': Year,
+                'Month': Month,
+            }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data != null) {
+                    $(".fc-daygrid-day").each(function (idx) {
+                        var arrDate = $(this).attr("data-date").split("-");
+                        if (Month == arrDate[1]) {
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].Day == arrDate[2]) {
+                                    var sDate = data[i].Day + "/" + Month + "/" + Year;
+                                    $(this).children().children().eq(1).append("<a href='@Url.Action("IndexCalendar", "AshDeposits")?Date=" + sDate +"'>Dep. de ceniza</a><br>");
+                                }
+                            }
+                        }
+                    });
+                }
+            },
+            error: function (error) {
+                alert(error);
+            }
+        })
+    };
+    </script>
+}
