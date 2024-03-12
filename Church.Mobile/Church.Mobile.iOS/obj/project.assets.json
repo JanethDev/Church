@@ -3478,29 +3478,26 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\dmcad\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
-    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\PC\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\dmcad\\source\\Workspaces\\Church\\Church\\church\\Church.Mobile\\Church.Mobile.iOS\\Church.Mobile.iOS.csproj",
+      "projectUniqueName": "C:\\GIT\\Church\\Church.Mobile\\Church.Mobile.iOS\\Church.Mobile.iOS.csproj",
       "projectName": "Church.Mobile.iOS",
-      "projectPath": "C:\\Users\\dmcad\\source\\Workspaces\\Church\\Church\\church\\Church.Mobile\\Church.Mobile.iOS\\Church.Mobile.iOS.csproj",
-      "packagesPath": "C:\\Users\\dmcad\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\dmcad\\source\\Workspaces\\Church\\Church\\church\\Church.Mobile\\Church.Mobile.iOS\\obj\\",
+      "projectPath": "C:\\GIT\\Church\\Church.Mobile\\Church.Mobile.iOS\\Church.Mobile.iOS.csproj",
+      "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+      "outputPath": "C:\\GIT\\Church\\Church.Mobile\\Church.Mobile.iOS\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\dmcad\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "xamarinios10"
@@ -3512,11 +3509,16 @@
       "frameworks": {
         "xamarinios10": {
           "projectReferences": {
-            "C:\\Users\\dmcad\\source\\Workspaces\\Church\\Church\\church\\Church.Mobile\\Church.Mobile\\Church.Mobile.csproj": {
-              "projectPath": "C:\\Users\\dmcad\\source\\Workspaces\\Church\\Church\\church\\Church.Mobile\\Church.Mobile\\Church.Mobile.csproj"
+            "C:\\GIT\\Church\\Church.Mobile\\Church.Mobile\\Church.Mobile.csproj": {
+              "projectPath": "C:\\GIT\\Church\\Church.Mobile\\Church.Mobile\\Church.Mobile.csproj"
             }
           }
         }
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {

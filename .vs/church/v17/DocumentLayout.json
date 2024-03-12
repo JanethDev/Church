@@ -3,7 +3,7 @@
   "WorkspaceRootPath": "C:\\GIT\\Church\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BCB42033-D6C8-408E-849A-8D4F0C22C0B2}|Church\\Church.csproj|C:\\GIT\\Church\\church\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "AbsoluteMoniker": "D:0:0:{BCB42033-D6C8-408E-849A-8D4F0C22C0B2}|Church\\Church.csproj|c:\\git\\church\\church\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{BCB42033-D6C8-408E-849A-8D4F0C22C0B2}|Church\\Church.csproj|solutionrelative:church\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
@@ -30,21 +30,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Web.config",
-              "DocumentMoniker": "C:\\GIT\\Church\\Church\\Web.config",
-              "RelativeDocumentMoniker": "Church\\Web.config",
-              "ToolTip": "C:\\GIT\\Church\\Church\\Web.config",
-              "RelativeToolTip": "Church\\Web.config",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAACdAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
-              "WhenOpened": "2024-03-12T16:08:00.448Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:11:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
@@ -55,15 +42,29 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Web.config",
+              "DocumentMoniker": "C:\\GIT\\Church\\Church\\Web.config",
+              "RelativeDocumentMoniker": "Church\\Web.config",
+              "ToolTip": "C:\\GIT\\Church\\Church\\Web.config*",
+              "RelativeToolTip": "Church\\Web.config*",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAABTAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2024-03-12T16:08:00.448Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
               "Title": "PurchasesRequestsB.cs",
               "DocumentMoniker": "C:\\GIT\\Church\\Church.Business\\PurchasesRequestsB.cs",
               "RelativeDocumentMoniker": "Church.Business\\PurchasesRequestsB.cs",
               "ToolTip": "C:\\GIT\\Church\\Church.Business\\PurchasesRequestsB.cs",
               "RelativeToolTip": "Church.Business\\PurchasesRequestsB.cs",
-              "ViewState": "AQIAAF4AAAAAAAAAAAAcwHMAAAAIAAAA",
+              "ViewState": "AQIAABcAAAAAAAAAAAAWwCoAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-12T16:08:00.582Z"
+              "WhenOpened": "2024-03-12T16:08:00.582Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
