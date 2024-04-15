@@ -96,7 +96,7 @@ namespace Church.Controllers
                 {
                     bool validated = PasswordSecurity.ValidatePassword(model.Password, contraseña);
                     //if (validated)
-                    if (true)
+                    if (validated)
                     {
                         dtoUsers tblUsers = users.GetUserByUserName(model.UserName);
                         DateTime expires = DateTime.Now.AddDays(1);

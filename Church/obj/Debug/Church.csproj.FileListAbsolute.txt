@@ -96,9 +96,6 @@ C:\GIT\Church\Church\bin\Microsoft.WindowsAzure.Storage.dll
 C:\GIT\Church\Church\bin\Dapper.dll
 C:\GIT\Church\Church\bin\Xceed.Words.NET.dll
 C:\GIT\Church\Church\bin\Xceed.Document.NET.dll
-C:\GIT\Church\Church\bin\Microsoft.Data.Edm.dll
-C:\GIT\Church\Church\bin\Microsoft.Data.Services.Client.dll
-C:\GIT\Church\Church\bin\Microsoft.Data.OData.dll
 C:\GIT\Church\Church\bin\Church.Business.pdb
 C:\GIT\Church\Church\bin\Church.Business.dll.config
 C:\GIT\Church\Church\bin\Church.Data.pdb

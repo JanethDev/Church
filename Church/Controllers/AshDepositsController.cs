@@ -195,7 +195,7 @@ namespace Church.Controllers
         public FileResult Download(string file)
         {
             string filepathfinal = Server.MapPath("~");
-            return File("C:/ChurchArchive/" + file + "", System.Net.Mime.MediaTypeNames.Application.Octet, file);
+            return File("C:/GIT/Church/" + file + "", System.Net.Mime.MediaTypeNames.Application.Octet, file);
         }
 
         public ActionResult SearchArchiveAshDeposits(string billpath)

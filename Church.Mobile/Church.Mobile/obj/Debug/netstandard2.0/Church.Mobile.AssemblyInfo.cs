@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Church.Mobile")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eab72a3906102913a986f0949711e1ed441b6584")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3c774271f5e44b52c8a07795b9cd7ef4a339e09b")]
 [assembly: System.Reflection.AssemblyProductAttribute("Church.Mobile")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Church.Mobile")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
