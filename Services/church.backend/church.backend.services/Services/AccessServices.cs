@@ -1,15 +1,15 @@
 ﻿using church.backend.services.DataBase;
 using church.backend.services.JsonWebToken;
 using church.backend.services.Models;
-using church.backend.services.Models.Client;
+using church.backend.services.Models.access;
+using church.backend.services.Models.register;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace church.backend.services.Services
@@ -28,36 +28,34 @@ namespace church.backend.services.Services
             _jwtService = jwtService;
         }
 
-        public GeneralResponse ValidateAccount(ValidateAccountRequest request)
+        public GeneralResponse login(string email, string password)
         {
-            return _accessDB.ValidateAccount(request);
-        }
-
-        public async Task<GeneralResponse> ReSendEmail(string email, int brand)
-        {
-            GeneralResponse getCode = _accessDB.GetEmailValidationCode(email, brand);
-
-            if(getCode.code != 1)
+            if (string.IsNullOrWhiteSpace(email)) {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un correo"
+                };
+            }
+            if (!ValidateEmail(email))
             {
                 return new GeneralResponse()
                 {
                     code = -1,
-                    message = getCode.message
+                    message = "El correo enviado no es válido"
+                };
+            }
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar una contraseña"
                 };
             }
 
-            await SendValidateEmail(email, getCode.message);
-            return new GeneralResponse()
-            {
-                code =1,
-                message = "success"
-            };
-        }
-
-        public GeneralResponse GetClient(string email, string password)
-        {
-            //GetClientResponse response = _accessDB.GetClient(email, new CryptoService().Encrypt(password), Encrypt(password, true), password);
-            GetClientResponse response = new GetClientResponse();
+            login_response response = _accessDB.login(email, password);
+            
             if (response.code != 1)
             {
                 return new GeneralResponse()
@@ -73,55 +71,44 @@ namespace church.backend.services.Services
             };
         }
 
-        public async Task<GetClientResponse> SaveClient(SaveClientRequest request)
+        public GeneralResponse ChangePassword(int user_id, string password)
         {
-            string code = new Random().Next(1000, 10000).ToString();
-            //request.password = new CryptoService().Encrypt(request.password);
-            GeneralResponse response = _accessDB.SaveClient(request, code);
-            if (response.code != 1) {
-                return new GetClientResponse()
+            if (string.IsNullOrWhiteSpace(password)) {
+                return new GeneralResponse()
                 {
                     code = -1,
-                    message = response.message
+                    message = "Es encesario enviar una contraseña"
                 };
             }
-            await SendValidateEmail(request.email, code);
-            return new GetClientResponse() { 
-                code = 1,
-                message = "success",
-                data = new AppClient()
+            if (password.Length<8)
+            {
+                return new GeneralResponse()
                 {
-                    clientId = int.Parse(response.message),
-                    name = request.name,
-                    email = request.email,
-                    phoneNumber = request.phoneNumber,
-                    rfc = request.rfc,
-                    isMoral = request.isMoral,
-                    city = request.city,
-                    state = request.state,
-                    postal_code = request.postal_code,
-                }
-            };
-        }
-
-        public GetClientResponse GetClientById(int clientId)
-        {
-            return _accessDB.GetClientById(clientId);
-        }
-
-        public GeneralResponse UpdateClientPhoto(int clientId, string photo)
-        {
-            byte[] bytesPhoto = Convert.FromBase64String(photo);
-            return _accessDB.UpdateClientPhoto(clientId, bytesPhoto);
-        }
-
-        public GeneralResponse ChangePassword(int clientId, string password)
-        {
-            return _accessDB.ChangePassword(clientId,password);
+                    code = -1,
+                    message = "Es encesario enviar una contraseña por lo menos 8 caracteres"
+                };
+            }
+            return _accessDB.ChangePassword(user_id, password);
         }
 
         public async Task<GeneralResponse> SetTempPassword(string email)
         {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un correo"
+                };
+            }
+            if (!ValidateEmail(email))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "El correo enviado no es válido"
+                };
+            }
             string temp = GetRandomAlphanumericPassword();
             GeneralResponse response = _accessDB.SetTempPassword(email, temp);
             if(response.code != 1)
@@ -129,13 +116,69 @@ namespace church.backend.services.Services
                 return response;
             }
 
-            await SendTemporalPassword(email, temp);
+            //await SendTemporalPassword(email, temp);
             return response;
         }
 
-        public GetClientResponse UpdateProfile(UpdateProfileRequest request)
+        public GeneralResponse createEmployee(create_employee_request data)
         {
-            return _accessDB.UpdateProfile(request);
+            if (data.role_id < 0) {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un rol para el usaurio"
+                };
+            }
+            if (string.IsNullOrWhiteSpace(data.email))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un correo"
+                };
+            }
+            if (!ValidateEmail(data.email))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "El correo enviado no es válido"
+                };
+            }
+            if (string.IsNullOrWhiteSpace(data.name))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un nombre"
+                };
+            }
+            if (string.IsNullOrWhiteSpace(data.father_last_name))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un apellido"
+                };
+            }
+            if (string.IsNullOrWhiteSpace(data.father_last_name))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un apellido"
+                };
+            }
+            if (string.IsNullOrWhiteSpace(data.phone))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar su número de teléfono"
+                };
+            }
+            data.password = GetRandomAlphanumericPassword();
+            return _accessDB.createEmployee(data);
         }
 
         private async Task SendValidateEmail(string email, string code)
@@ -196,58 +239,6 @@ namespace church.backend.services.Services
             await httpClient.SendAsync(request);
         }
 
-        private string Encrypt(string toEncrypt, bool useHashing)
-        {
-            byte[] keyArray;
-            byte[] toEncryptArray = UTF8Encoding.UTF8.GetBytes(toEncrypt);
-            string key = "mx.com.gasmart.gasmartmovil";
-            if (useHashing)
-            {
-                MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-                keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
-                hashmd5.Clear();
-            }
-            else
-                keyArray = UTF8Encoding.UTF8.GetBytes(key);
-
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-            tdes.Key = keyArray;
-            tdes.Mode = CipherMode.ECB;
-            tdes.Padding = PaddingMode.PKCS7;
-            ICryptoTransform cTransform = tdes.CreateEncryptor();
-            byte[] resultArray =
-              cTransform.TransformFinalBlock(toEncryptArray, 0,
-              toEncryptArray.Length);
-            tdes.Clear();
-            return Convert.ToBase64String(resultArray, 0, resultArray.Length);
-        }
-
-        private string Decrypt(string cipherString, bool useHashing)
-        {
-            byte[] keyArray;
-            byte[] toEncryptArray = Convert.FromBase64String(cipherString);
-            string key = "mx.com.gasmart.gasmartmovil";
-            if (useHashing)
-            {
-                MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-                keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
-                hashmd5.Clear();
-            }
-            else
-            {
-                keyArray = UTF8Encoding.UTF8.GetBytes(key);
-            }
-
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-            tdes.Key = keyArray;
-            tdes.Mode = CipherMode.ECB;
-            tdes.Padding = PaddingMode.PKCS7;
-            ICryptoTransform cTransform = tdes.CreateDecryptor();
-            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-            tdes.Clear();
-            return UTF8Encoding.UTF8.GetString(resultArray);
-        }
-
         private string GetRandomAlphanumericPassword()
         {
             Random random = new Random();
@@ -258,6 +249,22 @@ namespace church.backend.services.Services
                 stringChars[i] = chars[random.Next(chars.Length)];
             }
             return new String(stringChars);
+        }
+
+        public static bool ValidateEmail(string email)
+        {
+            string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            if (Regex.IsMatch(email, pattern))
+            {
+                if (!email.Contains(".."))
+                {
+                    if (!email.StartsWith(".") && !email.EndsWith("."))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

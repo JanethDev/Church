@@ -1,5 +1,4 @@
 ﻿using church.backend.services.Models.access;
-using church.backend.services.Models.Client;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -39,11 +38,6 @@ namespace church.backend.services.JsonWebToken
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
-        }
-
-        internal string GenerateToken(AppClient data)
-        {
-            throw new NotImplementedException();
         }
     }
 }

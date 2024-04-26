@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore;
+﻿using church.backend.services;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

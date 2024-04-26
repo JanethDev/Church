@@ -35,7 +35,9 @@ namespace church.backend.services
 
             services.AddHttpClient();
             services.AddSingleton<accessDB>();
+            services.AddSingleton<rolesDB>();
             services.AddSingleton<AccessServices>();
+            services.AddSingleton<RolesServices>();
             services.AddSingleton(provider => new JwtService("CHURCHmnjhbvgfcrdexcfrvgbhnjmhgvfrcvgbhnyv234dfg", "church_issuer"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
