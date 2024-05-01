@@ -1,0 +1,394 @@
+﻿html, body {
+    font-family: 'Lato-Regular'!important;
+
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/*Index*/
+
+.tableStyleHeader {
+    color: #000000 !important;
+    background-color: #c2c8cd !important;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: 1px solid #94969a;
+}
+
+    .tableStyleHeader > td {
+        padding: 2px;
+        text-align: right;
+    }
+
+    .tableStyleHeader > th > a {
+        color: #000 !important;
+        font-weight: bold;
+    }
+
+.tableStylerow > td {
+    padding: 4px !important;
+    border: 1px solid #c2c8cd;
+    color: #000000;
+}
+
+.tableShadow {
+    box-shadow: 7px 7px 4px #9a9a98;
+}
+/* Selected menu*/
+.selected a {
+    color: #fff !important;
+    text-decoration: none;
+    background-color: #808080 !important;
+}
+
+    .selected a > span {
+        color: #fff !important;
+        text-decoration: none;
+    }
+
+.container-form {
+    margin: 0;
+    padding: 10px;
+    padding-bottom: 20px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #fff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(158, 158, 158, 0.65);
+    box-shadow: 7px 7px 4px #9a9a98;
+    background-color: #eee;
+}
+
+.label-design {
+    background-color: #c7c7c7;
+    padding-bottom: 3px;
+    padding-top: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.label-detail-header {
+    font-size: small;
+    color: #000;
+    overflow-wrap: break-word;
+    font-weight: 700;
+}
+
+.label-designInside {
+    background-color: #c7c7c7;
+    padding-bottom: 3px;
+    padding-top: 3px;
+    padding-left: -5px;
+}
+
+.label-detail {
+    font-size: small;
+    color: #000;
+    overflow-wrap: break-word;
+}
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-top: 20px;
+}
+
+@media screen and (min-width: 300px) and (max-width: 768px) {
+    .body-content {
+        margin-top: 20px;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 992px) {
+    .body-content {
+        margin-top: 100px;
+    }
+}
+
+@media screen and (min-width: 993px) and (max-width: 1199px) {
+    .body-content {
+        margin-top: 60px;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .body-content {
+        margin-top: 20px;
+    }
+}
+
+@media screen and (max-width: 260px) {
+    .body-content {
+        margin-top: 50px;
+    }
+}
+
+/*pagination*/
+
+.pagination {
+    display: inline-block;
+    padding-left: 0;
+    /*margin: 20px 0;*/
+    margin: 0;
+    border-radius: 4px;
+}
+
+    .pagination > li {
+        display: inline !important;
+    }
+
+        .pagination > li > a,
+        .pagination > li > span {
+            position: relative;
+            float: left;
+            padding: 6px 12px;
+            margin-left: -1px;
+            line-height: 1.428571429;
+            text-decoration: none;
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+        }
+
+        .pagination > li:first-child > a,
+        .pagination > li:first-child > span {
+            margin-left: 0;
+            border-bottom-left-radius: 4px;
+            border-top-left-radius: 4px;
+        }
+
+        .pagination > li:last-child > a,
+        .pagination > li:last-child > span {
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+
+        .pagination > li > a:hover,
+        .pagination > li > span:hover,
+        .pagination > li > a:focus,
+        .pagination > li > span:focus {
+            background-color: #eeeeee;
+        }
+
+    .pagination > .active > a,
+    .pagination > .active > span,
+    .pagination > .active > a:hover,
+    .pagination > .active > span:hover,
+    .pagination > .active > a:focus,
+    .pagination > .active > span:focus {
+        z-index: 2;
+        color: #ffffff;
+        cursor: default;
+        background-color: #383939;
+        border-color: #222222;
+    }
+
+    .pagination > .disabled > span,
+    .pagination > .disabled > a,
+    .pagination > .disabled > a:hover,
+    .pagination > .disabled > a:focus {
+        color: #999999;
+        cursor: not-allowed;
+        background-color: #ffffff;
+        border-color: #dddddd;
+    }
+
+.pagination-lg > li > a,
+.pagination-lg > li > span {
+    padding: 10px 16px;
+    font-size: 18px;
+}
+
+.pagination-lg > li:first-child > a,
+.pagination-lg > li:first-child > span {
+    border-bottom-left-radius: 6px;
+    border-top-left-radius: 6px;
+}
+
+.pagination-lg > li:last-child > a,
+.pagination-lg > li:last-child > span {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.pagination-sm > li > a,
+.pagination-sm > li > span {
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.pagination-sm > li:first-child > a,
+.pagination-sm > li:first-child > span {
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
+}
+
+.pagination-sm > li:last-child > a,
+.pagination-sm > li:last-child > span {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+/*End pagination*/
+
+.minuevaclase {
+    background-color: red;
+}
+
+
+.minuevaclase {
+    background-color: green;
+    color:red;
+}
+
+.btn-danger {
+    color: yellow !important;
+    background-color: red;
+    border-color: white;
+}
+.card-header {
+    background-color: #CCA369 !important;
+}
+    .card-header h2 {
+        color: #fff;
+        font-size: 25px;
+        margin: 0;
+        padding: 0;
+    }
+.btn-default {
+    background-color: white;
+    border-color: gray !important;
+}
+.tableStyleHeader, #pagedList {
+    background-color: #c2c8cd !important;
+}
+.btn-primary {
+    background-color: #315D7C !important;
+    border-color: #1a3f5a !important;
+}
+.btn-success {
+    background-color: #CCA369 !important;
+    border-color: #dda75a!important;
+}
+.btn-danger {
+    background-color: #bc1d1d !important;
+    color: white !important;
+}
+.btn-success:focus, .btn-success.focus {
+    box-shadow: 0 0 0 0.2rem rgb(180 172 72 / 50%);
+}
+td a {
+    color: #315D7C;
+}
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+    background-color: #CCA369 !important;
+}
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus{
+    border-color:white!important;
+    color:white!important;
+}
+.label-designInside, .label-design, card-body h1, .card-body h2, .card-body h3, .card-body h4, .card-body h5 {
+    background-color: white;
+    color: #315D7C !important;
+}
+
+/*Login css*/
+.container-login {
+    width: 550px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.modal-header, .modal-header span {
+    background: #CCA369;
+    color: #fff;
+}
+.modal-content{
+    border: 0;
+}
+
+.container-nav{
+    padding-right: 200px;
+    padding-left: 200px;
+}
+
+.card {
+    border-top: none;
+}
+
+.btn.btn-circle, .btn.btn-icon {
+    width: 3rem;
+    height: 3rem;
+    line-height: 3rem;
+    font-size: 1.5rem;
+    padding: 0;
+    border-radius: 5rem;
+    transition: all ease-in-out 0.3s;
+}
+
+.btn.btn-icon {
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    font-size: 1rem;
+    color: #fff;
+}
+
+
+
+.form-group label{
+    font-weight: bolder;
+}
+
+footer {
+    padding: 10px 0px 5px 5px;
+    background-color: #315D7C;
+    text-align: center;
+    margin-top: 20px;
+}
+
+    footer > p {
+        color: #fff;
+        font-weight: bolder;
+        padding-top: 7px;
+    }
+
+
+.table td{
+    vertical-align: middle;
+}
