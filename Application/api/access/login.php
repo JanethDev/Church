@@ -31,17 +31,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Verificar el código de estado HTTP
         if ($http_code == 200) {
             // Inicio de sesión exitoso
-            echo "Inicio de sesión exitoso. Token de acceso: " . $response;
+            session_start();
+            $_SESSION['token'] = $response;
+            $code=1;
+            $mensaje = "";
+            
+
         } elseif ($http_code == 400) {
             // Error de credenciales incorrectas
-            echo "Error: " . $response;
+            $code = 2;
+            $mensaje =  "Error: " . $response;
         } else {
             // Otro tipo de error
-            echo "Error desconocido. Código de estado HTTP: " . $http_code;
+            $code = 2;
+            $mensaje = "Error desconocido. Código de estado HTTP: " . $http_code;
         }
    }
     curl_close($ch); 
     // Cerrar la sesión cURL
-    
+    $json_obj = array("caso"=> $code,"mensaje" => $response);
+    echo json_encode($json_obj, JSON_PRETTY_PRINT);
 }
+
 ?>
