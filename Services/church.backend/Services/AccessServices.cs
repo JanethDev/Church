@@ -3,14 +3,7 @@ using church.backend.services.JsonWebToken;
 using church.backend.services.Models;
 using church.backend.services.Models.access;
 using church.backend.services.Models.register;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.IO;
-using System.Net.Http;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace church.backend.services.Services
 {

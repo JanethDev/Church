@@ -2,11 +2,7 @@
 using church.backend.services.Models;
 using church.backend.services.Models.register;
 using church.backend.services.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace church.backend.services.Controllers
 {

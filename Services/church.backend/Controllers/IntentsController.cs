@@ -1,4 +1,6 @@
-﻿using church.backend.Models.catalogue.cities;
+﻿
+using church.backend.Models.catalogue.civil_status;
+using church.backend.Models.catalogue.intents;
 using church.backend.services.JsonWebToken;
 using church.backend.services.Models;
 using church.backend.services.Services;
@@ -6,16 +8,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace church.backend.services.Controllers
 {
-    public class CitiesController : Controller
+    public class IntentsController : Controller
     {
-        private readonly CitiesServices _citiesServices;
-        public CitiesController(CitiesServices citiesServices)
+        private readonly IntentsServices _intentsServices;
+        public IntentsController(IntentsServices intentsServices)
         {
-            _citiesServices = citiesServices;
+            _intentsServices = intentsServices;
         }
 
         /// <summary>
-        /// Consulta el catalogo de ciudades, requiere token
+        /// Consulta el catalogo de intenciones para misa, requiere token
         /// </summary>
         /// <response code="200">
         /// Ejemplo de respuesta:
@@ -23,21 +25,21 @@ namespace church.backend.services.Controllers
         ///     [
         ///         {
         ///             "id": 1,
-        ///             "city": "ciudad #1",
+        ///             "intent": "aniversario de morido",
         ///         },
         ///         {
         ///             "id": 2,
-        ///             "city": "ciudad #2",
+        ///             "intent": "brujeria pa la suerte",
         ///         }
         ///     ]
         /// </response>
         /// <response code="400">Retorna algun error del usuario</response>
         [HttpGet]
         [JwtAuthentication]
-        [Route("cities")]
-        public IActionResult consultCities()
+        [Route("intents")]
+        public IActionResult consultCivilStatus()
         {
-            cities_response response = _citiesServices.consultCities();
+            intents_response response = _intentsServices.consultIntents();
             if (response.code != 1)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, response.message);
@@ -46,18 +48,18 @@ namespace church.backend.services.Controllers
         }
 
         /// <summary>
-        /// Crea una nueva ciudad, requiere token
+        /// Crea una nueva intención para misa, requiere token
         /// </summary>
-        /// <response code="200">Significa que agregó la ciudad correctamente</response>
+        /// <response code="200">Significa que agregó la intención correctamente</response>
         /// <response code="400">Retorna algun error del usuario</response>
         [HttpGet]
         [JwtAuthentication]
-        [Route("create/city")]
-        public IActionResult createCity([FromQuery] string name)
+        [Route("create/intent")]
+        public IActionResult createCivilStatus([FromQuery] string name)
         {
             var claims = HttpContext.Items["Claims"] as IDictionary<string, string>;
             int user_id = int.Parse(claims?["user_id"] ?? "0");
-            GeneralResponse response = _citiesServices.createCity(name, user_id);
+            GeneralResponse response = _intentsServices.createIntent(name, user_id);
             if (response.code != 1)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, response.message);

@@ -1,8 +1,6 @@
-﻿using church.backend.Models.catalogue.cathedral;
-using church.backend.Models.catalogue.cities;
+﻿using church.backend.Models.catalogue.cities;
 using church.backend.services.Models;
 using System.Data.SqlClient;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace church.backend.services.DataBase
 {

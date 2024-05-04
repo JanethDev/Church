@@ -1,16 +1,9 @@
-﻿using church.backend.Models.catalogue.cathedral;
-using church.backend.Models.catalogue.discounts;
-using church.backend.Models.catalogue.roles;
+﻿using church.backend.Models.catalogue.discounts;
 using church.backend.Models.enums;
 using church.backend.services.JsonWebToken;
 using church.backend.services.Models;
-using church.backend.services.Models.register;
 using church.backend.services.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace church.backend.services.Controllers
 {
@@ -181,18 +174,20 @@ namespace church.backend.services.Controllers
             }
             return Ok(response.data);
         }
-        /*
+
         /// <summary>
-        /// Crea una nueva catedral, requiere token
+        /// Crea un nuevo descuento, requiere token
         /// </summary>
         /// <param name="data"></param>
-        /// <returns>crea una nueva catedral</returns>
+        /// <returns>crea un nuevo descuento</returns>
         /// <remarks>
         /// Ejemplo de llenado:
         ///
         ///     {
-        ///        "name": "Catedral nueva",
-        ///        "city_id" : 2
+        ///        "description": "promoción perrona de 90% de descuento",
+        ///        "percentage" : 90.0,
+        ///        "start_date" : "2024-02-15",
+        ///        "end_date"   : "2025-08-30"
         ///     }
         ///
         /// </remarks>
@@ -200,17 +195,52 @@ namespace church.backend.services.Controllers
         /// <response code="400">Retorna algun error del usuario</response>
         [HttpPost]
         [JwtAuthentication]
-        [Route("create/cathedrals")]
-        public IActionResult createCathedrals([FromBody] create_cathedral_request data)
+        [Route("create/discount")]
+        public IActionResult createDiscount([FromBody] create_discount_request data)
         {
             var claims = HttpContext.Items["Claims"] as IDictionary<string, string>;
             int user_id = int.Parse(claims?["user_id"] ?? "0");
-            GeneralResponse response = _cathedralServices.createCathedrals(data, user_id);
+            GeneralResponse response = _discountServices.createDiscount(data, user_id);
             if (response.code != 1)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, response.message);
             }
             return Ok(response.message);
-        }*/
+        }
+
+        /// <summary>
+        /// Actualiza un descuento, requiere token
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>actualiza un descuento</returns>
+        /// <remarks>
+        /// Ejemplo de llenado:
+        ///
+        ///     {
+        ///        "id"         : 1 ,
+        ///        "description": "promoción perrona de 90% de descuento",
+        ///        "percentage" : 90.0,
+        ///        "start_date" : "2024-02-15",
+        ///        "end_date"   : "2025-08-30",
+        ///        "status_id"  : 6
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="200">Significa que agregó la catedral correctamente</response>
+        /// <response code="400">Retorna algun error del usuario</response>
+        [HttpPost]
+        [JwtAuthentication]
+        [Route("update/discount")]
+        public IActionResult updateDiscount([FromBody] update_discount_request data)
+        {
+            var claims = HttpContext.Items["Claims"] as IDictionary<string, string>;
+            int user_id = int.Parse(claims?["user_id"] ?? "0");
+            GeneralResponse response = _discountServices.updateDiscount(data, user_id);
+            if (response.code != 1)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, response.message);
+            }
+            return Ok(response.message);
+        }
     }
 }

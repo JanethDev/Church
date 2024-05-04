@@ -1,9 +1,7 @@
-﻿using church.backend.Models.catalogue.cathedral;
-using church.backend.Models.catalogue.discounts;
+﻿using church.backend.Models.catalogue.discounts;
 using church.backend.Models.enums;
 using church.backend.services.DataBase;
 using church.backend.services.Models;
-using System.Data.SqlClient;
 
 namespace church.backend.services.Services
 {

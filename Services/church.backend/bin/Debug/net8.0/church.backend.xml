@@ -275,6 +275,89 @@
              </response>
              <response code="400">Retorna algun error del usuario</response>
         </member>
+        <member name="M:church.backend.services.Controllers.DiscountController.createDiscount(church.backend.Models.catalogue.discounts.create_discount_request)">
+             <summary>
+             Crea un nuevo descuento, requiere token
+             </summary>
+             <param name="data"></param>
+             <returns>crea un nuevo descuento</returns>
+             <remarks>
+             Ejemplo de llenado:
+            
+                 {
+                    "description": "promoción perrona de 90% de descuento",
+                    "percentage" : 90.0,
+                    "start_date" : "2024-02-15",
+                    "end_date"   : "2025-08-30"
+                 }
+            
+             </remarks>
+             <response code="200">Significa que agregó la catedral correctamente</response>
+             <response code="400">Retorna algun error del usuario</response>
+        </member>
+        <member name="M:church.backend.services.Controllers.DiscountController.updateDiscount(church.backend.Models.catalogue.discounts.update_discount_request)">
+             <summary>
+             Actualiza un descuento, requiere token
+             </summary>
+             <param name="data"></param>
+             <returns>actualiza un descuento</returns>
+             <remarks>
+             Ejemplo de llenado:
+            
+                 {
+                    "id"         : 1 ,
+                    "description": "promoción perrona de 90% de descuento",
+                    "percentage" : 90.0,
+                    "start_date" : "2024-02-15",
+                    "end_date"   : "2025-08-30",
+                    "status_id"  : 6
+                 }
+            
+             </remarks>
+             <response code="200">Significa que agregó la catedral correctamente</response>
+             <response code="400">Retorna algun error del usuario</response>
+        </member>
+        <member name="M:church.backend.services.Controllers.FederalTaxController.consultFederalTax">
+            <summary>
+            Consulta el impuesto federal configurado, requiere token
+            </summary>
+            <response code="200">Retorta el costo del impuesto federal</response>
+            <response code="400">Retorna algun error del usuario</response>
+        </member>
+        <member name="M:church.backend.services.Controllers.FederalTaxController.updateFederalTax(System.String)">
+            <summary>
+            Actualiza el impuesto federal, requiere token
+            </summary>
+            <response code="200">Retorta el costo del impuesto federal</response>
+            <response code="400">Retorna algun error del usuario</response>
+        </member>
+        <member name="M:church.backend.services.Controllers.IntentsController.consultCivilStatus">
+             <summary>
+             Consulta el catalogo de estados civiles, requiere token
+             </summary>
+             <response code="200">
+             Ejemplo de respuesta:
+            
+                 [
+                     {
+                         "id": 1,
+                         "civilStatus": "casado",
+                     },
+                     {
+                         "id": 2,
+                         "civilStatus": "soltero",
+                     }
+                 ]
+             </response>
+             <response code="400">Retorna algun error del usuario</response>
+        </member>
+        <member name="M:church.backend.services.Controllers.IntentsController.createCivilStatus(System.String)">
+            <summary>
+            Crea un nuevo estado civil, requiere token
+            </summary>
+            <response code="200">Significa que agregó el estado civil correctamente</response>
+            <response code="400">Retorna algun error del usuario</response>
+        </member>
         <member name="M:church.backend.services.Controllers.RolesController.consultRoles">
              <summary>
              Consulta el catalogo de roles, requiere token

@@ -27,6 +27,8 @@ builder.Services.AddSingleton<citiesDB>();
 builder.Services.AddSingleton<civilStatusDB>();
 builder.Services.AddSingleton<daysDB>();
 builder.Services.AddSingleton<discountDB>();
+builder.Services.AddSingleton<intentsDB>();
+builder.Services.AddSingleton<federalTaxDB>();
 builder.Services.AddSingleton<AccessServices>();
 builder.Services.AddSingleton<RolesServices>();
 builder.Services.AddSingleton<CathedralServices>();
@@ -34,6 +36,8 @@ builder.Services.AddSingleton<CitiesServices>();
 builder.Services.AddSingleton<CivilStatusServices>();
 builder.Services.AddSingleton<DaysServices>();
 builder.Services.AddSingleton<DiscountServices>();
+builder.Services.AddSingleton<FederalTaxServices>();
+builder.Services.AddSingleton<IntentsServices>();
 builder.Services.AddSingleton(provider => new JwtService("CHURCHmnjhbvgfcrdexcfrvgbhnjmhgvfrcvgbhnyv234dfg", "church_issuer"));
 
 

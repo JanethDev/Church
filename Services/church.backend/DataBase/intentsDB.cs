@@ -1,26 +1,27 @@
 ﻿using church.backend.Models.catalogue.civil_status;
+using church.backend.Models.catalogue.intents;
 using church.backend.services.Models;
 using System.Data.SqlClient;
 
 namespace church.backend.services.DataBase
 {
-    public class civilStatusDB
+    public class intentsDB
     {
         private readonly string DataBaseConection;
         private readonly IConfiguration _configuration;
-        public civilStatusDB(IConfiguration configuration)
+        public intentsDB(IConfiguration configuration)
         {
             DataBaseConection = configuration["connectionStrings:database:dev"]!;
             _configuration = configuration;
         }
-        public civil_status_response consultCivilStatus() 
+        public intents_response consultIntents() 
         {
             try
             {
-                civil_status_response response = new civil_status_response() { code = 1, message = "success" };
+                intents_response response = new intents_response() { code = 1, message = "success" };
                 using (SqlConnection connection = new SqlConnection(DataBaseConection))
                 {
-                    string query = string.Format(_configuration["queries:civil_status:consultAll"]!);
+                    string query = string.Format(_configuration["queries:intents_type:consultAll"]!);
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         connection.Open();
@@ -28,10 +29,10 @@ namespace church.backend.services.DataBase
                         {
                             while (reader.Read())
                             {
-                                response.data.Add(new civil_status()
+                                response.data.Add(new intents()
                                 {
                                     id = int.Parse(reader["id"].ToString()!),
-                                    civilStatus = reader["description"].ToString()!
+                                    intent = reader["intent"].ToString()!
                                 });
                             }
                         }
@@ -41,7 +42,7 @@ namespace church.backend.services.DataBase
             }
             catch (Exception ex)
             {
-                return new civil_status_response()
+                return new intents_response()
                 {
                     code = -1,
                     message = ex.Message
@@ -49,14 +50,14 @@ namespace church.backend.services.DataBase
             }
         }
 
-        public GeneralResponse createCivilStatus(string name, int user_id)
+        public GeneralResponse createIntent(string name, int user_id)
         {
             try
             {
                 GeneralResponse response = new GeneralResponse();
                 using (SqlConnection connection = new SqlConnection(DataBaseConection))
                 {
-                    string query = string.Format(_configuration["queries:civil_status:create"]!
+                    string query = string.Format(_configuration["queries:intents_type:create"]!
                         , name
                         , user_id
                     );

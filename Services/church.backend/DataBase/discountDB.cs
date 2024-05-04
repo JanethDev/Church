@@ -1,9 +1,7 @@
-﻿using church.backend.Models.catalogue.cathedral;
-using church.backend.Models.catalogue.discounts;
+﻿using church.backend.Models.catalogue.discounts;
 using church.backend.Models.enums;
 using church.backend.services.Models;
 using System.Data.SqlClient;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace church.backend.services.DataBase
 {
@@ -147,7 +145,7 @@ namespace church.backend.services.DataBase
                 GeneralResponse response = new GeneralResponse();
                 using (SqlConnection connection = new SqlConnection(DataBaseConection))
                 {
-                    string query = string.Format(_configuration["queries:discounts:create"]!
+                    string query = string.Format(_configuration["queries:discounts:update"]!
                         , data.description
                         , data.percentage
                         , data.start_date.ToString("yyyy-MM-dd")

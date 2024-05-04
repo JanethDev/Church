@@ -1,26 +1,25 @@
-﻿using church.backend.Models.catalogue.civil_status;
-using church.backend.services.Models;
+﻿using church.backend.services.Models;
 using System.Data.SqlClient;
 
 namespace church.backend.services.DataBase
 {
-    public class civilStatusDB
+    public class federalTaxDB
     {
         private readonly string DataBaseConection;
         private readonly IConfiguration _configuration;
-        public civilStatusDB(IConfiguration configuration)
+        public federalTaxDB(IConfiguration configuration)
         {
             DataBaseConection = configuration["connectionStrings:database:dev"]!;
             _configuration = configuration;
         }
-        public civil_status_response consultCivilStatus() 
+        public GeneralResponse consultFederalTax() 
         {
             try
             {
-                civil_status_response response = new civil_status_response() { code = 1, message = "success" };
+                GeneralResponse response = new GeneralResponse() { code = -1, message = "error" };
                 using (SqlConnection connection = new SqlConnection(DataBaseConection))
                 {
-                    string query = string.Format(_configuration["queries:civil_status:consultAll"]!);
+                    string query = string.Format(_configuration["queries:federal_tax:consultAll"]!);
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         connection.Open();
@@ -28,11 +27,11 @@ namespace church.backend.services.DataBase
                         {
                             while (reader.Read())
                             {
-                                response.data.Add(new civil_status()
-                                {
-                                    id = int.Parse(reader["id"].ToString()!),
-                                    civilStatus = reader["description"].ToString()!
-                                });
+                                response = new GeneralResponse() 
+                                { 
+                                    code = int.Parse(reader["id"].ToString()!),
+                                    message = reader["cost"].ToString()!
+                                };
                             }
                         }
                     }
@@ -41,7 +40,7 @@ namespace church.backend.services.DataBase
             }
             catch (Exception ex)
             {
-                return new civil_status_response()
+                return new GeneralResponse()
                 {
                     code = -1,
                     message = ex.Message
@@ -49,17 +48,14 @@ namespace church.backend.services.DataBase
             }
         }
 
-        public GeneralResponse createCivilStatus(string name, int user_id)
+        public GeneralResponse updateFederalTax(double cost, int user_id)
         {
             try
             {
-                GeneralResponse response = new GeneralResponse();
+                GeneralResponse response = new GeneralResponse() { code = -1, message = "error" };
                 using (SqlConnection connection = new SqlConnection(DataBaseConection))
                 {
-                    string query = string.Format(_configuration["queries:civil_status:create"]!
-                        , name
-                        , user_id
-                    );
+                    string query = string.Format(_configuration["queries:federal_tax:update"]!,cost,user_id);
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         connection.Open();
