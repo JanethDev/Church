@@ -1,26 +1,30 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\alexis.gonzalez\\Documents\\church.system\\church.backend\\",
+  "WorkspaceRootPath": "C:\\Users\\Alexis\\Documents\\GitHub\\Church\\Services\\church.backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|c:\\users\\alexis.gonzalez\\documents\\church.system\\church.backend\\controllers\\discountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|solutionrelative:controllers\\discountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|c:\\users\\alexis\\documents\\github\\church\\services\\church.backend\\models\\enums\\user_status.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|solutionrelative:models\\enums\\user_status.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|c:\\users\\alexis.gonzalez\\documents\\church.system\\church.backend\\models\\enums\\discount_status.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|solutionrelative:models\\enums\\discount_status.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|c:\\users\\alexis\\documents\\github\\church\\services\\church.backend\\database\\accessdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|solutionrelative:database\\accessdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|c:\\users\\alexis.gonzalez\\documents\\church.system\\church.backend\\models\\catalogue\\discounts\\discount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|solutionrelative:models\\catalogue\\discounts\\discount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|c:\\users\\alexis\\documents\\github\\church\\services\\church.backend\\services\\accessservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|solutionrelative:services\\accessservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|c:\\users\\alexis.gonzalez\\documents\\church.system\\church.backend\\services\\discountservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|solutionrelative:services\\discountservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|c:\\users\\alexis\\documents\\github\\church\\services\\church.backend\\models\\register\\create_employee_request.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|solutionrelative:models\\register\\create_employee_request.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|c:\\users\\alexis.gonzalez\\documents\\church.system\\church.backend\\database\\discountdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|solutionrelative:database\\discountdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|c:\\users\\alexis\\documents\\github\\church\\services\\church.backend\\controllers\\accesscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|solutionrelative:controllers\\accesscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|c:\\users\\alexis\\documents\\github\\church\\services\\church.backend\\controllers\\rolescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|solutionrelative:controllers\\rolescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -33,68 +37,89 @@
           "SelectedChildIndex": 2,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:11:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:12:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "discount_status.cs",
-              "DocumentMoniker": "C:\\Users\\alexis.gonzalez\\Documents\\church.system\\church.backend\\Models\\enums\\discount_status.cs",
-              "RelativeDocumentMoniker": "Models\\enums\\discount_status.cs",
-              "ToolTip": "C:\\Users\\alexis.gonzalez\\Documents\\church.system\\church.backend\\Models\\enums\\discount_status.cs",
-              "RelativeToolTip": "Models\\enums\\discount_status.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAfAAAA",
+              "DocumentIndex": 0,
+              "Title": "user_status.cs",
+              "DocumentMoniker": "C:\\Users\\Alexis\\Documents\\GitHub\\Church\\Services\\church.backend\\Models\\enums\\user_status.cs",
+              "RelativeDocumentMoniker": "Models\\enums\\user_status.cs",
+              "ToolTip": "C:\\Users\\Alexis\\Documents\\GitHub\\Church\\Services\\church.backend\\Models\\enums\\user_status.cs",
+              "RelativeToolTip": "Models\\enums\\user_status.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAbAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-01T00:26:20.152Z",
+              "WhenOpened": "2024-05-01T02:28:09.072Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "discount.cs",
-              "DocumentMoniker": "C:\\Users\\alexis.gonzalez\\Documents\\church.system\\church.backend\\Models\\catalogue\\discounts\\discount.cs",
-              "RelativeDocumentMoniker": "Models\\catalogue\\discounts\\discount.cs",
-              "ToolTip": "C:\\Users\\alexis.gonzalez\\Documents\\church.system\\church.backend\\Models\\catalogue\\discounts\\discount.cs",
-              "RelativeToolTip": "Models\\catalogue\\discounts\\discount.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAcAAAA",
+              "Title": "AccessServices.cs",
+              "DocumentMoniker": "C:\\Users\\Alexis\\Documents\\GitHub\\Church\\Services\\church.backend\\Services\\AccessServices.cs",
+              "RelativeDocumentMoniker": "Services\\AccessServices.cs",
+              "ToolTip": "C:\\Users\\Alexis\\Documents\\GitHub\\Church\\Services\\church.backend\\Services\\AccessServices.cs",
+              "RelativeToolTip": "Services\\AccessServices.cs",
+              "ViewState": "AQIAAHIAAAAAAAAAAAArwHoAAAAuAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-01T00:23:12.939Z",
+              "WhenOpened": "2024-05-01T02:27:58.127Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "DiscountController.cs",
-              "DocumentMoniker": "C:\\Users\\alexis.gonzalez\\Documents\\church.system\\church.backend\\Controllers\\DiscountController.cs",
-              "RelativeDocumentMoniker": "Controllers\\DiscountController.cs",
-              "ToolTip": "C:\\Users\\alexis.gonzalez\\Documents\\church.system\\church.backend\\Controllers\\DiscountController.cs",
-              "RelativeToolTip": "Controllers\\DiscountController.cs",
-              "ViewState": "AQIAAMQAAAAAAAAAAAAIwLcAAAAKAAAA",
+              "DocumentIndex": 1,
+              "Title": "accessDB.cs",
+              "DocumentMoniker": "C:\\Users\\Alexis\\Documents\\GitHub\\Church\\Services\\church.backend\\DataBase\\accessDB.cs",
+              "RelativeDocumentMoniker": "DataBase\\accessDB.cs",
+              "ToolTip": "C:\\Users\\Alexis\\Documents\\GitHub\\Church\\Services\\church.backend\\DataBase\\accessDB.cs",
+              "RelativeToolTip": "DataBase\\accessDB.cs",
+              "ViewState": "AQIAAJ8AAAAAAAAAAAArwKcAAAAfAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-01T00:21:24.173Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "DiscountServices.cs",
-              "DocumentMoniker": "C:\\Users\\alexis.gonzalez\\Documents\\church.system\\church.backend\\Services\\DiscountServices.cs",
-              "RelativeDocumentMoniker": "Services\\DiscountServices.cs",
-              "ToolTip": "C:\\Users\\alexis.gonzalez\\Documents\\church.system\\church.backend\\Services\\DiscountServices.cs",
-              "RelativeToolTip": "Services\\DiscountServices.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAhAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-01T00:21:45.522Z",
+              "WhenOpened": "2024-05-01T02:27:51.779Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "discountDB.cs",
-              "DocumentMoniker": "C:\\Users\\alexis.gonzalez\\Documents\\church.system\\church.backend\\DataBase\\discountDB.cs",
-              "RelativeDocumentMoniker": "DataBase\\discountDB.cs",
-              "ToolTip": "C:\\Users\\alexis.gonzalez\\Documents\\church.system\\church.backend\\DataBase\\discountDB.cs",
-              "RelativeToolTip": "DataBase\\discountDB.cs",
-              "ViewState": "AQIAAAoAAAAAAAAAAAAkwA0AAAAbAAAA",
+              "Title": "AccessController.cs",
+              "DocumentMoniker": "C:\\Users\\Alexis\\Documents\\GitHub\\Church\\Services\\church.backend\\Controllers\\AccessController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AccessController.cs",
+              "ToolTip": "C:\\Users\\Alexis\\Documents\\GitHub\\Church\\Services\\church.backend\\Controllers\\AccessController.cs",
+              "RelativeToolTip": "Controllers\\AccessController.cs",
+              "ViewState": "AQIAAF0AAACgmZmZmZkgwGIAAABZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-01T00:04:43.179Z",
+              "WhenOpened": "2024-05-01T02:26:42.275Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "create_employee_request.cs",
+              "DocumentMoniker": "C:\\Users\\Alexis\\Documents\\GitHub\\Church\\Services\\church.backend\\Models\\register\\create_employee_request.cs",
+              "RelativeDocumentMoniker": "Models\\register\\create_employee_request.cs",
+              "ToolTip": "C:\\Users\\Alexis\\Documents\\GitHub\\Church\\Services\\church.backend\\Models\\register\\create_employee_request.cs",
+              "RelativeToolTip": "Models\\register\\create_employee_request.cs",
+              "ViewState": "AQIAAAIAAAAAAAAAAAAnwAkAAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-01T02:16:52.698Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "RolesController.cs",
+              "DocumentMoniker": "C:\\Users\\Alexis\\Documents\\GitHub\\Church\\Services\\church.backend\\Controllers\\RolesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\RolesController.cs",
+              "ToolTip": "C:\\Users\\Alexis\\Documents\\GitHub\\Church\\Services\\church.backend\\Controllers\\RolesController.cs",
+              "RelativeToolTip": "Controllers\\RolesController.cs",
+              "ViewState": "AQIAAAcAAAAAAAAAAAAAABEAAAAWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-01T02:16:37.19Z",
               "EditorCaption": ""
             }
           ]

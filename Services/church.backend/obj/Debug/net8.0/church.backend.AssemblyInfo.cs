@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("church.backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2780c721e125ae0972cff4347db6cb5e2c3053bf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+797048fb5319eca37c56b9f7ef9b0a51abcb47e4")]
 [assembly: System.Reflection.AssemblyProductAttribute("church.backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("church.backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
