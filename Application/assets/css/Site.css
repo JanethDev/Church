@@ -345,10 +345,13 @@ td a {
     border: 0;
 }
 
-.container-nav{
-    padding-right: 200px;
-    padding-left: 200px;
+@media screen and (min-width: 1000px) {
+    .container-nav{
+        padding-right: 200px;
+        padding-left: 200px;
+    }
 }
+
 
 .card {
     border-top: none;
