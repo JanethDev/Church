@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } elseif ($http_code == 400) {
             // Error de credenciales incorrectas
             $code = 2;
-            $mensaje =  "Error: " . $response;
+            $mensaje =  "Error: " . $response; 
         } else {
             // Otro tipo de error
             $code = 2;
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
    }
     curl_close($ch); 
     // Cerrar la sesión cURL
-    $json_obj = array("caso"=> $code,"mensaje" => $response);
+    $json_obj = array("caso"=> $code,"token" => $response, "mensaje" => $mensaje);
     echo json_encode($json_obj, JSON_PRETTY_PRINT);
 }
 

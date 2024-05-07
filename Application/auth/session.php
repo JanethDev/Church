@@ -1,20 +1,31 @@
 <?php
+require_once("auth/jwt.php");
 session_start();
 
 function validarSesion() {
-    if(isset($_SESSION['token'])) {
-        
-        return true;
-    } else {
-        return false;
-    }
+    return isset($_SESSION['token']);
 }
 
 if(!validarSesion()) {
     header("Location: ../login.php");
     exit;
 }
-if(validarSesion()) {
-    $token = $_SESSION['token'];
+
+$token = $_SESSION['token'];
+
+try {
+    $result = JWTdec::encode($token);
+
+    if ($result !== null && is_array($result)) {
+        $role_id = $result['role_id'];
+        $name = $result['name'];
+        $email = $result['email'];
+        $role = $result['role'];
+        $user_id = $result['user_id'];
+    } else {
+        echo "Error: No se pudo obtener la información del token.";
+    }
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
 }
 ?>
