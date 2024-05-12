@@ -1,5 +1,4 @@
-﻿using church.backend.Models.catalogue.days;
-using church.backend.Models.catalogue.states_towns;
+﻿using church.backend.Models.catalogue.states_towns;
 using church.backend.services.JsonWebToken;
 using church.backend.services.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -21,14 +20,16 @@ namespace church.backend.services.Controllers
         /// Ejemplo de respuesta:
         ///
         ///     [
-        ///         {
+        ///         "state":{
         ///             "id": 1,
-        ///             "day": "lunes",
+        ///             "state_name": "baja california",
         ///         },
-        ///         {
-        ///             "id": 2,
-        ///             "day": "martes",
-        ///         }
+        ///         "towns_list":[
+        ///             {
+        ///                 "id": 1,
+        ///                 "town_name": "tijuana",
+        ///             }
+        ///         ]
         ///     ]
         /// </response>
         /// <response code="400">Retorna algun error del usuario</response>

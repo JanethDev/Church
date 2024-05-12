@@ -1,5 +1,4 @@
-﻿using church.backend.Models.catalogue.days;
-using church.backend.Models.catalogue.states_towns;
+﻿using church.backend.Models.catalogue.states_towns;
 using System.Data.SqlClient;
 
 namespace church.backend.services.DataBase
