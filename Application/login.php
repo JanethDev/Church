@@ -88,7 +88,7 @@ function autenticar(){
 	var data = new FormData(document.getElementById("loginForm"));
 	
 	$.ajax({
-		url: "api/access/login.php",        
+		url: "api/access/access.php",        
 		type: "POST",             
 		data: data, 			  
 		contentType: false,       

@@ -2,7 +2,7 @@
 require_once 'vendor/autoload.php'; 
 use \Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-class JWTdec
+class UserDataRequest
 {
     public static function encode($token){
         $secretKey = "CHURCHmnjhbvgfcrdexcfrvgbhnjmhgvfrcvgbhnyv234dfg";

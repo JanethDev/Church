@@ -337,6 +337,11 @@ td a {
     margin: 0 auto;
 }
 
+/*INDEX css*/
+.container{
+    margin-top: 20px;
+}
+
 .modal-header, .modal-header span {
     background: #CCA369;
     color: #fff;
@@ -418,3 +423,37 @@ footer {
     text-align: center;
     color: #fff;
 }
+
+#tableSections {
+    width: 100%;
+    height: auto;
+}
+@media screen and (min-width : 1020px ){
+    #tableSections {
+        width: 100%;
+        height: auto;
+    }
+    #tableSections table{
+        transform: scale(0.6); /* Reducir el tamaño de la tabla al 50% */
+        transform-origin: top left; /* Establecer el origen de la transformación */
+    }
+}
+
+@media screen and (min-width : 600px ) and (max-width:1019px){
+    #tableSections {
+        width: 100%;
+        height: auto;
+    }
+    #tableSections table{
+        transform: scale(0.4); /* Reducir el tamaño de la tabla al 50% */
+        transform-origin: top left; /* Establecer el origen de la transformación */
+    }
+}
+
+@media screen and (max-width : 599px ){
+    #tableSections table{
+        transform: scale(0.2); /* Reducir el tamaño de la tabla al 50% */
+        transform-origin: top left; /* Establecer el origen de la transformación */
+    }
+}
+

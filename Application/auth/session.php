@@ -1,5 +1,5 @@
 <?php
-require_once("auth/jwt.php");
+require_once("api/access/user_data.php");
 session_start();
 
 function validarSesion() {
@@ -14,7 +14,7 @@ if(!validarSesion()) {
 $token = $_SESSION['token'];
 
 try {
-    $result = JWTdec::encode($token);
+    $result = UserDataRequest::encode($token);
 
     if ($result !== null && is_array($result)) {
         $role_id = $result['role_id'];
