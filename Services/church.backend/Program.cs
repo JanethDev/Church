@@ -33,6 +33,7 @@ builder.Services.AddSingleton<maintenanceFeeDB>();
 builder.Services.AddSingleton<misaDB>();
 builder.Services.AddSingleton<misaIntentsDB>();
 builder.Services.AddSingleton<stateTownsDB>();
+builder.Services.AddSingleton<cryptDB>();
 builder.Services.AddSingleton<AccessServices>();
 builder.Services.AddSingleton<RolesServices>();
 builder.Services.AddSingleton<CathedralServices>();
@@ -46,6 +47,7 @@ builder.Services.AddSingleton<MaintenanceFeeServices>();
 builder.Services.AddSingleton<MisaServices>();
 builder.Services.AddSingleton<StateTownServices>();
 builder.Services.AddSingleton<MisaIntentsServices>();
+builder.Services.AddSingleton<CryptServices>();
 builder.Services.AddSingleton(provider => new JwtService("CHURCHmnjhbvgfcrdexcfrvgbhnjmhgvfrcvgbhnyv234dfg", "church_issuer"));
 
 
