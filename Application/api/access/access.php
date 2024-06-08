@@ -1,7 +1,6 @@
 <?php
 require_once('../../init.php');
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtener datos del formulario
     $email = $_POST["email"];
@@ -30,12 +29,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Verificar el código de estado HTTP
         if ($http_code == 200) {
+            
+            sleep(3);
+
             // Inicio de sesión exitoso
             session_start();
+            
             $_SESSION['token'] = $response;
             $code=1;
             $mensaje = "";
-            
+
 
         } elseif ($http_code == 400) {
             // Error de credenciales incorrectas

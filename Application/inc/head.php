@@ -13,6 +13,7 @@
 	<link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css">
 	<link href="assets/css/bootstrap-grid.css" id="bootstrap-style" rel="stylesheet" type="text/css">
 	<link href="assets/css/Site.css" id="bootstrap-style" rel="stylesheet" type="text/css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 	
 </head>
