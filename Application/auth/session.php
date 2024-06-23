@@ -6,12 +6,20 @@ function validarSesion() {
     return isset($_SESSION['token']);
 }
 
-if(!validarSesion()) {
+function getSessionToken() {
+    return $_SESSION['token'] ?? null;
+}
+
+function setSessionToken($token) {
+    $_SESSION['token'] = $token;
+}
+
+if (!validarSesion()) {
     header("Location: ../login.php");
     exit;
 }
 
-$token = $_SESSION['token'];
+$token = getSessionToken();
 
 try {
     $result = UserDataRequest::encode($token);
@@ -23,7 +31,7 @@ try {
         $role = $result['role'];
         $user_id = $result['user_id'];
     } else {
-        echo "Error: No se pudo obtener la información del token.";
+        throw new Exception("No se pudo obtener la información del token.");
     }
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();

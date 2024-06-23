@@ -22,7 +22,7 @@ $sCurrentAction = isset($_GET["action"]) ? $_GET["action"] : ''; // Obtener el v
                 <img src="../assets/img/crypt-sections/Sin-titulo-1_02.png" width="108" height="934" alt="">
             </td>
             <td rowspan="8">
-                <a href="btn-section-a">
+                <a href="#" data-section="A">
                     <img src="../assets/img/crypt-sections/btn-section-a.png" width="1050" height="913" border="0" alt="Seccion A">
                 </a>
             </td>
@@ -30,8 +30,8 @@ $sCurrentAction = isset($_GET["action"]) ? $_GET["action"] : ''; // Obtener el v
                 <img src="../assets/img/crypt-sections/Sin-titulo-1_04.png" width="138" height="311" alt="">
             </td>
             <td rowspan="7">
-                <a href="btn-section-b">
-                    <img src="../assets/img/crypt-sections/btn-section-b.png" width="126" height="896" border="0" alt="Secci&#243;n B">
+                <a href="#" data-section="B">
+                    <img src="../assets/img/crypt-sections/btn-section-b.png" width="126" height="896" border="0" alt="Sección B">
                 </a>
             </td>
             <td rowspan="2">
@@ -43,8 +43,8 @@ $sCurrentAction = isset($_GET["action"]) ? $_GET["action"] : ''; // Obtener el v
                 <img src="../assets/img/crypt-sections/Sin-titulo-1_07.png" width="54" height="784" alt="">
             </td>
             <td rowspan="8">
-                <a href="btn-section-c">
-                    <img src="../assets/img/crypt-sections/btn-section-C.png" width="492" height="913" border="0" alt="Secci&#243;n C">
+                <a href="#" data-section="C">
+                    <img src="../assets/img/crypt-sections/btn-section-c.png" width="492" height="913" border="0" alt="Sección C">
                 </a>
             </td>
             <td colspan="2">
@@ -137,8 +137,5 @@ $sCurrentAction = isset($_GET["action"]) ? $_GET["action"] : ''; // Obtener el v
 </div>
 
 <?php
-if ($sCurrentAction == "Manage") {
-    include_once $_SERVER['DOCUMENT_ROOT'] . '/Views/Crypts/_CryptsNichos.php'; // Incluir otro archivo PHP si es necesario
-    echo '<div id="CryptSection"></div>'; // Esto se imprimirá si $sCurrentAction es "Manage"
-}
+
 ?>

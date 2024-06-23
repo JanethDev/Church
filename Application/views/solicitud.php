@@ -3,7 +3,6 @@ $_title = 'Solicitud | Catedral Tijuana';
 ?>
 <form id="frmCryptRequest" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 
-
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <a class="nav-item nav-link active" id="nav-zona-tab" data-toggle="tab" href="#nav-zona" role="tab" aria-controls="nav-zona" aria-selected="true">Zonas</a>
@@ -17,14 +16,70 @@ $_title = 'Solicitud | Catedral Tijuana';
             <?php include_once('crypts/cryptmaps.php'); ?>
         </div>
         <div class="tab-pane fade" id="nav-area" role="tabpanel" aria-labelledby="nav-area-tab">
-            <?php //include_once($_SERVER['DOCUMENT_ROOT'] . '/Views/CryptsNichos.php'); ?>
+            <div id="areaContent"></div>
         </div>
         <div class="tab-pane fade" id="nav-criptas" role="tabpanel" aria-labelledby="nav-criptas-tab">
-            <div class="mt-5" id="CryptSection"></div>
+            <?php include_once('crypts/cryptsections.php'); ?>
         </div>
         <div class="tab-pane fade" id="nav-forma-pago" role="tabpanel" aria-labelledby="nav-forma-pago-tab">
             <!-- Contenido de la pestaña Forma de pago -->
         </div>
     </div>
 </form>
+<script>
+    $(document).ready(function() {
+        $('a[data-section]').on('click', function(e) {
+            e.preventDefault();
+            var section = $(this).data('section');
+            if (section === 'A') {
+                loadSectionA();
+            } else if (section === 'B') {
+                loadSectionB();
+            } else if (section === 'C') {
+                loadSectionC();
+            }
+        });
+    });
 
+    function loadSectionA() {
+        fetch('/views/crypts/cryptnichosA.php')
+            .then(response => response.text())
+            .then(html => {
+                $('#areaContent').html(html); 
+                $('#nav-area-tab').tab('show'); 
+                history.pushState(null, '', ''); 
+            })
+            .catch(error => {
+                console.error('Error al cargar la sección B:', error);
+                $('#areaContent').html('<p>Error al cargar la sección B.</p>');
+            });
+    }
+
+    function loadSectionB() {
+        fetch('crypts/cryptnichos.php')
+            .then(response => response.text())
+            .then(html => {
+                $('#areaContent').html(html); 
+                $('#nav-area-tab').tab('show'); 
+                history.pushState(null, '', ''); 
+            })
+            .catch(error => {
+                console.error('Error al cargar la sección B:', error);
+                $('#areaContent').html('<p>Error al cargar la sección B.</p>');
+            });
+    }
+
+    function loadSectionC() {
+        fetch('crypts/cryptnichos.php')
+            .then(response => response.text())
+            .then(html => {
+                $('#areaContent').html(html); 
+                $('#nav-area-tab').tab('show'); 
+                history.pushState(null, '', ''); 
+            })
+            .catch(error => {
+                console.error('Error al cargar la sección C:', error);
+                $('#areaContent').html('<p>Error al cargar la sección C.</p>');
+            });
+    }
+</script>

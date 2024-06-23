@@ -1,0 +1,225 @@
+.punto1{
+    position: absolute;
+    width: 80px; 
+    height: 10px; 
+    pointer-events: none;
+}
+.punto2{
+    position: absolute;
+    width: 10px; 
+    height: 440px; 
+    pointer-events: none;
+}
+.punto3{
+    position: absolute;
+    width: 28px; 
+    height: 280px; 
+    pointer-events: none;
+}
+.punto6{
+    position: absolute;
+    width: 185px; 
+    height: 10px; 
+    pointer-events: none;
+}
+.punto7{
+    position: absolute;
+    width: 130px; 
+    height: 10px; 
+    pointer-events: none;
+}
+
+.punto8{
+    position: absolute;
+    width: 155px; 
+    height: 10px; 
+    pointer-events: none;
+}
+
+.punto9{
+    position: absolute;
+    width: 130px; 
+    height: 10px; 
+    pointer-events: none;
+}
+
+.punto10{
+    position: absolute;
+    width: 38px; 
+    height: 10px; 
+    pointer-events: none;
+}
+
+.punto11{
+    position: absolute;
+    width: 55px; 
+    height: 10px; 
+    pointer-events: none;
+}
+
+.punto12{
+    position: absolute;
+    width: 110px; 
+    height: 10px; 
+    pointer-events: none;
+}
+.punto13{
+    position: absolute;
+    width: 90px; 
+    height: 10px; 
+    pointer-events: none;
+}
+
+.punto14{
+    position: absolute;
+    width: 130px; 
+    height: 25px; 
+    pointer-events: none;
+}
+.punto15{
+    position: absolute;
+    width: 140px; 
+    height: 25px; 
+    pointer-events: none;
+}
+
+.punto16{
+    position: absolute;
+    width: 138px; 
+    height: 25px; 
+    pointer-events: none;
+}
+
+.punto17{
+    position: absolute;
+    width: 138px; 
+    height: 25px; 
+    pointer-events: none;
+}
+.punto18{
+    position: absolute;
+    width: 105px; 
+    height: 10px; 
+    pointer-events: none;
+}
+
+.punto19{
+    position: absolute;
+    width: 62px; 
+    height: 10px; 
+    pointer-events: none;
+}
+
+.punto20{
+    position: absolute;
+    width: 62px; 
+    height: 10px; 
+    pointer-events: none;
+}
+
+.punto21{
+    position: absolute;
+    width: 138px; 
+    height: 10px; 
+    pointer-events: none;
+}
+
+.punto22{
+    position: absolute;
+    width: 10px; 
+    height: 95px; 
+    pointer-events: none;
+}
+
+.punto23{
+    position: absolute;
+    width: 10px; 
+    height: 95px; 
+    pointer-events: none;
+}
+
+.punto24{
+    position: absolute;
+    width: 350px; 
+    height: 10px; 
+    pointer-events: none;
+}
+
+.punto25{
+    position: absolute;
+    width: 230px; 
+    height: 10px; 
+    pointer-events: none;
+}
+
+.punto26{
+    position: absolute;
+    width: 135px; 
+    height: 10px; 
+    pointer-events: none;
+}
+.punto27{
+    position: absolute;
+    width: 10px; 
+    height: 35px; 
+    pointer-events: none;
+}
+.punto28{
+    position: absolute;
+    width: 10px; 
+    height: 132px; 
+    pointer-events: none;
+}
+.punto29{
+    position: absolute;
+    width: 12px; 
+    height: 12px; 
+    pointer-events: none;
+}
+.punto30{
+    position: absolute;
+    width: 12px; 
+    height: 12px; 
+    pointer-events: none;
+}
+.punto31{
+    position: absolute;
+    width: 10px; 
+    height: 10px; 
+    pointer-events: none;
+}
+.punto {
+    position: absolute;
+    width: 20px; 
+    height: 20px; 
+    pointer-events: none;
+}
+#tableNichos {
+width: 100%;
+height: auto;
+}
+@media screen and (min-width : 1020px ){
+#tableNichos {
+width: 100%;
+height: auto;
+}
+
+}
+
+@media screen and (min-width : 600px ) and (max-width:1019px){
+#tableNichos {
+width: 100%;
+height: auto;
+}
+#tableNichos {
+transform: scale(0.3); /* Reducir el tamaño de la tabla al 50% */
+transform-origin: top left; /* Establecer el origen de la transformación */
+}
+}
+
+@media screen and (max-width : 599px ){
+#tableNichos {
+transform: scale(0.1); /* Reducir el tamaño de la tabla al 50% */
+transform-origin: top left; /* Establecer el origen de la transformación */
+}
+}

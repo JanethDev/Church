@@ -1,5 +1,8 @@
 {
     "require": {
-        "firebase/php-jwt": "^6.10"
+        "firebase/php-jwt": "^6.10",
+        "guzzlehttp/guzzle": "~6.0",
+        "php-http/httplug": "^2.4",
+        "php-http/guzzle6-adapter": "^2.0"
     }
 }

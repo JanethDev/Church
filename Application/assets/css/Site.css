@@ -407,7 +407,7 @@ footer {
 /* Footer */
 
 .footer {
-    position: fixed;
+    position: absolute;
     padding: 10px 0px 5px 5px;
     bottom: 0;
     left: 0;
@@ -434,8 +434,8 @@ footer {
         height: auto;
     }
     #tableSections table{
-        transform: scale(0.6); /* Reducir el tamaño de la tabla al 50% */
-        transform-origin: top left; /* Establecer el origen de la transformación */
+        transform: scale(0.6); 
+        transform-origin: top left; 
     }
 }
 
@@ -445,15 +445,53 @@ footer {
         height: auto;
     }
     #tableSections table{
-        transform: scale(0.4); /* Reducir el tamaño de la tabla al 50% */
-        transform-origin: top left; /* Establecer el origen de la transformación */
+        transform: scale(0.4); 
+        transform-origin: top left; 
     }
 }
 
 @media screen and (max-width : 599px ){
     #tableSections table{
-        transform: scale(0.2); /* Reducir el tamaño de la tabla al 50% */
-        transform-origin: top left; /* Establecer el origen de la transformación */
+        transform: scale(0.2); 
+        transform-origin: top left; 
     }
 }
 
+#tableNichos {
+    width: 100%;
+    height: auto;
+}
+@media screen and (min-width : 1020px ){
+    #tableNichos {
+        width: 100%;
+        height: auto;
+    }
+    #imgNichosA {
+        transform: scale(0.6); 
+        transform-origin: top left; 
+    }
+}
+
+@media screen and (min-width : 600px ) and (max-width:1019px){
+    #tableNichos {
+        width: 100%;
+        height: auto;
+    }
+    #imgNichosA {
+        transform: scale(0.5); 
+        transform-origin: top left; 
+    }
+}
+
+@media screen and (max-width : 599px ){
+    #imgNichosA {
+        transform: scale(0.3); 
+        transform-origin: top left; 
+    }
+}
+.spinner-border {
+    display: none; /* Oculto por defecto */
+    width: 3rem;
+    height: 3rem;
+    border-width: .3em;
+}

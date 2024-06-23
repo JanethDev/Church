@@ -52,8 +52,14 @@ require_once 'inc/head.php';
 							<a href="#" data-toggle="modal" data-target=".bs-example-modal-sm" class="float-right">¿Olvidó su contraseña?</a>
 						</div>
 						<div class="col-12 form-group mt-2">
-							<input type="button" value="Iniciar sesión" class="btn btn-success w-100" onclick="autenticar();"/>
+							<input type="button" value="Iniciar sesión" class="btn btn-success w-100" id="loginButton" onclick="autenticar();"/>
 						</div>
+						<div class="col-12 form-group mt-2 text-center">
+							<div class="spinner-border text-primary" role="status" id="loadingSpinner">
+								<span class="sr-only">Loading...</span>
+							</div>
+						</div>
+
 					</div>
 				</form>
 			</div>
@@ -83,37 +89,59 @@ require_once 'inc/head.php';
     
 <?php require_once('inc/footer.php'); ?>
 <script>
-function autenticar(){
-		
-	var data = new FormData(document.getElementById("loginForm"));
 	
-	$.ajax({
-		url: "api/access/access.php",        
-		type: "POST",             
-		data: data, 			  
-		contentType: false,       
-		cache: false,             
-		processData:false,        
-		success: function(data)   
-		{	
-			validateJS = JSON.parse(data);
-			switch(validateJS.caso) {
-				case 1:
-                    window.location.href = "index.php";
-					break;
-				case 2:
-					$(".upload-msg").html("<div class='alert alert-danger alert-dismissible' role='alert'>"+validateJS.mensaje+"</div> ");
-					window.setTimeout(function() {
-					$(".alert-dismissible").fadeTo(500, 0).slideUp(500, function(){
-					$(this).remove();
-					});	}, 5000);
-							
-					break;
-					
-			}
+$(document).ready(function() {
+    $(".spinner-border").hide();
+});
+function autenticar(){
+    var data = new FormData(document.getElementById("loginForm"));
 
-		}
-	});
-		
-	}
+    // Ocultar el botón de iniciar sesión y mostrar el spinner de carga
+    $("#loginButton").hide();
+    $(".spinner-border").show();
+
+    $.ajax({
+        url: "api/access/access.php",        
+        type: "POST",             
+        data: data,             
+        contentType: false,       
+        cache: false,             
+        processData:false,        
+        success: function(data) {   
+            // Revertir: Mostrar el botón de iniciar sesión y ocultar el spinner de carga
+            $("#loginButton").show();
+            $(".spinner-container").hide();
+            
+            var validateJS = JSON.parse(data);
+			
+            switch(validateJS.caso) {
+                case 1:
+                    window.location.href = "index.php";
+                    break;
+                case 2:
+                    $(".upload-msg").html("<div class='alert alert-danger alert-dismissible' role='alert'>"+validateJS.mensaje+"</div> ");
+                    window.setTimeout(function() {
+                        $(".alert-dismissible").fadeTo(500, 0).slideUp(500, function(){
+                            $(this).remove();
+                        });
+                    }, 5000);
+                    break;
+            }
+
+        },
+        error: function() {
+            // Revertir: Mostrar el botón de iniciar sesión y ocultar el spinner de carga en caso de error
+            $("#loginButton").show();
+            $(".spinner-container").hide();
+            $(".upload-msg").html("<div class='alert alert-danger alert-dismissible' role='alert'>Error desconocido.</div>");
+            window.setTimeout(function() {
+                $(".alert-dismissible").fadeTo(500, 0).slideUp(500, function(){
+                    $(this).remove();
+                });
+            }, 5000);
+        }
+    });
+}
+
 </script>
+
