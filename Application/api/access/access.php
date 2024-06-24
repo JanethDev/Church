@@ -1,5 +1,5 @@
 <?php
-require_once('../../init.php');
+require_once '../../init.php';
 require 'vendor/autoload.php'; 
 
 session_start();

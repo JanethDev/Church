@@ -215,5 +215,3 @@
 </div>
 
 <div style="position: relative;" id="imgNichosC">
-   
-</div>

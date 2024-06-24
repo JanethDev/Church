@@ -17,17 +17,15 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 $(document).ready(function() {
     // Función para cargar el contenido de la página mediante AJAX
     function loadPage(page) {
-        var url;
-        if (page.includes('views/')) {
-            url = page + '.php';
-        } else {
-            url = 'views/' + page + '.php';
-        }
+        var url = 'views/' + page + '.php'; // Construimos la URL correcta
         $.ajax({
             url: url,
             type: 'GET',
             success: function(response) {
                 $('#page-content').html(response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error al cargar la página:', error);
             }
         });
     }
@@ -35,12 +33,7 @@ $(document).ready(function() {
     // Cargar la página inicial al cargar la página por primera vez
     loadPage('<?php echo $currentPage; ?>');
 
-    // Manejar el evento de clic en el navbar para cargar la página correspondiente
-    $('.navbar-nav a').click(function(e) {
-        e.preventDefault();
-        var page = $(this).attr('href');
-        loadPage(page);
-    });
+    
 });
 </script>
 

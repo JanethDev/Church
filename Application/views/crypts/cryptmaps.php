@@ -35,7 +35,7 @@ $sCurrentAction = isset($_GET["action"]) ? $_GET["action"] : ''; // Obtener el v
                 </a>
             </td>
             <td rowspan="2">
-                <a href="btn-section-b">
+                <a href="#" data-section="B">
                     <img src="../assets/img/crypt-sections/btn-section-b-07.png" width="160" height="124" border="0" alt="Secci&#243;n B">
                 </a>
             </td>
@@ -56,7 +56,7 @@ $sCurrentAction = isset($_GET["action"]) ? $_GET["action"] : ''; // Obtener el v
         </tr>
         <tr>
             <td rowspan="5">
-                <a href="btn-section-c">
+                <a href="#" data-section="C">
                     <img src="../assets/img/crypt-sections/btn-section-c-11.png" width="279" height="708" border="0" alt="Secci&#243;n C">
                 </a>
             </td>
@@ -80,7 +80,7 @@ $sCurrentAction = isset($_GET["action"]) ? $_GET["action"] : ''; // Obtener el v
                 <img src="../assets/img/crypt-sections/Sin-titulo-1_13.png" width="22" height="623" alt="">
             </td>
             <td>
-                <a href="btn-section-b">
+                <a href="#" data-section="B">
                     <img src="../assets/img/crypt-sections/btn-section-b-15.png" width="116" height="316" border="0" alt="Secci&#243;n B">
                 </a>
             </td>
@@ -98,7 +98,7 @@ $sCurrentAction = isset($_GET["action"]) ? $_GET["action"] : ''; // Obtener el v
         </tr>
         <tr>
             <td colspan="2" rowspan="3">
-                <a href="btn-section-b">
+                <a href="#" data-section="B">
                     <img src="../assets/img/crypt-sections/btn-section-b-17.png" width="214" height="129" border="0" alt="Secci&#243;n B">
                 </a>
             </td>

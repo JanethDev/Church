@@ -27,7 +27,7 @@
                             <li style="margin-right:15px; color:white"><a <?php if ($current_page == 'solicitud') echo 'class="active"' ?> href="solicitud">Solicitud</a></li>
                             <li style="margin-right:15px; color:white"><a <?php if ($current_page == 'solicitudes') echo 'class="active"' ?> href="solicitudes">Solicitudes()</a></li>
                             <li style="margin-right:15px; color:white"><a <?php if ($current_page == 'pagos') echo 'class="active"' ?> href="pagos">Pagos</a></li>
-                            <li class="dropdown csDropdown">
+                            <li class="nav-item dropdown csDropdown">
                                 <a <?php if ($current_page == 'aviso_de_privacidad' ||$current_page == 'reglamento_columbario' ) echo 'class="active"' ?> href="#" data-toggle="dropdown" class="dropdown-toggle" style="margin-right:15px">Documentos<span class="caret"></span></a>
                                 <ul class="dropdown-menu csWidth100" style="color:black">
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="aviso_de_privacidad">Aviso de privacidad</a></li>
@@ -123,7 +123,7 @@
                             Hola <?php echo $email; ?>!
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a style="margin-left: 7%;" href="javascript:void(0);" onclick="cerrarSesion();">Cerrar sesión</a>
+                            <a class="dropdown-item"  style="margin-left: 7%;" href="#" onclick="cerrarSesion();">Cerrar sesión</a>
                         </div>
                     </li>
                 </ul>
