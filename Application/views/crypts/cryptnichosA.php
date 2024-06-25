@@ -1,5 +1,11 @@
 <link href="assets/css/cryptnichos.css" id="bootstrap-style" rel="stylesheet" type="text/css">
+<div class="row">
+    <div class="col-md-12"><br>
+        <h5>Seleccionar nicho</h5>
+    </div>
+</div>
 <div style="position: relative;" id="imgNichosA">
+
     <img src="../assets/img/mapa criptas 2024_page-0001.jpg" alt="Imagen" usemap="#puntos">
     <!-- Puntos superpuestos -->
     <div class="punto1" style="left: 90px; top: 90px;" data-coord="1"></div>

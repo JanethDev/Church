@@ -8,7 +8,8 @@ use GuzzleHttp\Exception\RequestException;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['href']) && !empty($_POST['href'])) {
-        $zone = 'aj13u02'; 
+        $href = isset($_POST['href']) ? trim($_POST['href']) : '';
+        $zone = str_replace('#', '', $href); 
         $headers = [
             'Authorization' => 'Bearer '.$token,
         ];
@@ -25,7 +26,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'zone' => $zone,
                 ],
             ]);
-
 
             // Obtiene el contenido de la respuesta de la API
             $body = $response->getBody()->getContents();

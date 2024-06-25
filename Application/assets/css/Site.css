@@ -1,5 +1,6 @@
 ﻿html, body {
     font-family: 'Lato-Regular'!important;
+    margin-bottom: 100px;
 
 }
 @font-face {
@@ -407,7 +408,7 @@ footer {
 /* Footer */
 
 .footer {
-    position: absolute;
+    position: fixed;
     padding: 10px 0px 5px 5px;
     bottom: 0;
     left: 0;
@@ -494,4 +495,52 @@ footer {
     width: 3rem;
     height: 3rem;
     border-width: .3em;
+}
+
+@media screen and (min-width : 1020px ){
+    .table-container {
+        max-width: 100%;
+        overflow-x: auto;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (min-width : 600px ) and (max-width:1019px){
+    .table-container {
+        max-width: 100%;
+        overflow-x: auto;
+        margin: 0 auto;
+    }
+}
+table#tablecryptsection {
+    width: auto; /* Ajusta el ancho automáticamente según el contenido */
+    max-width: 100%; /* Ajusta el ancho máximo */
+    border-collapse: collapse; /* Colapsa los bordes de la tabla */
+    white-space: nowrap; /* Evita el salto de línea en las celdas */
+}
+
+table#tablecryptsection th, 
+table#tablecryptsection td {
+    text-align: center; /* Alinea el texto al centro */
+   
+}
+
+.position-name {
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+}
+
+.disponible img,
+.no-disponible img {
+    width: 50px;
+    height: 50px;
+}
+
+.disponible:hover img {
+    content: url('../../assets/img/cuadro-selected.png');
+}
+
+.td-inner {
+    padding: 5px; /* Ajustar si es necesario */
 }
