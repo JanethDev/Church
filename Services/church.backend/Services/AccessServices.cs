@@ -1,4 +1,5 @@
-﻿using church.backend.services.DataBase;
+﻿using church.backend.Models.register;
+using church.backend.services.DataBase;
 using church.backend.services.JsonWebToken;
 using church.backend.services.Models;
 using church.backend.services.Models.access;
@@ -172,6 +173,89 @@ namespace church.backend.services.Services
             }
             data.password = GetRandomAlphanumericPassword();
             return _accessDB.createEmployee(data);
+        }
+
+        public GeneralResponse createCustomer(create_customer_request data)
+        {
+            if (data.catStatesId < 0)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un estado"
+                };
+            }
+            if (data.catTownsId < 0)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar una ciudad"
+                };
+            }
+            if (string.IsNullOrWhiteSpace(data.email))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un correo"
+                };
+            }
+            if (!ValidateEmail(data.email))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "El correo enviado no es válido"
+                };
+            }
+            if (string.IsNullOrWhiteSpace(data.name))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un nombre"
+                };
+            }
+            if (string.IsNullOrWhiteSpace(data.father_last_name))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un apellido"
+                };
+            }
+            if (string.IsNullOrWhiteSpace(data.father_last_name))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un apellido"
+                };
+            }
+            if (string.IsNullOrWhiteSpace(data.phone))
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar su número de teléfono"
+                };
+            }
+            return _accessDB.createCustomer(data);
+        }
+
+        public list_customer SearchCustomer(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return new list_customer()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un valor de busqueda"
+                };
+            }
+
+            return _accessDB.SearchCustomer(value);
         }
 
         private async Task SendValidateEmail(string email, string code)
