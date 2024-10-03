@@ -1,13 +1,12 @@
-using Enerfan.DataBase;
-using Enerfan.Services;
-using Enerfan.Utilities;
+using church.backend.services.DataBase;
+using church.backend.services.JsonWebToken;
+using church.backend.services.Services;
+using church.backend.Utilities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
-DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Configuration
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .AddEnvironmentVariables();
 
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
@@ -22,46 +21,80 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddHttpClient();
+//Data base
+builder.Services.AddSingleton<accessDB>();
+builder.Services.AddSingleton<rolesDB>();
+builder.Services.AddSingleton<cathedralDB>();
+builder.Services.AddSingleton<citiesDB>();
+builder.Services.AddSingleton<civilStatusDB>();
+builder.Services.AddSingleton<daysDB>();
+builder.Services.AddSingleton<discountDB>();
+builder.Services.AddSingleton<intentsDB>();
+builder.Services.AddSingleton<federalTaxDB>();
+builder.Services.AddSingleton<maintenanceFeeDB>();
+builder.Services.AddSingleton<misaDB>();
+builder.Services.AddSingleton<misaIntentsDB>();
+builder.Services.AddSingleton<stateTownsDB>();
+builder.Services.AddSingleton<cryptDB>();
 
-//database
-builder.Services.AddSingleton<StationDataBase>();
-builder.Services.AddSingleton<QrDataBase>();
-builder.Services.AddSingleton<AccessDataBase>();
-builder.Services.AddSingleton<PhotoProfileDataBase>();
-builder.Services.AddSingleton<PromotionDataBase>();
-builder.Services.AddSingleton<InvoiceDataBase>();
-
-//services
-builder.Services.AddSingleton<StationServices>();
-builder.Services.AddSingleton<QrServices>();
+//Services
 builder.Services.AddSingleton<AccessServices>();
-builder.Services.AddSingleton<PromotionServices>();
-builder.Services.AddSingleton<PhotoProfileServices>();
-builder.Services.AddSingleton<InvoiceService>();
+builder.Services.AddSingleton<RolesServices>();
+builder.Services.AddSingleton<CathedralServices>();
+builder.Services.AddSingleton<CitiesServices>();
+builder.Services.AddSingleton<CivilStatusServices>();
+builder.Services.AddSingleton<DaysServices>();
+builder.Services.AddSingleton<DiscountServices>();
+builder.Services.AddSingleton<FederalTaxServices>();
+builder.Services.AddSingleton<IntentsServices>();
+builder.Services.AddSingleton<MaintenanceFeeServices>();
+builder.Services.AddSingleton<MisaServices>();
+builder.Services.AddSingleton<StateTownServices>();
+builder.Services.AddSingleton<MisaIntentsServices>();
+builder.Services.AddSingleton<CryptServices>();
 
-//utils
-builder.Services.AddSingleton<xmlTools>();
-builder.Services.AddSingleton<Utils>();
-builder.Services.AddSingleton<PasswordMaker>();
+//Utilities
 builder.Services.AddSingleton<NullValues>();
-builder.Services.AddSingleton<NipValidator>();
-builder.Services.AddSingleton<ImageUtils>();
-builder.Services.AddSingleton<LocationUtil>();
+builder.Services.AddSingleton(provider => new JwtService("CHURCHmnjhbvgfcrdexcfrvgbhnjmhgvfrcvgbhnyv234dfg", "church_issuer"));
 
-//jwt
-builder.Services.AddSingleton(provider => new JwtService("Enerfanmnjhbvgfcrdexcfrvgbhnjmhgvfrcvgbhnyv234dfg", "enerfan_issuer"));
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "API",
+        Description = "Documentation of RestServives",
+    });
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+    var jwtSecurityScheme = new OpenApiSecurityScheme
+    {
+        BearerFormat = "JWT",
+        Name = "JsonWebToken",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        Description = "Coloca **SOLO** tu JWT token en el recuadro de abajo",
+
+        Reference = new OpenApiReference
+        {
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+
+    options.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { jwtSecurityScheme, Array.Empty<string>() }
+    });
+});
 
 var app = builder.Build();
-var config = app.Configuration;
-config["ConnectionStrings:db"] = DotNetEnv.Env.GetString("db_connection");
-config["ConnectionStrings:invoice"] = DotNetEnv.Env.GetString("invoice");
-config["ConnectionStrings:sepomex"] = DotNetEnv.Env.GetString("sepomex");
-config["Invoice:url"] = DotNetEnv.Env.GetString("invoiceUrlBase");
-config["Invoice:user"] = DotNetEnv.Env.GetString("invoiceUser");
-config["Invoice:password"] = DotNetEnv.Env.GetString("invoicePassword");
 
 if (app.Environment.IsDevelopment())
 {
