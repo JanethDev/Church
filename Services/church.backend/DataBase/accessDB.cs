@@ -1,8 +1,9 @@
-﻿using church.backend.Models.register;
+using church.backend.Models.register;
 using church.backend.services.Models;
 using church.backend.services.Models.access;
 using church.backend.services.Models.enums;
 using church.backend.services.Models.register;
+using church.backend.Utilities;
 using System.Data.SqlClient;
 
 namespace church.backend.services.DataBase
@@ -11,10 +12,12 @@ namespace church.backend.services.DataBase
     {
         private readonly string DataBaseConection;
         private readonly IConfiguration _configuration;
-        public accessDB(IConfiguration configuration)
+        private readonly NullValues _nv;
+        public accessDB(IConfiguration configuration, NullValues nv)
         {
             DataBaseConection = configuration["connectionStrings:database:dev"]!;
             _configuration = configuration;
+            _nv = nv;
         }
 
         public login_response login(string email,string password)
@@ -286,22 +289,22 @@ namespace church.backend.services.DataBase
                             {
                                 response.customers.Add(new customer_response()
                                 {
-                                    id = int.Parse(reader["id"].ToString()!),
-                                    customerNumber = int.Parse(reader["customer_number"].ToString()!),
+                                    id = _nv.nullInt(reader["id"].ToString()!),
+                                    customerNumber = _nv.nullInt(reader["customer_number"].ToString()!),
                                     name = reader["name"].ToString()!,
                                     father_last_name = reader["psurname"].ToString()!,
                                     mother_last_name = reader["msurname"].ToString()!,
                                     phone = reader["phone"].ToString()!,
                                     email = reader["email"].ToString()!,
                                     rfc = reader["rfc"].ToString()!,
-                                    zip_code = int.Parse(reader["cp_code"].ToString()!),
+                                    zip_code = _nv.nullInt(reader["cp_code"].ToString()!),
                                     address = reader["address"].ToString()!,
-                                    catStatesId = int.Parse(reader["cat_states_id"].ToString()!),
+                                    catStatesId = _nv.nullInt(reader["cat_states_id"].ToString()!),
                                     state = reader["state"].ToString()!,
-                                    catTownsId = int.Parse(reader["town"].ToString()!),
-                                    town = reader["state"].ToString()!,
+                                    catTownsId = _nv.nullInt(reader["town"].ToString()!),
+                                    town = reader["town"].ToString()!,
                                     social_reason = reader["social_reason"].ToString()!,
-                                    birthdate = DateTime.Parse(reader["birthdate"].ToString()!),
+                                    birthdate = _nv.nullDate(reader["birthdate"].ToString()!),
                                     birth_place  = reader["birth_place"].ToString()!,
                                     civil_status = reader["civil_status"].ToString()!,
                                     occupation = reader["occupation"].ToString()!,
@@ -310,7 +313,7 @@ namespace church.backend.services.DataBase
                                     business_phone = reader["business_phone"].ToString()!,
                                     business_ext = reader["business_ext"].ToString()!,
                                     deputation = reader["deputation"].ToString()!,
-                                    average_income = double.Parse(reader["average_income"].ToString()!),
+                                    average_income = _nv.nullDouble(reader["average_income"].ToString()??"0"),
                                 });
                             }
                         }
