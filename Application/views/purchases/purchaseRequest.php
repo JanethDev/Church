@@ -1,4 +1,45 @@
+<!-- Primero incluye jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<!-- Luego incluye Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<?php
+require_once '../../init.php';
+require_once('auth/session.php');
+    // Recibe los valores enviados a través de AJAX
+    $urnaSeleccionada = isset($_POST['urnaSeleccionada']) ? $_POST['urnaSeleccionada'] : '';
+    $tipoSeleccionado = isset($_POST['tipoSeleccionado']) ? $_POST['tipoSeleccionado'] : '';
+    $precioSeleccionado = isset($_POST['precioSeleccionado']) ? $_POST['precioSeleccionado'] : '';
+    $descuentoAplicado = isset($_POST['descuentoAplicado']) ? $_POST['descuentoAplicado'] : '';
+    $totalFinal = isset($_POST['totalFinal']) ? $_POST['totalFinal'] : '';
+    $selectedDiscountValue = isset($_POST['selectedDiscountValue']) ? $_POST['selectedDiscountValue'] : '';
+    $selectedPaymentValue = isset($_POST['selectedPaymentValue']) ? $_POST['selectedPaymentValue'] : '';
+    $enganche = isset($_POST['enganche']) ? $_POST['enganche'] : '';
+    $positions = isset($_POST['positions']) ? json_decode($_POST['positions'], true) : [];
+
+    if (!empty($positions)) {
+        // Acceder a los valores dentro de positions
+        $fullposition = isset($positions[0]['full_position']) ? $positions[0]['full_position'] : '';
+        $id = isset($positions[0]['id']) ? $positions[0]['id'] : '';
+    } else {
+        $fullposition = '';
+        $id = '';
+    }   
+
+    // Aquí puedes usar las variables para mostrarlas o realizar cualquier otra operación
+    echo "<h1>Resumen de Compra</h1>";
+    echo "<p>Urna seleccionada: $urnaSeleccionada</p>";
+    echo "<p>Tipo seleccionado: $tipoSeleccionado</p>";
+    echo "<p>Precio seleccionado: $precioSeleccionado</p>";
+    echo "<p>Descuento aplicado: $descuentoAplicado</p>";
+    echo "<p>Total final: $totalFinal</p>";
+    echo "<p>Descuento: $selectedDiscountValue</p>";
+    echo "<p>Forma de pago: $selectedPaymentValue</p>";
+    echo "<p>Enganche: $enganche</p>";
+    echo "<p>Ubicacion de compra: $fullposition</p>";
+    echo "<p>Id: $id</p>";
+?>
 <div class="card">
     <div class="card-header card-header-green">
         <h2>Nueva solicitud de compra</h2>
@@ -9,30 +50,25 @@
                 <div class="col-md-4 col-sm-6 col-xs-12">
                     <table class="table table-bordered" style="background-color: white">
                         <tr><td colspan="3" style="text-align:center;">Fecha</td></tr>
-                        <tr>
-                            <td>Day</td>
-                            <td>Month</td>
-                            <td>Year</td>
+                        <tr style="text-align:center;">
+                            <td><?php echo(date('d')); ?></td>
+                            <td><?php echo(date(format: 'm')); ?></td>
+                            <td><?php echo(date(format: 'Y')); ?></td>
                         </tr>
                     </table>
                 </div>
                 <div class="offset-2 col-md-6 col-sm-6 col-xs-12">
                     <table class="table table-bordered" style="background-color: white">
                         <tr>
-                            <td style="">SOLICITUD</td>
-                            <td>ID</td>
+                            
                             <td style="">VENDEDOR</td>
-                            <td>CreatedBy</td>
+                            
                         </tr>
                         <tr>
-                            <td style="">CONTRATO</td>
-                            <td>ContractID</td>
-                            <td style="">PROMOTOR</td>
+                            
+                            
                             <td>
-                                <select class="form-control">
-                                    <option value="">Seleccione</option>
-                                    <!-- options -->
-                                </select>
+                                <?php echo($name); ?>
                             </td>
                         </tr>
                     </table>
@@ -44,15 +80,16 @@
                         <tr><td colspan="3" style="text-align:center;"><strong>DATOS DEL SOLICITANTE</strong></td></tr>
                         <tr>
                             <td colspan="3">
-                                <button type="button" class="btn btn-success">EDITAR NOMBRE</button>
-                                <button type="button" class="btn btn-success" style="margin-left:5px;">NUEVO CLIENTE</button>
-                                <button style="margin-left:5px" type="button" class="btn btn-info">CLIENTE EXISTENTE</button>
+                                <button type="button" class="btn btn-success" id="btnNewCustomer" style="margin-left:5px;">NUEVO CLIENTE</button>
+                                <button type="button" class="btn btn-info" id="btnExistingCustomer" style="margin-left:5px;">CLIENTE EXISTENTE</button>
                             </td>
                         </tr>
                         <tr class="tr-search-customer" style="display:none;">
                             <td>BUSCAR CLIENTE</td>
                             <td colspan="2">
-                                <input type="text" class="form-control" id="Customer" name="Customer" />
+                            <select class="form-control" id="CustomerSelect" name="CustomerSelect">
+                                <option value="">Buscar cliente...</option>
+                            </select>
                                 <input type="hidden" name="CustomerID" id="CustomerID" />
                                 <input type="hidden" name="UserID" id="UserID" />
                             </td>
@@ -332,27 +369,68 @@
 </div>
 <div class="row" style="padding-top:15px;">
     <div class="col-md-2 col-sm-2 col-xs-6">
-        <button class = "btn btn-primary" style="width:100%;">Volver</button>
+    <button class = "btn btn-primary" style="width:100%;" id="btnSelUrna">Volver</button>
     </div>
     <div class="offset-md-6 col-md-2 col-sm-2 col-xs-6">
         <input type="button" value="Cotizar" id="btnQuotation" class="btn btn-default" style="float:right;width:100%;" />
     </div>
-    <!--
-        @*<div class="col-md-2 col-sm-2 col-xs-6">
-                @Html.ActionLink("Contrato", "Contract", null, htmlAttributes: new { @class = "btn btn-success", @style = "width:100%;" })
-            </div>
-            <div class="col-md-2 col-sm-2 col-xs-6">
-                @Html.ActionLink("Contrato 2", "ContractCommunityCrypt", null, htmlAttributes: new { @class = "btn btn-success", @style = "width:100%;" })
-            </div>*@
-        @*<div class="col-md-2 col-sm-2 col-xs-6">
-            @Html.ActionLink("Solicitud", "PDF", null, htmlAttributes: new { @class = "btn btn-success", @style = "width:100%;" })
-            </div>*@
-
-        --> 
     <div class="col-md-2 col-sm-2 col-xs-6">
         <input type="button" value="Guardar" id="btnSave" class="btn btn-default" style="float:right;width:100%;" />
     </div>
 </div>
 
-<input type="hidden" id="windowid" name="windowid" value="@Guid.NewGuid().ToString()" />
-<input type="hidden" id="window_contract_id" name="window_contract_id" value="@Guid.NewGuid().ToString("N")" />
+
+<script>
+$(document).ready(function() {
+    $('#btnNewCustomer').click(function() {
+        $('.tr-search-customer').hide(); // Ocultar la búsqueda de cliente
+        $('.tr-new-customer').show();    // Mostrar los campos de nuevo cliente
+    });
+
+    // Mostrar campo de "Buscar Cliente"
+    $('#btnExistingCustomer').click(function() {
+        $('.tr-new-customer').hide();    // Ocultar los campos de nuevo cliente
+        $('.tr-search-customer').show(); // Mostrar la búsqueda de cliente
+    });
+    $('#btnSelUrna').click(function(e) {
+        e.preventDefault(); // Evita que el botón envíe un formulario o recargue la página
+        window.location.href = 'solicitud'; // Redirige sin parámetros
+    });
+
+    $('#CustomerSelect').select2({
+        placeholder: "Buscar cliente...",
+        minimumInputLength: 2,
+        ajax: {
+            url: "api/customers/searchCustomers.php",
+            type: "POST",
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    name: params.term
+                };
+            },
+            processResults: function(response) {
+                return {
+                    results: response.map(function(customer) {
+                        return {
+                            id: customer.id,
+                            text: customer.name
+                        };
+                    })
+                };
+            },
+            cache: true
+        }
+    });
+
+    // Manejar el evento de selección
+    $('#CustomerSelect').on('select2:select', function(e) {
+        var selectedCustomerId = e.params.data.id;
+        var selectedCustomerName = e.params.data.text;
+
+        // Asignar el valor seleccionado a los campos ocultos
+        $('#CustomerID').val(selectedCustomerId);
+    });
+});
+</script>
