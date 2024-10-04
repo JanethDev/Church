@@ -19,7 +19,7 @@ $server_name = $_SERVER['SERVER_NAME'];
 $request_uri = $_SERVER['REQUEST_URI'];
 $request_method = $_SERVER['REQUEST_METHOD'];
 $current_page = basename($_SERVER['PHP_SELF']);
-$services = "https://986f-2806-2f0-1000-eade-f12b-d037-4b2f-6913.ngrok-free.app/";
+$services = "http://localhost:5107/";
 
 
 $document_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http').'://'.$server_name;

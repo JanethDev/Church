@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($http_code == 200 && !empty($responseBody)) {
             // Inicio de sesión exitoso
-            sleep(2);
+            //sleep(2);
             $_SESSION['token'] = $responseBody;
             $code = 1;
             $mensaje = "";
@@ -44,4 +44,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $json_obj = array("caso" => $code, "token" => $responseBody ?? null, "mensaje" => $mensaje);
     echo json_encode($json_obj, JSON_PRETTY_PRINT);
 }
-?>

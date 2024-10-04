@@ -189,7 +189,7 @@ $(document).ready(function() {
         var selectedDiscountValue = $('#sel-discount').val();
         var selectedPaymentValue = $('#sel-pago').val();
         var enganche = $('#sel-enganche').val();
-
+        var positions = <?php echo json_encode($positions); ?>;
         var data = {
             urnaSeleccionada: urnaSeleccionada,
             tipoSeleccionado: tipoSeleccionado,
@@ -198,7 +198,8 @@ $(document).ready(function() {
             totalFinal: totalFinal,
             selectedDiscountValue: selectedDiscountValue,
             selectedPaymentValue: selectedPaymentValue,
-            enganche: enganche
+            enganche: enganche,
+            positions: JSON.stringify(positions)
         };
 
         $.ajax({

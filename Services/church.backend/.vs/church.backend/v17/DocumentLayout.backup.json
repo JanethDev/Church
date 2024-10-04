@@ -1,0 +1,62 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\GIT\\Church\\Services\\church.backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|c:\\git\\church\\services\\church.backend\\controllers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|solutionrelative:controllers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|c:\\git\\church\\services\\church.backend\\database\\accessdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E5A6359-FBBE-450C-B310-ECADFEB8A62B}|church.backend.csproj|solutionrelative:database\\accessdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:11:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:12:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CustomerController.cs",
+              "DocumentMoniker": "C:\\GIT\\Church\\Services\\church.backend\\Controllers\\CustomerController.cs",
+              "RelativeDocumentMoniker": "Controllers\\CustomerController.cs",
+              "ToolTip": "C:\\GIT\\Church\\Services\\church.backend\\Controllers\\CustomerController.cs",
+              "RelativeToolTip": "Controllers\\CustomerController.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAAgwDwAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-03T04:11:33.639Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "accessDB.cs",
+              "DocumentMoniker": "C:\\GIT\\Church\\Services\\church.backend\\DataBase\\accessDB.cs",
+              "RelativeDocumentMoniker": "DataBase\\accessDB.cs",
+              "ToolTip": "C:\\GIT\\Church\\Services\\church.backend\\DataBase\\accessDB.cs",
+              "RelativeToolTip": "DataBase\\accessDB.cs",
+              "ViewState": "AgIAAPUAAAAAAAAAAAAUwAIBAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-03T04:11:23.543Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
