@@ -5,6 +5,7 @@ using church.backend.Models.purchase;
 using church.backend.services.DataBase;
 using church.backend.services.JsonWebToken;
 using church.backend.services.Models;
+using church.backend.services.Models.enums;
 
 namespace church.backend.Services
 {
@@ -61,7 +62,7 @@ namespace church.backend.Services
                 };
             }
             crypt tempCrypt = crypt.data[0];
-            tempCrypt.status_id = data.statusId==2008? 1001 : 1009; //si la transaccion es de compra se pone como vendido si no se pone como apartado
+            tempCrypt.status_id = data.statusId==(int)purchase_status.proceso? 1001 : 1009; //si la transaccion es de compra se pone como vendido si no se pone como apartado
             update_crypt_request updateReques = new update_crypt_request(){
                 id = tempCrypt.id,
                 status_id = tempCrypt.status_id,
@@ -82,6 +83,28 @@ namespace church.backend.Services
             data.userId = userId;
             data.datePurchase = DateTime.Now;
             return _purchaseDB.CreatePurchase(data);
+        }
+    
+        public PurchaseResponse ConsultPurchaceByClient(int customerId)
+        {
+            if(customerId<=0){
+                return new PurchaseResponse(){
+                    code = -1,
+                    message = "Es necesario enviar el id del cliente"
+                };
+            }
+            return _purchaseDB.ConsultPurchaceByClient(customerId);
+        }
+
+        public PurchaseResponse ConsultPurchaceByStatus(int statusId)
+        {
+            if(statusId<=0){
+                return new PurchaseResponse(){
+                    code = -1,
+                    message = "Es necesario enviar el id de estatus"
+                };
+            }
+            return _purchaseDB.ConsultPurchaceByStatus(statusId);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using church.backend.Models.purchase;
 using church.backend.services.Models;
+using church.backend.services.Models.enums;
 using church.backend.services.Models.register;
 using church.backend.services.Services;
 using church.backend.Services;
@@ -92,7 +93,7 @@ namespace church.backend.Controllers
         {
             var claims = HttpContext.Items["Claims"] as IDictionary<string, string>;
             int user_id = int.Parse(claims?["user_id"] ?? "0");
-            data.statusId = 2008;
+            data.statusId = (int)purchase_status.proceso;
             GeneralResponse client = _PurchaseServices.CreatePurchase(data, user_id);
             if (client.code != 1)
             {
@@ -142,13 +143,49 @@ namespace church.backend.Controllers
         {
             var claims = HttpContext.Items["Claims"] as IDictionary<string, string>;
             int user_id = int.Parse(claims?["user_id"] ?? "0");
-            data.statusId = 2011;
+            data.statusId = (int)purchase_status.presolicitud;
             GeneralResponse client = _PurchaseServices.CreatePurchase(data, user_id);
             if (client.code != 1)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, client.message);
             }
             return Ok(client.message);
+        }
+
+        /// <summary>
+        /// Devuelve la lista las compras por cliente
+        /// </summary>
+        /// <returns>Devuelve la lista las compras por cliente</returns>
+        /// <response code="200">lista las compras por cliente</response>
+        /// <response code="400">Retorna algun error</response>
+        [HttpGet]
+        [Route("purchase/by/customer")]
+        public IActionResult ConsultPurchaceByClient([FromQuery] int customerId)
+        {
+            PurchaseResponse response = _PurchaseServices.ConsultPurchaceByClient(customerId);
+            if (response.code != 1)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, response.message);
+            }
+            return Ok(response.data);
+        }
+
+        /// <summary>
+        /// Devuelve la lista las compras reservadas/apartadas
+        /// </summary>
+        /// <returns>Devuelve la lista las compras reservadas/apartadas</returns>
+        /// <response code="200">lista las compras reservadas/apartadas</response>
+        /// <response code="400">Retorna algun error</response>
+        [HttpGet]
+        [Route("purchase/reserved")]
+        public IActionResult PurchaseReserved()
+        {
+            PurchaseResponse response = _PurchaseServices.ConsultPurchaceByClient((int)purchase_status.presolicitud);
+            if (response.code != 1)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, response.message);
+            }
+            return Ok(response.data);
         }
     }
 }
