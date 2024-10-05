@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace church.backend.Controllers
 {
-    public class PuschaseController : Controller
+    public class PurchaseController : Controller
     {
         private readonly PurchaseServices _PurchaseServices;
-        public PuschaseController(PurchaseServices PurchaseServices)
+        public PurchaseController(PurchaseServices PurchaseServices)
         {
             _PurchaseServices = PurchaseServices;
         }
@@ -73,6 +73,14 @@ namespace church.backend.Controllers
         ///        "referencePersonPhone1" : "test",
         ///        "referencePerson2" : "test",
         ///        "referencePersonPhone2" : "test",
+        ///        "payments":  [
+        ///                     {
+        ///                         "paymentAmount" : 10000.30,
+        ///                         "concept" : "pago inicial",
+        ///                         "typePaymentId" : 1,
+        ///                         "currencyId" : 1
+        ///                     }
+        ///         ]
         ///     }
         ///
         /// </remarks>
@@ -115,6 +123,14 @@ namespace church.backend.Controllers
         ///        "referencePersonPhone1" : "test",
         ///        "referencePerson2" : "test",
         ///        "referencePersonPhone2" : "test",
+        ///        "payments":  [
+        ///                     {
+        ///                         "paymentAmount" : 10000.30,
+        ///                         "concept" : "pago inicial",
+        ///                         "typePaymentId" : 1,
+        ///                         "currencyId" : 1
+        ///                     }
+        ///         ]
         ///     }
         ///
         /// </remarks>

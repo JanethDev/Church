@@ -60,8 +60,18 @@ namespace church.backend.Services
                     message = "Es necesario enviar el id de la cripta valida"
                 };
             }
-
-            data.cryptPrice = crypt.data[0].price;
+            crypt tempCrypt = crypt.data[0];
+            tempCrypt.status_id = data.statusId==2008? 1001 : 1009; //si la transaccion es de compra se pone como vendido si no se pone como apartado
+            update_crypt_request updateReques = new update_crypt_request(){
+                id = tempCrypt.id,
+                status_id = tempCrypt.status_id,
+                is_shared = tempCrypt.is_shared,
+                price = tempCrypt.price,
+                price_shared = tempCrypt.price_shared,
+                places_shared = tempCrypt.places_shared - data.cryptSpaces,
+            };
+            _cryptDB.updateCrypt(updateReques, userId);
+            data.cryptPrice = tempCrypt.price;
 
             if (data.discountId > 0)
             {
