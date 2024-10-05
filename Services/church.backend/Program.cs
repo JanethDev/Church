@@ -1,6 +1,8 @@
+using church.backend.DataBase;
 using church.backend.services.DataBase;
 using church.backend.services.JsonWebToken;
 using church.backend.services.Services;
+using church.backend.Services;
 using church.backend.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
@@ -36,6 +38,7 @@ builder.Services.AddSingleton<misaDB>();
 builder.Services.AddSingleton<misaIntentsDB>();
 builder.Services.AddSingleton<stateTownsDB>();
 builder.Services.AddSingleton<cryptDB>();
+builder.Services.AddSingleton<purchaseDB>();
 
 //Services
 builder.Services.AddSingleton<AccessServices>();
@@ -52,6 +55,7 @@ builder.Services.AddSingleton<MisaServices>();
 builder.Services.AddSingleton<StateTownServices>();
 builder.Services.AddSingleton<MisaIntentsServices>();
 builder.Services.AddSingleton<CryptServices>();
+builder.Services.AddSingleton<PurchaseServices>();
 
 //Utilities
 builder.Services.AddSingleton<NullValues>();
