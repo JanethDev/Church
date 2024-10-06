@@ -180,16 +180,27 @@ $(document).ready(function() {
 });
 $(document).ready(function() {
     $('#btn-aceptar').click(function() {
+        var selectedPaymentValue = $('#sel-pago').val();
+        
+        // Verificar si se ha seleccionado un plan de venta
+        if (selectedPaymentValue === '0') { // '0' es el valor de "Seleccionar opción"
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Debes seleccionar un plan de venta antes de continuar.',
+            });
+            return; // Salir de la función si no se seleccionó un plan
+        }
+
         var urnaSeleccionada = $('#sel-urna').text();
         var tipoSeleccionado = $('#sel-tipo').text();
         var precioSeleccionado = $('#sel-precio').text();
         var descuentoAplicado = $('#sel-cal-descuento').text();
         var totalFinal = $('#sel-total').text();
-
         var selectedDiscountValue = $('#sel-discount').val();
-        var selectedPaymentValue = $('#sel-pago').val();
         var enganche = $('#sel-enganche').val();
         var positions = <?php echo json_encode($positions); ?>;
+        
         var data = {
             urnaSeleccionada: urnaSeleccionada,
             tipoSeleccionado: tipoSeleccionado,
