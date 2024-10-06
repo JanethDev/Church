@@ -13,11 +13,11 @@ namespace church.backend.services.DataBase
             DataBaseConection = configuration["connectionStrings:database:dev"]!;
             _configuration = configuration;
         }
-        public crypt_response consultByZone(string zone) 
+        public crypt_responseV2 consultByZone(string zone) 
         {
             try
             {
-                crypt_response response = new crypt_response() { code = 1, message = "success" };
+                crypt_responseV2 response = new crypt_responseV2() { code = 1, message = "success" };
                 using (SqlConnection connection = new SqlConnection(DataBaseConection))
                 {
                     string query = string.Format(_configuration["queries:crypts:consultByZone"]!, zone);
@@ -28,7 +28,7 @@ namespace church.backend.services.DataBase
                         {
                             while (reader.Read())
                             {
-                                response.data.Add(new crypt()
+                                response.data.crypts.Add(new crypt()
                                 {
                                     id = int.Parse(reader["id"].ToString()!),
                                     places_shared = int.Parse(reader["places_shared"].ToString()!),
@@ -40,7 +40,17 @@ namespace church.backend.services.DataBase
                                     is_shared = reader["is_shared"].ToString()!.ToLower()=="true",
                                     status = reader["status"].ToString()!,
                                     status_id = int.Parse(reader["cat_status_id"].ToString()!),
+                                    aisle = reader["aisle"].ToString()!,
+                                    level = GetFirstCharacterOrEmpty(reader["position"].ToString()!),
                                 });
+                            }
+                        }
+
+                        foreach(crypt item in response.data.crypts)
+                        {
+                            if(!response.data.levels.Contains(item.level))
+                            {
+                                response.data.levels.Add(item.level);
                             }
                         }
                     }
@@ -49,12 +59,17 @@ namespace church.backend.services.DataBase
             }
             catch (Exception ex)
             {
-                return new crypt_response()
+                return new crypt_responseV2()
                 {
                     code = -1,
                     message = ex.Message
                 };
             }
+        }
+
+        private string GetFirstCharacterOrEmpty(string input)
+        {
+            return !string.IsNullOrEmpty(input) ? input[0].ToString() : string.Empty;
         }
 
         public crypt_response consultById(int id)
@@ -84,6 +99,8 @@ namespace church.backend.services.DataBase
                                     is_shared = reader["is_shared"].ToString()!.ToLower() == "true",
                                     status = reader["status"].ToString()!,
                                     status_id = int.Parse(reader["cat_status_id"].ToString()!),
+                                    aisle = reader["aisle"].ToString()!,
+                                    level = GetFirstCharacterOrEmpty(reader["position"].ToString()!),
                                 });
                             }
                         }

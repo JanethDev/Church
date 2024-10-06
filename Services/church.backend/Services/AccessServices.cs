@@ -244,6 +244,62 @@ namespace church.backend.services.Services
             return _accessDB.createCustomer(data);
         }
 
+        public GeneralResponse createBeneficiaries(BeneficiarieRequest data, int user_id)
+        {
+            if (data.customerId < 0)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un id de cliente para los beneficiarios"
+                };
+            }
+            if (user_id < 0)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un id de usuario"
+                };
+            }
+            data.user_id = user_id;
+            return _accessDB.createBeneficiaries(data);
+        }
+
+        public GeneralResponse deleteBeneficiaries(int beneficiarieId, int user_id)
+        {
+            if (beneficiarieId < 0)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un id de beneficiario"
+                };
+            }
+            if (user_id < 0)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un id de usuario"
+                };
+            }
+            return _accessDB.deleteBeneficiaries(beneficiarieId,user_id);
+        }
+
+        public BeneficiarieResponse consultBeneficiaries(int customerId)
+        {
+            if (customerId < 0)
+            {
+                return new BeneficiarieResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un id de cliente de los beneficiarios"
+                };
+            }
+            return _accessDB.consultBeneficiaries(customerId);
+        }
+
         public list_customer SearchCustomer(string value)
         {
             if (string.IsNullOrWhiteSpace(value))

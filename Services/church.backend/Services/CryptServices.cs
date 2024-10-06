@@ -15,11 +15,11 @@ namespace church.backend.services.Services
             _cryptDB = cryptDB;
         }
 
-        public crypt_response consultByZone(string zone)
+        public crypt_responseV2 consultByZone(string zone)
         {
             if (string.IsNullOrWhiteSpace(zone))
             {
-                return new crypt_response()
+                return new crypt_responseV2()
                 {
                     code = -1,
                     message = "Es necesario enviar la zona"

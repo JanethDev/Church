@@ -230,6 +230,9 @@ namespace church.backend.services.DataBase
                         , data.business_ext
                         , data.deputation
                         , data.average_income
+                        , data.business_city
+                        , data.business_municipality
+                        , data.business_state
                     );
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -252,6 +255,130 @@ namespace church.backend.services.DataBase
             catch (Exception ex)
             {
                 return new GeneralResponse()
+                {
+                    code = -1,
+                    message = ex.Message
+                };
+            }
+        }
+
+        public GeneralResponse createBeneficiaries(BeneficiarieRequest data)
+        {
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:access:createBeneficiaries"]!
+                        , data.customerId
+                        , data.name
+                        , data.lastname                       
+                        , data.birthdate.ToString("yyyy-MM-dd")
+                        , data.phone
+                        , data.relationship
+                        , data.user_id
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = ex.Message
+                };
+            }
+        }
+
+        public GeneralResponse deleteBeneficiaries(int beneficiarieId, int user_id)
+        {
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:access:deleteBeneficiaries"]!
+                        , beneficiarieId
+                        , user_id
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = ex.Message
+                };
+            }
+        }
+
+        public BeneficiarieResponse consultBeneficiaries(int customerId)
+        {
+            try
+            {
+                BeneficiarieResponse response = new BeneficiarieResponse(){code = 1};
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:access:beneficiariesByCustomer"]!
+                        , customerId
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response.data.Add(new Beneficiarie(){
+                                    id = _nv.nullInt(reader["id"].ToString()!),
+                                    name = reader["name"].ToString()!,
+                                    lastname = reader["lastname"].ToString()!,
+                                    birthdate = _nv.nullDate(reader["birthdate"].ToString()!),
+                                    phone = reader["phone"].ToString()!,
+                                    relationship = reader["relationship"].ToString()!,
+                                });                             
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new BeneficiarieResponse()
                 {
                     code = -1,
                     message = ex.Message
@@ -310,6 +437,9 @@ namespace church.backend.services.DataBase
                                     occupation = reader["occupation"].ToString()!,
                                     business_name = reader["business_name"].ToString()!,
                                     business_address = reader["business_address"].ToString()!,
+                                    business_city = reader["business_city"].ToString()!,
+                                    business_municipality = reader["business_ municipality"].ToString()!,
+                                    business_state = reader["business_state"].ToString()!,
                                     business_phone = reader["business_phone"].ToString()!,
                                     business_ext = reader["business_ext"].ToString()!,
                                     deputation = reader["deputation"].ToString()!,

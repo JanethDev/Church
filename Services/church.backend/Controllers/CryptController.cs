@@ -43,7 +43,7 @@ namespace church.backend.services.Controllers
         [Route("crypts/byzone")]
         public IActionResult consultByZone([FromQuery] string zone)
         {
-            crypt_response response = _cryptServices.consultByZone(zone);
+            crypt_responseV2 response = _cryptServices.consultByZone(zone);
             if (response.code != 1)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, response.message);

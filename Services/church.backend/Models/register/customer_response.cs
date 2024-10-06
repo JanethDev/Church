@@ -25,6 +25,9 @@ namespace church.backend.Models.register
         public string occupation { get; set; } = string.Empty;
         public string business_name { get; set; } = string.Empty;
         public string business_address { get; set; } = string.Empty;
+        public string business_city { get; set; } = string.Empty;
+        public string business_municipality { get; set; } = string.Empty;
+        public string business_state { get; set; } = string.Empty;
         public string business_phone { get; set; } = string.Empty;
         public string business_ext { get; set; } = string.Empty;
         public string deputation { get; set; } = string.Empty;
