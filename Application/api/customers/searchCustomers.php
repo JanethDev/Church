@@ -7,9 +7,9 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['Customer']) && !empty($_POST['Customer'])) {
+    if (isset($_POST['value']) && !empty($_POST['value'])) {
         // Recoge el valor del cliente buscado
-        $customer = isset($_POST['Customer']) ? trim($_POST['Customer']) : '';
+        $customer = isset($_POST['value']) ? trim($_POST['value']) : '';
 
         // Prepara los headers de la solicitud con el token de autorización
         $headers = [
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Realiza la solicitud GET a la API para buscar al cliente
             $response = $client->request('GET', 'customer/search', [
                 'query' => [
-                    'name' => $customer, // Aquí va el parámetro de búsqueda
+                    'value' => $customer, // Aquí va el parámetro de búsqueda
                 ],
             ]);
 

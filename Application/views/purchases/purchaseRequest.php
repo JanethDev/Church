@@ -4,6 +4,9 @@
 <!-- Luego incluye Select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<style>
+ 
+</style>
 <?php
 require_once '../../init.php';
 require_once('auth/session.php');
@@ -87,7 +90,7 @@ require_once('auth/session.php');
                         <tr class="tr-search-customer" style="display:none;">
                             <td>BUSCAR CLIENTE</td>
                             <td colspan="2">
-                            <select class="form-control" id="CustomerSelect" name="CustomerSelect">
+                            <select class="form-control" id="CustomerSelect" name="CustomerSelect" style="width: 100%!important;" >
                                 <option value="">Buscar cliente...</option>
                             </select>
                                 <input type="hidden" name="CustomerID" id="CustomerID" />
@@ -407,7 +410,7 @@ $(document).ready(function() {
             delay: 250,
             data: function(params) {
                 return {
-                    name: params.term
+                    value: params.term
                 };
             },
             processResults: function(response) {
@@ -415,7 +418,7 @@ $(document).ready(function() {
                     results: response.map(function(customer) {
                         return {
                             id: customer.id,
-                            text: customer.name
+                            text: customer.name + ' ' + customer.father_last_name + ' - ' + customer.phone
                         };
                     })
                 };
@@ -432,5 +435,7 @@ $(document).ready(function() {
         // Asignar el valor seleccionado a los campos ocultos
         $('#CustomerID').val(selectedCustomerId);
     });
+
+
 });
 </script>
