@@ -1,18 +1,19 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
     $response = $_POST['response'];
-
+   
     // Decodifica el JSON recibido
     $data = json_decode($response, true);
 
     // Asegúrate de que la decodificación fue exitosa y que tienes 'crypts'
     if ($data !== null && isset($data['crypts'])) { 
         $positions = $data['crypts']; // Accede a 'crypts'
+
  ?>
 <div class="table-container">
     <div class="row">
         <div class="col-md-12"><br>
-            <h5>Código: <a id="posicion"></a> </h5>
+            <h5>Nicho seleccionado: <a id="aisle"></a>, <a id="posicion"></a> </h5>
         </div>
     </div>
     <div class="row">
@@ -107,6 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                                 data-price="<?= $pos['price'] ?> " 
                                 data-price-shared="<?= $pos['price_shared']?>"
                                 data-status-id="<?= $pos['status_id'] ?>"
+                                data-aisle="<?=  htmlspecialchars($pos['aisle']); ?>"
                                 data-status="<?= htmlspecialchars($pos['status']) ?>">
                                 <div class="td-inner">
                                     <img src="<?= $pos['status'] == 'disponible' ? '../../assets/img/cuadro.png' : '../../assets/img/cuadro-disabled.png' ?>" alt="<?= $pos['status'] ?>">
@@ -123,6 +125,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
     </table>
 </div>
 <script>
+function formatPrice(price) {
+    return '$' + price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 document.querySelectorAll('#tablecryptsection .disponible').forEach(td => {
     td.addEventListener('click', function() {
         if (this.dataset.status === 'no-disponible') {
@@ -139,32 +144,33 @@ document.querySelectorAll('#tablecryptsection .disponible').forEach(td => {
             this.classList.add('selected');
             this.querySelector('.td-inner img').src = '../../assets/img/cuadro-selected.png';
             document.getElementById('posicion').textContent = this.dataset.fullPosition;
+            document.getElementById('aisle').textContent = this.dataset.aisle;
             document.getElementById('urna').textContent = this.dataset.positionName;
             const tipo = this.dataset.isShared == 1 ? 'Individual' : 'Familiar';
             document.getElementById('tipo').textContent = tipo;
 
+
             // Condición basada en is_shared
             if (this.dataset.isShared == 1) {
-                // Si is_shared es 1, obtenemos el tipo de cambio
-                fetch('../../api/purchases/exchangeRate.php') 
-                    .then(response => response.json())
-                    .then(data => {
-                        const tipoCambio = data.tipo_cambio;
-                        if (tipoCambio) {
-                            const precioEnPesos = this.dataset.priceShared * tipoCambio;
-                            document.getElementById('precio').textContent = '$' + precioEnPesos.toFixed(2);
-                        } else {
-                            document.getElementById('precio').textContent = 'No disponible (Error en el tipo de cambio)';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error al obtener el tipo de cambio:', error);
-                        document.getElementById('precio').textContent = 'No disponible (Error al conectar con la API)';
-                    });
+            // Si is_shared es 1, obtenemos el tipo de cambio
+            fetch('../../api/purchases/exchangeRate.php') 
+                .then(response => response.json())
+                .then(data => {
+                    const tipoCambio = data.tipo_cambio;
+                    if (tipoCambio) {
+                        const precioEnPesos = parseFloat(this.dataset.priceShared) * tipoCambio; // Convertir a número
+                        document.getElementById('precio').textContent = formatPrice(precioEnPesos); // Formatear precio
+                    } else {
+                        document.getElementById('precio').textContent = 'No disponible (Error en el tipo de cambio)';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al obtener el tipo de cambio:', error);
+                    document.getElementById('precio').textContent = 'No disponible (Error al conectar con la API)';
+                });
             } else {
-                // Si is_shared es 0, mostramos el precio original
-                const precio = this.dataset.price; // Obteniendo el precio original
-                document.getElementById('precio').textContent = precio ;
+                const precio = parseFloat(this.dataset.price); // Convertir a número
+                document.getElementById('precio').textContent = formatPrice(precio); // Formatear precio
             }
         }
     });

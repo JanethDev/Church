@@ -16,9 +16,9 @@ require_once('auth/session.php');
     $precioSeleccionado = isset($_POST['precioSeleccionado']) ? $_POST['precioSeleccionado'] : '';
     $descuentoAplicado = isset($_POST['descuentoAplicado']) ? $_POST['descuentoAplicado'] : '';
     $totalFinal = isset($_POST['totalFinal']) ? $_POST['totalFinal'] : '';
-    $selectedDiscountValue = isset($_POST['selectedDiscountValue']) ? $_POST['selectedDiscountValue'] : '$ 0.00 MXN';
+    $selectedDiscountValue = isset($_POST['selectedDiscountValue']) ? $_POST['selectedDiscountValue'] : '';
     $selectedPaymentValue = isset($_POST['selectedPaymentValue']) ? $_POST['selectedPaymentValue'] : '';
-    $enganche = isset($_POST['enganche']) ? $_POST['enganche'] : '$ 0.00 MXN';
+    $enganche = isset($_POST['enganche']) ? $_POST['enganche'] : '';
     $positions = isset($_POST['positions']) ? json_decode($_POST['positions'], true) : [];
 
     $paymentMethods = [

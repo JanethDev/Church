@@ -33,7 +33,13 @@ $(document).ready(function() {
                     icon: 'error',
                     title: 'Contenido no disponible',
                     text: 'El contenido que intentas acceder no está disponible en este momento.',
+                    }).then((result) => {
+                    // Al hacer clic en "OK", recargar la página
+                    if (result.isConfirmed) {
+                        location.reload(); // Recargar la página
+                    }
                 });
+               
             });
     }
 
@@ -228,6 +234,7 @@ $(document).ready(function() {
             var statusId = $(this).data('status-id');
             var status = $(this).data('status');
             var total = $('#precio').text();
+            var aisle = $(this).data('aisle');
 
             // Construir objeto para esta posición seleccionada
             var positionData = {
@@ -241,7 +248,8 @@ $(document).ready(function() {
                 price_shared: priceShared,
                 status_id: statusId,
                 status: status,
-                total: total
+                total: total,
+                aisle: aisle
             };
 
             // Agregar objeto al arreglo de datos

@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['positions'])) {
     
 $(document).ready(function() {
     var total = <?php echo $precioNumerico; ?>; // Variable total inicializada con el precio numérico
-
+    var positions = <?php echo json_encode($positions); ?>;
     $('#sel-pago').change(function() {
         if ($(this).prop('disabled')) {
             $(this).val('1'); // Asegúrate de que se mantenga en "Contado"
@@ -130,7 +130,8 @@ $(document).ready(function() {
         } else if (selectedDiscountValue === '4') {
             descuento = 0.05 * total;
         }
-        $('#sel-cal-descuento').text('$' + descuento.toFixed(2));
+
+        $('#sel-cal-descuento').text('$ ' + descuento.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
         var nuevoTotal = total - descuento;
 
         var selectedPaymentValue = $('#sel-pago').val();
@@ -139,36 +140,72 @@ $(document).ready(function() {
         var mensualidad = 0;
 
         switch (selectedPaymentValue) {
-            case '1':
-                enganche = nuevoTotal;
-                mensualidades = 0;
-                mensualidad = 0;
+            case '1': // Contado
+            // Si es contado, el enganche es igual al total, no hay mensualidades.
+            enganche = nuevoTotal; // Aquí mantienes el total en enganche
+            mensualidades = 0;
+            mensualidad = 0;
+            break;
+            case '2': // 12 meses
+                if (enganche > 0) {
+                    mensualidades = 11; // 12 meses, menos 1 pago inicial
+                    mensualidad = (nuevoTotal - enganche) / mensualidades; // Cálculo basado en enganche personalizado
+                } else {
+                    enganche = nuevoTotal / 12; // Si no hay enganche, calcular un enganche predeterminado
+                    mensualidades = 11;
+                    mensualidad = (nuevoTotal - enganche) / mensualidades;
+                }
                 break;
-            case '2':
-                mensualidades = 11;
-                mensualidad = (nuevoTotal - enganche) / mensualidades;
+            case '5': // 18 meses
+                if (enganche > 0) {
+                    mensualidades = 17; // 18 meses, menos 1
+                    mensualidad = (nuevoTotal - enganche) / mensualidades;
+                } else {
+                    enganche = nuevoTotal / 18; // Enganche predeterminado
+                    mensualidades = 17;
+                    mensualidad = (nuevoTotal - enganche) / mensualidades;
+                }
                 break;
-            case '5':
-                mensualidades = 17;
-                mensualidad = (nuevoTotal - enganche) / mensualidades;
+            case '3': // 24 meses
+                if (enganche > 0) {
+                    mensualidades = 23; // 24 meses
+                    mensualidad = (nuevoTotal - enganche) / mensualidades;
+                } else {
+                    enganche = nuevoTotal / 24; // Enganche predeterminado
+                    mensualidades = 23;
+                    mensualidad = (nuevoTotal - enganche) / mensualidades;
+                }
                 break;
-            case '3':
-                mensualidades = 23;
-                mensualidad = (nuevoTotal - enganche) / mensualidades;
+            case '6': // 36 meses
+                if (enganche > 0) {
+                    mensualidades = 35; // 36 meses
+                    mensualidad = (nuevoTotal - enganche) / mensualidades;
+                } else {
+                    enganche = nuevoTotal / 36; // Enganche predeterminado
+                    mensualidades = 35;
+                    mensualidad = (nuevoTotal - enganche) / mensualidades;
+                }
                 break;
-            case '6':
-                mensualidades = 35;
-                mensualidad = (nuevoTotal - enganche) / mensualidades;
+            case '7': // 48 meses
+                if (enganche > 0) {
+                    mensualidades = 47; // 48 meses
+                    mensualidad = (nuevoTotal - enganche) / mensualidades;
+                } else {
+                    enganche = nuevoTotal / 48; // Enganche predeterminado
+                    mensualidades = 47;
+                    mensualidad = (nuevoTotal - enganche) / mensualidades;
+                }
                 break;
-            case '7':
-                mensualidades = 47;
-                mensualidad = (nuevoTotal - enganche) / mensualidades;
-                break;
-            case '4':
-                enganche = nuevoTotal / 2;
-                mensualidades = 11;
-                mensualidad = (nuevoTotal - enganche) / mensualidades;
-                break;
+            case '4': // Uso inmediato 50%
+                if (enganche > 0) {
+                    mensualidades = 11; // 12 meses
+                    mensualidad = (nuevoTotal - enganche) / mensualidades;
+                } else {
+                    enganche = nuevoTotal / 12; // Enganche predeterminado
+                    mensualidades = 11;
+                    mensualidad = (nuevoTotal - enganche) / mensualidades;
+            }
+            break;
             default:
                 enganche = 0;
                 mensualidades = 0;
@@ -176,6 +213,8 @@ $(document).ready(function() {
         }
 
         $('#sel-enganche').val(enganche.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+
+
         $('#sel-mensualidades').text(mensualidades + ' mensualidades de $' + mensualidad.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 
         if (mensualidades > 0 || enganche > 0) {
@@ -192,6 +231,9 @@ $(document).ready(function() {
     });
     
     $('#sel-enganche').change(function() {
+        actualizarTotalYCalculos();
+    });
+    $('#sel-enganche').on('input', function() {
         actualizarTotalYCalculos();
     });
 
@@ -231,7 +273,7 @@ $(document).ready(function() {
             selectedDiscountValue: $('#sel-discount').val(),
             selectedPaymentValue: selectedPaymentValue,
             enganche: $('#sel-enganche').val(),
-            positions: <?php echo json_encode($positions); ?>
+            positions: JSON.stringify(positions)
         };
 
         $.ajax({
@@ -257,15 +299,32 @@ $(document).ready(function() {
     }
 
     // Inicialización de máscaras de entrada
-    $('.just-decimal').inputmask({
-        alias: 'currency',
-        prefix: '$',
-        groupSeparator: ',',
-        autoGroup: true,
-        digits: 2,
-        digitsOptional: false,
-        rightAlign: false
-    });
+    $('#sel-enganche').on('focus', function() {
+    // Deshabilitar la máscara de entrada al enfocar
+    $(this).inputmask('remove');
+        }).on('blur', function() {
+            // Aplicar la máscara de nuevo al perder el enfoque
+            $(this).inputmask({
+                alias: 'currency',
+                prefix: '$',
+                groupSeparator: ',',
+                autoGroup: true,
+                digits: 2,
+                digitsOptional: false,
+                placeholder: '0',
+                rightAlign: false
+            });
+        }).on('click', function() {
+            // Seleccionar todo el texto al hacer clic en el campo
+            $(this).select();
+        });
+
+        // También puedes usar 'input' para actualizar los cálculos sin interferir con la selección de texto
+        $('#sel-enganche').on('input', function() {
+            // Solo actualiza los cálculos sin cambiar el valor del campo
+            actualizarTotalYCalculos();
+        });
+
     $(document).on('keydown', function(event) {
         if (event.key === 'Enter') {
             event.preventDefault(); // Prevenir el envío del formulario
