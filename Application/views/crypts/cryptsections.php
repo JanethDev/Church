@@ -3,10 +3,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
     $response = $_POST['response'];
 
     // Decodifica el JSON recibido
-    $positions = json_decode($response, true);
+    $data = json_decode($response, true);
 
-    if ($positions !== null) { 
-?>
+    // Asegúrate de que la decodificación fue exitosa y que tienes 'crypts'
+    if ($data !== null && isset($data['crypts'])) { 
+        $positions = $data['crypts']; // Accede a 'crypts'
+ ?>
 <div class="table-container">
     <div class="row">
         <div class="col-md-12"><br>
@@ -40,9 +42,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                 // Obtener el número máximo de columnas a partir de las posiciones disponibles
                 $maxColumns = 0;
                 foreach ($positions as $pos) {
-                    $number = intval(substr($pos['position'], 1));
-                    if ($number > $maxColumns) {
-                        $maxColumns = $number;
+                    // Asegúrate de que $pos es un arreglo y que contiene 'full_position' o 'position'
+                    if (is_array($pos) && isset($pos['position'])) {
+                        // Obtener el número de la posición, asumiendo que el formato es como "AJ10U01A1"
+                        $number = intval(substr($pos['position'], -1)); // Cambiado a 'full_position'
+                        if ($number > $maxColumns) {
+                            $maxColumns = $number;
+                        }
+                    } else {
+                        echo '<p>Error: posición no válida.</p>'; // Manejo de error
                     }
                 }
                 
@@ -96,9 +104,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                                 data-position-name="<?= htmlspecialchars(getPositionName($pos)) ?>"
                                 data-is-shared="<?= $pos['is_shared']?>"
                                 data-places-shared="<?= $pos['places_shared'] ?>"
-                                data-price="<?= formatPrice($pos['price']) ?>"
-                                data-price-initial="<?= $pos['price'] ?>"
-                                data-price-shared="<?= formatPrice($pos['price_shared']) ?>"
+                                data-price="<?= $pos['price'] ?> " 
+                                data-price-shared="<?= $pos['price_shared']?>"
                                 data-status-id="<?= $pos['status_id'] ?>"
                                 data-status="<?= htmlspecialchars($pos['status']) ?>">
                                 <div class="td-inner">
@@ -116,30 +123,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
     </table>
 </div>
 <script>
-    document.querySelectorAll('#tablecryptsection .disponible').forEach(td => {
-        td.addEventListener('click', function() {
-            if (this.dataset.status === 'no-disponible') {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Notificación',
-                    text: 'La cripta seleccionada no está disponible.',
-                });
+document.querySelectorAll('#tablecryptsection .disponible').forEach(td => {
+    td.addEventListener('click', function() {
+        if (this.dataset.status === 'no-disponible') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Notificación',
+                text: 'La cripta seleccionada no está disponible.',
+            });
+        } else {
+            document.querySelectorAll('#tablecryptsection .disponible').forEach(el => {
+                el.classList.remove('selected');
+                el.querySelector('.td-inner img').src = '../../assets/img/cuadro.png';
+            });
+            this.classList.add('selected');
+            this.querySelector('.td-inner img').src = '../../assets/img/cuadro-selected.png';
+            document.getElementById('posicion').textContent = this.dataset.fullPosition;
+            document.getElementById('urna').textContent = this.dataset.positionName;
+            const tipo = this.dataset.isShared == 1 ? 'Individual' : 'Familiar';
+            document.getElementById('tipo').textContent = tipo;
+
+            // Condición basada en is_shared
+            if (this.dataset.isShared == 1) {
+                // Si is_shared es 1, obtenemos el tipo de cambio
+                fetch('../../api/purchases/exchangeRate.php') 
+                    .then(response => response.json())
+                    .then(data => {
+                        const tipoCambio = data.tipo_cambio;
+                        if (tipoCambio) {
+                            const precioEnPesos = this.dataset.priceShared * tipoCambio;
+                            document.getElementById('precio').textContent = '$' + precioEnPesos.toFixed(2);
+                        } else {
+                            document.getElementById('precio').textContent = 'No disponible (Error en el tipo de cambio)';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener el tipo de cambio:', error);
+                        document.getElementById('precio').textContent = 'No disponible (Error al conectar con la API)';
+                    });
             } else {
-                document.querySelectorAll('#tablecryptsection .disponible').forEach(el => {
-                    el.classList.remove('selected');
-                    el.querySelector('.td-inner img').src = '../../assets/img/cuadro.png';
-                });
-                this.classList.add('selected');
-                this.querySelector('.td-inner img').src = '../../assets/img/cuadro-selected.png';
-                document.getElementById('posicion').textContent = this.dataset.fullPosition;
-                document.getElementById('urna').textContent = this.dataset.positionName;
-                document.getElementById('precio').textContent = this.dataset.price;
-                const tipo = this.dataset.isShared == 1 ? 'Individual' : 'Familiar';
-                document.getElementById('tipo').textContent = tipo;
+                // Si is_shared es 0, mostramos el precio original
+                const precio = this.dataset.price; // Obteniendo el precio original
+                document.getElementById('precio').textContent = precio ;
             }
-        });
+        }
     });
+});
 </script>
+
 <?php
     } else {
         echo '<p>Error: Datos JSON inválidos.</p>';

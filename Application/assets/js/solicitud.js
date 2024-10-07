@@ -138,11 +138,11 @@ $(document).ready(function() {
 
     // Manejar clic en el botón de forma de pago (btnPaymentMethod)
     $(document).on('click', '#btnPaymentMethod', function() {
-        enviarDatos(); // Llama a la función para enviar los datos seleccionados
+        $('#nav-forma-pago-tab').tab('show');
     });
 
     // Función para enviar los datos seleccionados a cryptrequest.php
-    function enviarDatos() {
+    /*function enviarDatos() {
         var datos = [];
 
         // Recorrer todas las posiciones seleccionadas
@@ -154,7 +154,7 @@ $(document).ready(function() {
             var isShared = $(this).data('is-shared');
             var placesShared = $(this).data('places-shared');
             var price = $(this).data('price');
-            var priceShared = $(this).data('price-shared');
+            var priceShared = $(this).data('price_shared');
             var statusId = $(this).data('status-id');
             var status = $(this).data('status');
 
@@ -203,7 +203,7 @@ $(document).ready(function() {
                 text: 'Debes seleccionar al menos una posición antes de continuar.',
             });
         }
-    }
+    }*/
     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
         var target = $(e.target).attr("href"); // Get the target tab
         if (target === '#nav-forma-pago') {
@@ -227,6 +227,7 @@ $(document).ready(function() {
             var priceShared = $(this).data('price-shared');
             var statusId = $(this).data('status-id');
             var status = $(this).data('status');
+            var total = $('#precio').text();
 
             // Construir objeto para esta posición seleccionada
             var positionData = {
@@ -239,7 +240,8 @@ $(document).ready(function() {
                 price: price,
                 price_shared: priceShared,
                 status_id: statusId,
-                status: status
+                status: status,
+                total: total
             };
 
             // Agregar objeto al arreglo de datos
@@ -278,5 +280,7 @@ $(document).ready(function() {
         e.preventDefault();
         $(this).tab('show');
     });
+
+    
 
 });

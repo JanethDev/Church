@@ -11,15 +11,43 @@
 require_once '../../init.php';
 require_once('auth/session.php');
     // Recibe los valores enviados a través de AJAX
-    $urnaSeleccionada = isset($_POST['urnaSeleccionada']) ? $_POST['urnaSeleccionada'] : '';
+    $nichoSeleccionada = isset($_POST['nichoSeleccionada']) ? $_POST['nichoSeleccionada'] : '';
     $tipoSeleccionado = isset($_POST['tipoSeleccionado']) ? $_POST['tipoSeleccionado'] : '';
     $precioSeleccionado = isset($_POST['precioSeleccionado']) ? $_POST['precioSeleccionado'] : '';
     $descuentoAplicado = isset($_POST['descuentoAplicado']) ? $_POST['descuentoAplicado'] : '';
     $totalFinal = isset($_POST['totalFinal']) ? $_POST['totalFinal'] : '';
-    $selectedDiscountValue = isset($_POST['selectedDiscountValue']) ? $_POST['selectedDiscountValue'] : '';
+    $selectedDiscountValue = isset($_POST['selectedDiscountValue']) ? $_POST['selectedDiscountValue'] : '$ 0.00 MXN';
     $selectedPaymentValue = isset($_POST['selectedPaymentValue']) ? $_POST['selectedPaymentValue'] : '';
-    $enganche = isset($_POST['enganche']) ? $_POST['enganche'] : '';
+    $enganche = isset($_POST['enganche']) ? $_POST['enganche'] : '$ 0.00 MXN';
     $positions = isset($_POST['positions']) ? json_decode($_POST['positions'], true) : [];
+
+    $paymentMethods = [
+        '1' => 'Contado',
+        '2' => '12 meses',
+        '5' => '18 meses',
+        '3' => '24 meses',
+        '6' => '36 meses',
+        '7' => '48 meses',
+        '4' => 'Uso inmediato 50%'
+    ];
+    $selectedPaymentDescription = isset($paymentMethods[$selectedPaymentValue]) ? $paymentMethods[$selectedPaymentValue] : 'Opción no válida';
+    // Función para convertir el formato de precio a número
+    function convertToNumber($value) {
+        return floatval(str_replace(['$', 'MXN', ' ', ','], '', $value));
+    }
+
+    // Convertir totalFinal y enganche a números
+    $totalFinalValue = convertToNumber($totalFinal);
+    $engancheValue = convertToNumber($enganche);
+
+    // Calcular el saldo
+    $saldo = $totalFinalValue - $engancheValue;
+
+    // Función para formatear el precio
+    function formatPrice($price) {
+        return '$ ' . number_format($price, 2, '.', ',') . ' MXN';
+    }
+
 
     if (!empty($positions)) {
         // Acceder a los valores dentro de positions
@@ -28,11 +56,13 @@ require_once('auth/session.php');
     } else {
         $fullposition = '';
         $id = '';
-    }   
-
+    }
+    
+    
+    $zone = substr($fullposition, 0, 1);
     // Aquí puedes usar las variables para mostrarlas o realizar cualquier otra operación
     echo "<h1>Resumen de Compra</h1>";
-    echo "<p>Urna seleccionada: $urnaSeleccionada</p>";
+    echo "<p>Nicho seleccionada: $nichoSeleccionada</p>";
     echo "<p>Tipo seleccionado: $tipoSeleccionado</p>";
     echo "<p>Precio seleccionado: $precioSeleccionado</p>";
     echo "<p>Descuento aplicado: $descuentoAplicado</p>";
@@ -124,7 +154,7 @@ require_once('auth/session.php');
                             <td><input type="text" class="form-control" id="BusinessName" name="BusinessName" /></td>
                         </tr>
                         <tr>
-                            <td style="width:25%">R.F.C</td>
+                            <td style="width:25%">R.F.C o CURP</td>
                             <td><input type="text" class="form-control" id="RFCCURP" name="RFCCURP"></td>
                         </tr>
                         <tr>
@@ -137,7 +167,7 @@ require_once('auth/session.php');
                         </tr>
                         <tr>
                             <td style="width:25%">ESTADO CIVIL</td>
-                            <td></td>
+                            <td><input type="text" class="form-control" id="CivilStatus" name="CivilStatus" value="" /></td>
                         </tr>
                         <tr>
                             <td style="width:25%">OCUPACION</td>
@@ -174,9 +204,9 @@ require_once('auth/session.php');
         <td>CIUDAD</td>
     </tr>
     <tr>
-        <td></td>
         <td><input type="text" class="form-control" id="DelegationAddressCompany" name="DelegationAddressCompany" value="y" /></td>
-        <td></td>
+        <td><input type="text" class="form-control" id="DelegationAddressCompany" name="DelegationAddressCompany" value="y" /></td>
+        <td><input type="text" class="form-control" id="DelegationAddressCompany" name="DelegationAddressCompany" value="y" /></td>
     </tr>
     <tr>
         <td colspan="2">INGRESO PROMEDIO MENSUAL (incluye su conyuge)</td>
@@ -237,11 +267,11 @@ require_once('auth/session.php');
         <td>ZONA</td>
     </tr>
     <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>ZONA A</td>
+        <td><?php echo $selectedPaymentDescription; ?></td>
+        <td><?php echo $fullposition; ?> </td>
+        <td><?php echo $selectedPaymentDescription; ?> </td>
+        <td> <?php echo $selectedPaymentDescription; ?></td>
+        <td>ZONA <?php echo $zone; ?></td>
     </tr>
 </table>
 <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
@@ -253,12 +283,10 @@ require_once('auth/session.php');
     </tr>
 
     <tr>
-        <td></td>
-        <td>
-            
-        </td>
-        <td></td>
-        <td></td>
+        <td> <?php echo $totalFinal; ?></td>
+        <td> <?php echo $selectedDiscountValue; ?></td>
+        <td> <?php echo $enganche; ?></td>
+        <td> <?php echo $totalFinal; ?></td>
     </tr>
     
         <tr>
@@ -372,7 +400,7 @@ require_once('auth/session.php');
 </div>
 <div class="row" style="padding-top:15px;">
     <div class="col-md-2 col-sm-2 col-xs-6">
-    <button class = "btn btn-primary" style="width:100%;" id="btnSelUrna">Volver</button>
+    <button class = "btn btn-primary" style="width:100%;" id="btnSelNicho">Volver</button>
     </div>
     <div class="offset-md-6 col-md-2 col-sm-2 col-xs-6">
         <input type="button" value="Cotizar" id="btnQuotation" class="btn btn-default" style="float:right;width:100%;" />
@@ -395,7 +423,7 @@ $(document).ready(function() {
         $('.tr-new-customer').hide();    // Ocultar los campos de nuevo cliente
         $('.tr-search-customer').show(); // Mostrar la búsqueda de cliente
     });
-    $('#btnSelUrna').click(function(e) {
+    $('#btnSelNicho').click(function(e) {
         e.preventDefault(); // Evita que el botón envíe un formulario o recargue la página
         window.location.href = 'solicitud'; // Redirige sin parámetros
     });
@@ -418,7 +446,29 @@ $(document).ready(function() {
                     results: response.map(function(customer) {
                         return {
                             id: customer.id,
-                            text: customer.name + ' ' + customer.father_last_name + ' - ' + customer.phone
+                            text: customer.name + ' ' + customer.father_last_name + ' - ' + customer.phone,
+                            customerNumber: customer.customerNumber,
+                            email: customer.email,
+                            name: customer.name,
+                            father_last_name: customer.father_last_name,
+                            mother_last_name: customer.mother_last_name,
+                            phone: customer.phone,
+                            rfc: customer.rfc,
+                            zip_code: customer.zip_code,
+                            address: customer.address,
+                            state: customer.state,
+                            town: customer.town,
+                            social_reason: customer.social_reason,
+                            birthdate: customer.birthdate,
+                            birth_place: customer.birth_place,
+                            civil_status: customer.civil_status,
+                            occupation: customer.occupation,
+                            business_name: customer.business_name,
+                            business_address: customer.business_address,
+                            business_phone: customer.business_phone,
+                            business_ext: customer.business_ext,
+                            deputation: customer.deputation,
+                            average_income: customer.average_income
                         };
                     })
                 };
@@ -429,11 +479,34 @@ $(document).ready(function() {
 
     // Manejar el evento de selección
     $('#CustomerSelect').on('select2:select', function(e) {
-        var selectedCustomerId = e.params.data.id;
-        var selectedCustomerName = e.params.data.text;
+        var selectedCustomer = e.params.data;
 
-        // Asignar el valor seleccionado a los campos ocultos
-        $('#CustomerID').val(selectedCustomerId);
+        // Asignar el valor seleccionado a los campos ocultos y visibles
+        $('#CustomerID').val(selectedCustomer.id); // ID del cliente
+
+        // Asignar los valores de nombre y apellidos a los inputs
+        $('#PSurname').val(selectedCustomer.father_last_name); // Apellido paterno
+        $('#MSurname').val(selectedCustomer.mother_last_name); // Apellido materno
+        $('#Name').val(selectedCustomer.name);                 // Nombre
+        $('#CelPhone').val(selectedCustomer.phone); // Teléfono
+        $('#Email').val(selectedCustomer.email); // Correo electrónico
+        $('#BusinessName').val(selectedCustomer.business_name); // Nombre de la empresa
+        $('#RFCCURP').val(selectedCustomer.rfc); // RFC
+        $('#DateOfBirth').val(selectedCustomer.birthdate); // Fecha de nacimiento
+        $('#CityOfBirth').val(selectedCustomer.birth_place); // Ciudad de nacimiento
+        $('#CivilStatus').val(selectedCustomer.civil_status); // Estado civil
+        $('#Occupation').val(selectedCustomer.occupation); // Ocupación
+
+        // Asignar datos de la empresa
+        $('#Company').val(selectedCustomer.business_name); // Nombre de la empresa
+        $('#PhoneCompany').val(selectedCustomer.business_phone); // Teléfono de la empresa
+        $('#AddressCompany').val(selectedCustomer.business_address); // Dirección de la empresa
+        $('#ExtPhoneCompany').val(selectedCustomer.business_ext); // Extensión de teléfono
+        $('#DelegationAddressCompany').val(selectedCustomer.deputation); // Delegación
+        $('#Income').val(selectedCustomer.average_income); // Ingreso promedio
+
+        // Mostrar los campos de nuevo cliente para permitir editar
+        $('.tr-new-customer').show();
     });
 
 

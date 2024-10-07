@@ -2,7 +2,7 @@
 require_once '../../init.php';
 require_once('auth/session.php');
     // Recibe los valores enviados a través de AJAX
-    $urnaSeleccionada = isset($_POST['urnaSeleccionada']) ? $_POST['urnaSeleccionada'] : '';
+    $nichoSeleccionada = isset($_POST['urnaSeleccionada']) ? $_POST['urnaSeleccionada'] : '';
     $tipoSeleccionado = isset($_POST['tipoSeleccionado']) ? $_POST['tipoSeleccionado'] : '';
     $precioSeleccionado = isset($_POST['precioSeleccionado']) ? $_POST['precioSeleccionado'] : '';
     $descuentoAplicado = isset($_POST['descuentoAplicado']) ? $_POST['descuentoAplicado'] : '';
@@ -23,7 +23,7 @@ require_once('auth/session.php');
 
     // Aquí puedes usar las variables para mostrarlas o realizar cualquier otra operación
     echo "<h1>Resumen de Compra</h1>";
-    echo "<p>Urna seleccionada: $urnaSeleccionada</p>";
+    echo "<p>Urna seleccionada: $nichoSeleccionada</p>";
     echo "<p>Tipo seleccionado: $tipoSeleccionado</p>";
     echo "<p>Precio seleccionado: $precioSeleccionado</p>";
     echo "<p>Descuento aplicado: $descuentoAplicado</p>";
