@@ -1,14 +1,18 @@
 <?php
 // Función para obtener el tipo de cambio actual
 function obtenerTipoCambio() {
-    // URL de ejemplo para obtener el tipo de cambio desde una API
-    $url = "https://open.er-api.com/v6/latest/USD"; // Actualiza a una API válida.
+
+    $token = '0f3d70f1cf4fd8f916a9d7736a2882a26ba374273d4defcb118a73e0336fea01';
+    $url = 'https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF43718/datos/oportuno?token=' . $token;
+
 
     // Inicializamos cURL para hacer la solicitud HTTP
     $ch = curl_init();
+    // Configurar opciones de cURL
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Agregar un timeout de 10 segundos
+
+    // Ejecutar la solicitud
     $response = curl_exec($ch);
     
     // Verificar si ocurrió un error en la conexión
@@ -23,8 +27,8 @@ function obtenerTipoCambio() {
     $data = json_decode($response, true);
 
     // Verificar si obtuvimos la tasa de cambio correctamente
-    if (isset($data['rates']['MXN'])) {
-        return $data['rates']['MXN'];
+    if (isset($data['bmx']['series'][0]['datos'][0]['dato'])) {
+        return $data['bmx']['series'][0]['datos'][0]['dato'];
     } else {
         return 'Error al obtener el tipo de cambio';
     }

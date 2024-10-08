@@ -3,6 +3,11 @@
 
 <!-- Luego incluye Inputmask -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
+<!-- Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JavaScript -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['positions'])) {
@@ -81,13 +86,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['positions'])) {
                             </div>
                             <div class="col-md-3 divEnganche" style="display: none;">
                                 <label class="" id="sel-mensualidades"></label><br>
+                                <label class="" id="sel-mensualidad" style="display: none;"></label>
                                 <label class="" id="sel-interes"></label>
                             </div>
                         </div>
 
                         <div class="row mt-3">
                             <div class="offset-md-6 col-md-3">
-                                <h5>Total: <span id="sel-total"><?php echo '$' . number_format($precioNumerico, 2, '.', ','); ?></span></h5>
+                                <h5>Total: <span id="sel-total"></span></h5>
                             </div>
                         </div>
 
@@ -118,11 +124,16 @@ $(document).ready(function() {
             actualizarTotalYCalculos();
         }
     });
+    $('.divEnganche').hide();
 
     function actualizarTotalYCalculos() {
         var selectedDiscountValue = $('#sel-discount').val();
         var descuento = 0;
+        var enganche = convertToNumber($('#sel-enganche').val()) || 0; // Manejar el valor inicial de enganche
+        var nuevoTotal = total;
 
+
+        // Cálculo del descuento
         if (selectedDiscountValue === '2') {
             descuento = 0.10 * total;
         } else if (selectedDiscountValue === '3') {
@@ -130,97 +141,115 @@ $(document).ready(function() {
         } else if (selectedDiscountValue === '4') {
             descuento = 0.05 * total;
         }
-
+        
         $('#sel-cal-descuento').text('$ ' + descuento.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+        
         var nuevoTotal = total - descuento;
 
         var selectedPaymentValue = $('#sel-pago').val();
-        var enganche = convertToNumber($('#sel-enganche').val()); // Obtener el valor actualizado del input
+        var enganche = convertToNumber($('#sel-enganche').val()) || 0; // Asegurarte de que sea un número
         var mensualidades = 0;
         var mensualidad = 0;
+        var interes = 0;
 
-        switch (selectedPaymentValue) {
-            case '1': // Contado
-            // Si es contado, el enganche es igual al total, no hay mensualidades.
-            enganche = nuevoTotal; // Aquí mantienes el total en enganche
-            mensualidades = 0;
-            mensualidad = 0;
-            break;
-            case '2': // 12 meses
-                if (enganche > 0) {
-                    mensualidades = 11; // 12 meses, menos 1 pago inicial
-                    mensualidad = (nuevoTotal - enganche) / mensualidades; // Cálculo basado en enganche personalizado
-                } else {
-                    enganche = nuevoTotal / 12; // Si no hay enganche, calcular un enganche predeterminado
-                    mensualidades = 11;
-                    mensualidad = (nuevoTotal - enganche) / mensualidades;
-                }
-                break;
-            case '5': // 18 meses
-                if (enganche > 0) {
-                    mensualidades = 17; // 18 meses, menos 1
-                    mensualidad = (nuevoTotal - enganche) / mensualidades;
-                } else {
-                    enganche = nuevoTotal / 18; // Enganche predeterminado
-                    mensualidades = 17;
-                    mensualidad = (nuevoTotal - enganche) / mensualidades;
-                }
-                break;
-            case '3': // 24 meses
-                if (enganche > 0) {
-                    mensualidades = 23; // 24 meses
-                    mensualidad = (nuevoTotal - enganche) / mensualidades;
-                } else {
-                    enganche = nuevoTotal / 24; // Enganche predeterminado
-                    mensualidades = 23;
-                    mensualidad = (nuevoTotal - enganche) / mensualidades;
-                }
-                break;
-            case '6': // 36 meses
-                if (enganche > 0) {
-                    mensualidades = 35; // 36 meses
-                    mensualidad = (nuevoTotal - enganche) / mensualidades;
-                } else {
-                    enganche = nuevoTotal / 36; // Enganche predeterminado
-                    mensualidades = 35;
-                    mensualidad = (nuevoTotal - enganche) / mensualidades;
-                }
-                break;
-            case '7': // 48 meses
-                if (enganche > 0) {
-                    mensualidades = 47; // 48 meses
-                    mensualidad = (nuevoTotal - enganche) / mensualidades;
-                } else {
-                    enganche = nuevoTotal / 48; // Enganche predeterminado
-                    mensualidades = 47;
-                    mensualidad = (nuevoTotal - enganche) / mensualidades;
-                }
-                break;
-            case '4': // Uso inmediato 50%
-                if (enganche > 0) {
-                    mensualidades = 11; // 12 meses
-                    mensualidad = (nuevoTotal - enganche) / mensualidades;
-                } else {
-                    enganche = nuevoTotal / 12; // Enganche predeterminado
-                    mensualidades = 11;
-                    mensualidad = (nuevoTotal - enganche) / mensualidades;
+        if (selectedPaymentValue === '1') { // Contado
+            // Aplicar un 10% de descuento adicional
+            descuento = 0.10 * total;
+            nuevoTotal = total - descuento;
+
+            // Ocultar campos que no son necesarios para pago contado
+            $('#sel-enganche').closest('.divEnganche').hide(); // Oculta enganche
+            $('#sel-mensualidades').hide(); // Oculta mensualidades
+            $('#sel-interes').hide(); // Oculta interés
+
+            $('#sel-discount').prop('disabled',true);
+
+            // Establecer el total
+            $('#sel-total').text('$' + nuevoTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+            $('#sel-cal-descuento').text('$ ' + descuento.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+
+        } else if (selectedPaymentValue !== '0') {
+
+            $('#sel-discount').prop('disabled',false);
+
+            switch (selectedPaymentValue) {
+                case '2': // 12 meses
+                    mensualidades = 12;
+                    interes = 0; // Asumimos que no hay interés
+                    break;
+                case '5': // 18 meses
+                    mensualidades = 18; 
+                    interes = 0.065;
+                    break;
+                case '3': // 24 meses
+                    mensualidades = 24; 
+                    interes = 0.10;
+                    break;
+                case '6': // 36 meses
+                    mensualidades = 36; 
+                    interes = 0.145;
+                    break;
+                case '7': // 48 meses
+                    mensualidades = 48; 
+                    interes = 0;
+                    break;
+                case '4': // Uso inmediato 50%
+                    enganche = nuevoTotal * 0.50; // Enganche del 50%
+                    mensualidades = 12; // 12 mensualidades
+                    interes = 0;
+                    break;
             }
-            break;
-            default:
-                enganche = 0;
-                mensualidades = 0;
+
+            // Calcular el interés total y mensual
+            var interesTotal = nuevoTotal * interes; // Calcular el interés total
+            var interesMensual = interesTotal / mensualidades; // Calcular el interés mensual
+
+            // Si el enganche no es válido (negativo), ajustarlo a 0
+            if (enganche < 0) {
+                enganche = 0; // Si el enganche es menor que 0, establecerlo a 0
+            }
+
+            // Calcular el monto a financiar después del enganche
+            var montoFinanciar = nuevoTotal - enganche;
+            if (montoFinanciar < 0) {
+                montoFinanciar = 0; // Asegurarse que no sea negativo
+            }
+
+            // Calcular la mensualidad (incluyendo interés mensual)
+            
+            if (mensualidades > 0) {
+                mensualidad = montoFinanciar / mensualidades + interesMensual;
+            } else {
                 mensualidad = 0;
-        }
+            }
+            // El enganche es igual a la mensualidad inicial + interés mensual
+            var engancheTotal = montoFinanciar / mensualidades + interesMensual;
 
-        $('#sel-enganche').val(enganche.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+            // El total debe incluir el interés total
+            var totalConInteres = nuevoTotal + interesTotal;
 
-
-        $('#sel-mensualidades').text(mensualidades + ' mensualidades de $' + mensualidad.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-
-        if (mensualidades > 0 || enganche > 0) {
+            // Mostrar resultados
+            $('#sel-enganche').val(engancheTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+            $('#sel-mensualidades').text(mensualidades + ' mensualidades de $' + mensualidad.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+            $('#sel-mensualidad').text(mensualidad.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+            $('#sel-interes').text('Interés mensual: $' + interesMensual.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+            $('#sel-total').text('$' + totalConInteres.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+            $('#sel-cal-descuento').text('$ ' + descuento.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
             $('.divEnganche').show();
+            $('#sel-enganche').closest('.divEnganche').show(); // Oculta enganche
+            $('#sel-mensualidades').show(); // Oculta mensualidades
+            $('#sel-interes').show(); // Oculta interés
+            
+        }else {
+            // Si aún no se selecciona un plan de pago, mostrar valores por defecto
+            $('#sel-enganche').val('0.00');
+            $('#sel-mensualidades').text('0 mensualidades de $0.00');
+            $('#sel-interes').text('Interés mensual: $0.00');
+            $('#sel-total').text('$' + nuevoTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+            $('.divEnganche').hide();
         }
     }
+
 
     $('#sel-discount').change(function() {
         actualizarTotalYCalculos();
@@ -254,8 +283,22 @@ $(document).ready(function() {
 
         var enganche = convertToNumber($('#sel-enganche').val()); // Asegúrate de obtener el valor actualizado
         var totalFinal = convertToNumber($('#sel-total').text());
+        var interes = convertToNumber($('#sel-interes').text());
+        var mensualidad = convertToNumber($('#sel-mensualidad').text());
+        var precio = convertToNumber($('#sel-precio').text());
+        var descuento = convertToNumber($('#sel-discount').val());
+        var descuentoAplicado = convertToNumber($('#sel-cal-descuento').text());
 
         if (enganche > totalFinal) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'El enganche no puede ser menor al 50% del valor del nicho.',
+            });
+            return;
+        } 
+        if (selectedPaymentValue === '4'  && enganche < total*0.50) {
+
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -267,12 +310,14 @@ $(document).ready(function() {
         var data = {
             nichoSeleccionada: $('#sel-nicho').text(),
             tipoSeleccionado: $('#sel-tipo').text(),
-            precioSeleccionado: $('#sel-precio').text(),
-            descuentoAplicado: $('#sel-cal-descuento').text(),
-            totalFinal: $('#sel-total').text(),
-            selectedDiscountValue: $('#sel-discount').val(),
+            precioSeleccionado: precio,
+            descuentoAplicado: descuentoAplicado,
+            totalFinal: totalFinal,
+            selectedDiscountValue: descuento,
             selectedPaymentValue: selectedPaymentValue,
-            enganche: $('#sel-enganche').val(),
+            enganche: enganche,
+            interes: interes,
+            mensualidad: mensualidad,
             positions: JSON.stringify(positions)
         };
 
@@ -295,7 +340,7 @@ $(document).ready(function() {
 
     // Función para convertir a número
     function convertToNumber(value) {
-        return parseFloat(value.replace(/[^0-9.-]+/g, ""));
+        return Number(value.replace(/[^0-9.-]+/g,""));
     }
 
     // Inicialización de máscaras de entrada
@@ -306,7 +351,6 @@ $(document).ready(function() {
             // Aplicar la máscara de nuevo al perder el enfoque
             $(this).inputmask({
                 alias: 'currency',
-                prefix: '$',
                 groupSeparator: ',',
                 autoGroup: true,
                 digits: 2,

@@ -15,10 +15,12 @@ require_once('auth/session.php');
     $tipoSeleccionado = isset($_POST['tipoSeleccionado']) ? $_POST['tipoSeleccionado'] : '';
     $precioSeleccionado = isset($_POST['precioSeleccionado']) ? $_POST['precioSeleccionado'] : '';
     $descuentoAplicado = isset($_POST['descuentoAplicado']) ? $_POST['descuentoAplicado'] : '';
-    $totalFinal = isset($_POST['totalFinal']) ? $_POST['totalFinal'] : '';
-    $selectedDiscountValue = isset($_POST['selectedDiscountValue']) ? $_POST['selectedDiscountValue'] : '';
+    $totalFinal = isset($_POST['totalFinal']) ? floatval($_POST['totalFinal']) : 0;
+    $enganche = isset($_POST['enganche']) ? floatval($_POST['enganche']) : 0;
+    $selectedDiscountValue = isset($_POST['selectedDiscountValue']) ? $_POST['selectedDiscountValue'] : '0';
     $selectedPaymentValue = isset($_POST['selectedPaymentValue']) ? $_POST['selectedPaymentValue'] : '';
-    $enganche = isset($_POST['enganche']) ? $_POST['enganche'] : '';
+    $interes = isset($_POST['interes']) ? $_POST['interes'] : '';
+    $mensualidades = isset($_POST['mensualidad']) ? $_POST['mensualidad'] : '';
     $positions = isset($_POST['positions']) ? json_decode($_POST['positions'], true) : [];
 
     $paymentMethods = [
@@ -28,7 +30,7 @@ require_once('auth/session.php');
         '3' => '24 meses',
         '6' => '36 meses',
         '7' => '48 meses',
-        '4' => 'Uso inmediato 50%'
+        '4' => '12 meses'
     ];
     $selectedPaymentDescription = isset($paymentMethods[$selectedPaymentValue]) ? $paymentMethods[$selectedPaymentValue] : 'Opción no válida';
     // Función para convertir el formato de precio a número
@@ -36,12 +38,28 @@ require_once('auth/session.php');
         return floatval(str_replace(['$', 'MXN', ' ', ','], '', $value));
     }
 
+    // Fecha actual
+    $fechaUltima = new DateTime();
+
+    // Suma los meses de las mensualidades a la fecha actual
+    $fechaUltima->modify("+{$mensualidades} months");
+
+    // Formatear la fecha para mostrar el día, mes y año
+    $diaUltimoPago = $fechaUltima->format('d');
+    $mesUltimoPago = $fechaUltima->format('m');
+    $añoUltimoPago = $fechaUltima->format('Y');
+
     // Convertir totalFinal y enganche a números
     $totalFinalValue = convertToNumber($totalFinal);
     $engancheValue = convertToNumber($enganche);
 
     // Calcular el saldo
-    $saldo = $totalFinalValue - $engancheValue;
+    if($selectedPaymentValue != 1){
+        $saldo = $totalFinalValue - $engancheValue;
+    }else{
+        $saldo = 0;
+    }
+    
 
     // Función para formatear el precio
     function formatPrice($price) {
@@ -68,8 +86,10 @@ require_once('auth/session.php');
     echo "<p>Descuento aplicado: $descuentoAplicado</p>";
     echo "<p>Total final: $totalFinal</p>";
     echo "<p>Descuento: $selectedDiscountValue</p>";
-    echo "<p>Forma de pago: $selectedPaymentValue</p>";
+    echo "<p>Forma de pago: $selectedPaymentDescription</p>";
     echo "<p>Enganche: $enganche</p>";
+    echo "<p>Interes: $interes</p>";
+    echo "<p>Mensualidades: $mensualidades</p>";
     echo "<p>Ubicacion de compra: $fullposition</p>";
     echo "<p>Id: $id</p>";
 ?>
@@ -204,9 +224,9 @@ require_once('auth/session.php');
         <td>CIUDAD</td>
     </tr>
     <tr>
-        <td><input type="text" class="form-control" id="DelegationAddressCompany" name="DelegationAddressCompany" value="y" /></td>
-        <td><input type="text" class="form-control" id="DelegationAddressCompany" name="DelegationAddressCompany" value="y" /></td>
-        <td><input type="text" class="form-control" id="DelegationAddressCompany" name="DelegationAddressCompany" value="y" /></td>
+        <td><input type="text" class="form-control" id="StateAddressCompany" name="StateAddressCompany" value="" /></td>
+        <td><input type="text" class="form-control" id="MunicipalityAddressCompany" name="MunicipalityAddressCompany" value="" /></td>
+        <td><input type="text" class="form-control" id="CityAddressCompany" name="CityAddressCompany" value="" /></td>
     </tr>
     <tr>
         <td colspan="2">INGRESO PROMEDIO MENSUAL (incluye su conyuge)</td>
@@ -269,9 +289,9 @@ require_once('auth/session.php');
     <tr>
         <td><?php echo $selectedPaymentDescription; ?></td>
         <td><?php echo $fullposition; ?> </td>
-        <td><?php echo $selectedPaymentDescription; ?> </td>
-        <td> <?php echo $selectedPaymentDescription; ?></td>
-        <td>ZONA <?php echo $zone; ?></td>
+        <td><?php echo $positions[0]['level']; ?> </td>
+        <td><?php echo $positions[0]['aisle'];; ?></td>
+        <td><?php echo $zone; ?></td>
     </tr>
 </table>
 <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
@@ -283,14 +303,30 @@ require_once('auth/session.php');
     </tr>
 
     <tr>
-        <td> <?php echo $totalFinal; ?></td>
-        <td> <?php echo $selectedDiscountValue; ?></td>
-        <td> <?php echo $enganche; ?></td>
-        <td> <?php echo $totalFinal; ?></td>
+        <td> <?php echo '$' . number_format($totalFinal, 2) . ' MXN'; ?></td>
+        <td> <?php echo '$' . number_format($selectedDiscountValue, 2) . ' MXN'; ?></td>
+        <td>
+            <?php 
+                // Condición para mostrar totalFinal o enganche
+                if ($selectedPaymentValue == 1) {
+                    echo '$' . number_format($totalFinal, 2) . ' MXN';
+                } else {
+                    echo '$' . number_format($enganche, 2) . ' MXN';
+                }
+            ?>
+        </td>
+        <td> <?php echo '$' . number_format($saldo, 2) . ' MXN'; ?></td>
     </tr>
     
         <tr>
-            <td colspan="3">EL SALDO SERA LIQUIDADO EN @iMeses ABONOS DE:  MXN. C/U, </td>
+            <?php
+                if($paymentMethods != 1){
+                    echo '<td colspan="3">EL SALDO SERA LIQUIDADO EN '. $selectedPaymentDescription. ' EN ABONOS DE: '.$mensualidades.' MXN. C/U, </td>';
+                }else{	
+                    echo '<td colspan="3"></td>';
+                }
+            ?>
+            
         </tr>
     
 </table>
@@ -310,15 +346,14 @@ require_once('auth/session.php');
         </tr>
         <tr>
             <td colspan="2">SIENDO EL PRIMERO DE ELLOS EN</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><?php echo(date('d')); ?></td>
+            <td><?php echo(date('m')); ?></td>
+            <td><?php echo(date('y')); ?></td>
             <td colspan="2">Y EL ULTIMO EN</td>
-            <td></td>
-            <td></td>
-            <td>
-        </td>
-    </tr>
+            <td><?php echo $diaUltimoPago; ?></td>
+            <td><?php echo $mesUltimoPago; ?></td>
+            <td><?php echo $añoUltimoPago; ?></td>
+        </tr>
 </table>
 
 <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
@@ -329,74 +364,70 @@ require_once('auth/session.php');
     </tr>
     <tr>
         <td colspan="" style="">
-           
-            <input type="checkbox" id="cbCheckMaintenanceFee" class="check-box" data-id="" style="width: 30px; height: 30px"  />
-            <label style="position:absolute;margin-top:4px;margin-left:15px"> MXN</label>
-            <input type="hidden" name="CheckMaintenanceFee" id="CheckMaintenanceFee" value="False" />
-            <input type="hidden" name="MaintenanceFeeID" id="MaintenanceFeeID" value="0" />
+            <input type="checkbox" id="ckMaintenance" class="check-box" style="width: 30px; height: 30px" />
+            <label style="position:absolute;margin-top:4px;margin-left:15px">$ <span id="maintenance"></span> MXN</label> 
+            <input type="hidden" name="inMaintenance" id="CheckMaintenanceFee" value="False" />
         </td>
         <td style="">
-            
-            <input type="checkbox" id="cbCheckFederalTax" class="check-box" data-id="" style="width: 30px; height: 30px; " @sCheckFederalTax />
-            <label style="position: absolute; margin-top: 4px; margin-left: 15px"> MXN</label>
-            <input type="hidden" name="CheckFederalTax" id="" value="False" />
-            <input type="hidden" name="FederalTaxID" id="FederalTaxID" value="0" />
+            <input type="checkbox" id="ckAshDeposit" class="check-box" style="width: 30px; height: 30px;" />
+            <label style="position: absolute; margin-top: 4px; margin-left: 15px">$ <span id="ashDeposit"></span> MXN</label>
+            <input type="hidden" name="inAshDeposit" id="CheckAshDepositFee" value="False" />
         </td>
     </tr>
 </table>
 <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
-            
-            <tr>
-                <td class="text-center align-middle" rowspan="7">FORMA DEL PAGO INICIAL*</td>
-            </tr>
-            <tr>
-                <td colspan="2"></td>
-                <td>CANTIDAD</td>
-                <td>No. DE CHEQUE</td>
-                <td>No. DE CUENTA</td>
-                <td>BANCO</td>
-                <td>Comprobante</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" id="TypePay1" class="typepay" name="TypePay" value="1" ></td>
-                <td>CHEQUE </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr style="margin-bottom:5px">
-                <td><input type="checkbox" id="TypePay2" class="typepay" name="TypePay" value="2" ></td>
-                <td>T. DE CREDITO/DEBITO </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" id="TypePay3" class="typepay" name="TypePay" value="3" ></td>
-                <td>TRANSFERENCIA</td>
-                <td></td>
-                <td colspan="3"></td>
-                <td><input type="file" class="form-control typepay3" id="Ticket" name="Ticket" /></td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" id="TypePay5" class="typepay" name="TypePay" value="5" ></td>
-                <td>DEPOSITO EN EFECTIVO</td>
-                <td></td>
-                <td colspan="4"></td>
-                <td><input type="file" class="form-control typepay5" id="TicketCashDeposit" name="TicketCashDeposit" /></td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" id="TypePay4" class="typepay" name="TypePay" value="4" ></td>
-                <td>EFECTIVO</td>
-                <td></td>
-                <td colspan="5"></td>
-            </tr>
-        </table>
-    </div>
+    <tr>
+        <td class="text-center align-middle" rowspan="7">FORMA DEL PAGO INICIAL*</td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
+        <td>CANTIDAD</td>
+        <td>No. DE CHEQUE</td>
+        <td>No. DE CUENTA</td>
+        <td>BANCO</td>
+        <td>Comprobante</td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="TypePay1" class="typepay" name="TypePay" value="1"></td>
+        <td>CHEQUE</td>
+        <td><input type="number" id="amount_check" class="form-control" name="amount_check" placeholder="Cantidad" disabled></td>
+        <td><input type="text" id="check_number" class="form-control" name="check_number" placeholder="No. de Cheque" disabled></td>
+        <td><input type="text" id="account_number" class="form-control" name="account_number" placeholder="No. de Cuenta" disabled></td>
+        <td><input type="text" id="bank" class="form-control" name="bank" placeholder="Banco" disabled></td>
+        <td></td> <!-- No input file para Cheque -->
+    </tr>
+    <tr style="margin-bottom:5px">
+        <td><input type="checkbox" id="TypePay2" class="typepay" name="TypePay" value="2"></td>
+        <td>T. DE CREDITO/DEBITO</td>
+        <td><input type="number" id="amount_card" class="form-control" name="amount_card" placeholder="Cantidad" disabled></td>
+        <td><input type="text" id="card_number" class="form-control" name="card_number" placeholder="No. de Cheque" disabled></td>
+        <td><input type="text" id="account_card" class="form-control" name="account_card" placeholder="No. de Cuenta" disabled></td>
+        <td><input type="text" id="bank_card" class="form-control" name="bank_card" placeholder="Banco" disabled></td>
+        <td></td> <!-- No input file para T. de Crédito/Debito -->
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="TypePay3" class="typepay" name="TypePay" value="3"></td>
+        <td>TRANSFERENCIA</td>
+        <td><input type="number" id="amount_transfer" class="form-control" name="amount_transfer" placeholder="Cantidad" disabled></td>
+        <td colspan="3"></td>
+        <td><input type="file" class="form-control typepay3" id="TicketTransfer" name="TicketTransfer" disabled></td> <!-- Input file para Transferencia -->
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="TypePay5" class="typepay" name="TypePay" value="5"></td>
+        <td>DEPOSITO EN EFECTIVO</td>
+        <td><input type="number" id="amount_cash_deposit" class="form-control" name="amount_cash_deposit" placeholder="Cantidad" disabled></td>
+        <td colspan="4"></td>
+        <td><input type="file" class="form-control typepay5" id="TicketCashDeposit" name="TicketCashDeposit" disabled></td> <!-- Input file para Depósito en Efectivo -->
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="TypePay4" class="typepay" name="TypePay" value="4"></td>
+        <td>EFECTIVO</td>
+        <td><input type="number" id="amount_cash" class="form-control" name="amount_cash" placeholder="Cantidad" disabled></td>
+        <td colspan="4"></td>
+        <td></td> <!-- No input file para Efectivo -->
+    </tr>
+</table>
+</div>
 </div>
 <div class="row" style="padding-top:15px;">
     <div class="col-md-2 col-sm-2 col-xs-6">
@@ -465,6 +496,9 @@ $(document).ready(function() {
                             occupation: customer.occupation,
                             business_name: customer.business_name,
                             business_address: customer.business_address,
+                            business_city: customer.business_city,
+                            business_municipality: customer.business_municipality,
+                            business_state: customer.business_state,
                             business_phone: customer.business_phone,
                             business_ext: customer.business_ext,
                             deputation: customer.deputation,
@@ -501,6 +535,9 @@ $(document).ready(function() {
         $('#Company').val(selectedCustomer.business_name); // Nombre de la empresa
         $('#PhoneCompany').val(selectedCustomer.business_phone); // Teléfono de la empresa
         $('#AddressCompany').val(selectedCustomer.business_address); // Dirección de la empresa
+        $('#CityAddressCompany').val(selectedCustomer.business_city); // Dirección de la empresa
+        $('#MunicipalityAddressCompany').val(selectedCustomer.business_municipality); // Dirección de la empresa
+        $('#StateAddressCompany').val(selectedCustomer.business_state); // Dirección de la empresa
         $('#ExtPhoneCompany').val(selectedCustomer.business_ext); // Extensión de teléfono
         $('#DelegationAddressCompany').val(selectedCustomer.deputation); // Delegación
         $('#Income').val(selectedCustomer.average_income); // Ingreso promedio
@@ -509,6 +546,101 @@ $(document).ready(function() {
         $('.tr-new-customer').show();
     });
 
+    let maintenanceCost = 0;
+    const ashDepositCost = 920;
+
+    $.ajax({
+        url: '../../api/purchases/maintenance.php', // Cambia esto a la ruta correcta de tu archivo
+        type: 'GET',
+        dataType: 'json', // Espera una respuesta en JSON
+        success: function(data) {
+            // Aquí puedes manejar la respuesta
+            if (data.error) {
+                $('#resultado').html("Error: " + data.error);
+            } else {
+                // Almacena el costo de mantenimiento
+                maintenanceCost = data.cost; 
+                $('#maintenance').text(maintenanceCost); // Mostrar costo en la etiqueta
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // Manejar errores de la solicitud
+            $('#resultado').html("Error en la solicitud: " + textStatus);
+        }
+    });
+
+    // Actualizar el contenido y el valor del campo oculto cuando el checkbox es seleccionado
+    $('#ckMaintenance').change(function() {
+        if ($(this).is(':checked')) {
+            // Asignar el costo al campo oculto
+            $('#CheckMaintenanceFee').val(maintenanceCost); // Asignar costo al campo oculto
+        } else {
+            // Limpiar el campo oculto si no está seleccionado
+            $('#CheckMaintenanceFee').val('False'); // Restablecer campo oculto
+        }
+    });
+
+    // Manejar el checkbox de depósito de cenizas
+    $('#ckAshDeposit').change(function() {
+        if ($(this).is(':checked')) {
+            // Mostrar costo en la etiqueta y asignar el valor al campo oculto
+            $('#ashDeposit').text(ashDepositCost); // Mostrar costo de cenizas
+            $('#CheckAshDepositFee').val(ashDepositCost); // Asignar costo al campo oculto
+        } else {
+            // Limpiar el contenido y el campo oculto si no está seleccionado
+            $('#ashDeposit').text(''); // Limpiar costo
+            $('#CheckAshDepositFee').val('False'); // Restablecer campo oculto
+        }
+    });
+    const enganche = parseFloat(<?php echo json_encode($enganche); ?>);
+    const totalFinal = parseFloat(<?php echo json_encode($totalFinal); ?>);
+    const selectedPaymentValue = parseInt(<?php echo json_encode($selectedPaymentValue); ?>); // Agrega esta línea
+
+    $('.typepay').change(function() {
+        var row = $(this).closest('tr'); // Obtiene la fila actual
+        
+        // Habilitar o deshabilitar los inputs según el estado del checkbox
+        if ($(this).is(':checked')) {
+            // Contar los checkboxes seleccionados
+            var checkedCount = $('.typepay:checked').length;
+
+            // Si se seleccionan más de 2, deseleccionar el checkbox actual
+            if (checkedCount > 2) {
+                $(this).prop('checked', false);
+                alert("Solo puedes seleccionar un máximo de 2 opciones.");
+            } else {
+                row.find('input[type="number"], input[type="text"]').prop('disabled', false);
+
+                // Mostrar el enganche o el total final en el input de cantidad
+                if (selectedPaymentValue === 1) {
+                    row.find('input[type="number"]').val(totalFinal.toFixed(2)); // Si el pago es contado
+                } else {
+                    row.find('input[type="number"]').val(enganche.toFixed(2)); // Si no es contado
+                }
+
+                // Habilitar el input de archivo solo si es Transferencia o Depósito en Efectivo
+                if ($(this).val() === "3" || $(this).val() === "5") {
+                    row.find('input[type="file"]').prop('disabled', false);
+                }
+            }
+        } else {
+            row.find('input[type="number"], input[type="text"]').prop('disabled', true);
+            // Limpiar los valores al deshabilitar
+            row.find('input[type="number"], input[type="text"]').val('');
+            
+            // Deshabilitar el input de archivo si no es Transferencia o Depósito en Efectivo
+            if ($(this).val() === "3" || $(this).val() === "5") {
+                row.find('input[type="file"]').prop('disabled', true);
+            }
+        }
+
+        // Habilitar el input de archivo para Transferencia y Depósito en Efectivo
+        $('.typepay:checked').each(function() {
+            if ($(this).val() === "3" || $(this).val() === "5") {
+                row.find('input[type="file"]').prop('disabled', false);
+            }
+        });
+    });
 
 });
 </script>

@@ -108,6 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                                 data-price="<?= $pos['price'] ?> " 
                                 data-price-shared="<?= $pos['price_shared']?>"
                                 data-status-id="<?= $pos['status_id'] ?>"
+                                data-level="<?= $pos['level'] ?>"
                                 data-aisle="<?=  htmlspecialchars($pos['aisle']); ?>"
                                 data-status="<?= htmlspecialchars($pos['status']) ?>">
                                 <div class="td-inner">
