@@ -1029,7 +1029,30 @@ $(document).ready(function() {
             formData.append(`beneficiaries[${index}][customerId]`, customerId);
         });
 
-        // Agrega esos valores al FormData
+        const payments = [];
+        paymentMethods.each(function() {
+            const row = $(this).closest('tr');
+            const amount = row.find('input[type="number"]').val();
+            const paymentType = parseInt($(this).val());
+
+            // Solo agrega si se ha ingresado un monto
+            if (amount) {
+                payments.push({
+                    paymentAmount: parseFloat(amount), // Convierte a número
+                    concept: "Pago inicial", // Puedes ajustar esto si es necesario
+                    typePaymentId: paymentType,
+                    currencyId: 1 // Ajusta según tu necesidad
+                });
+            }
+        });
+
+        // Agrega el arreglo de pagos al FormData
+        payments.forEach((payment, index) => {
+            formData.append(`payments[${index}][paymentAmount]`, payment.paymentAmount);
+            formData.append(`payments[${index}][concept]`, payment.concept);
+            formData.append(`payments[${index}][typePaymentId]`, payment.typePaymentId);
+            formData.append(`payments[${index}][currencyId]`, payment.currencyId);
+        });
         formData.append('paymentPlan', paymentPlan);
         formData.append('cryptKey', cryptKey);
         formData.append('level', level);
@@ -1057,60 +1080,60 @@ $(document).ready(function() {
         });
 
         // Función para validar los montos de los métodos de pago
-        function validatePaymentAmounts(total, enganche) {
-            let sum = 0;
-            
-            // Sumar las cantidades de los inputs seleccionados
-            if ($('#amount_card').is(':enabled')) {
-                sum += parseFloat($('#amount_card').val()) || 0;
-            }
-            if ($('#amount_transfer').is(':enabled')) {
-                sum += parseFloat($('#amount_transfer').val()) || 0;
-            }
-            if ($('#amount_cash_deposit').is(':enabled')) {
-                sum += parseFloat($('#amount_cash_deposit').val()) || 0;
-            }
-            if ($('#amount_cash').is(':enabled')) {
-                sum += parseFloat($('#amount_cash').val()) || 0;
-            }
-
-            // Verificar que la suma no exceda el enganche o total final
-            if (selectedPaymentValue === 1 && sum > total) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'La suma de los montos no puede exceder el total final.',
-                });
-                return false;
-            } else if (selectedPaymentValue !== 1 && sum > enganche) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'La suma de los montos no puede exceder el enganche.',
-                });
-                return false;
-            }
-
-            if (selectedPaymentValue === 1 && sum < total) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'La suma de los montos no puede ser menor que el total final.',
-                });
-                return false;
-            } else if (selectedPaymentValue !== 1 && sum < enganche) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'La suma de los montos no puede ser menor que el enganche.',
-                });
-                return false;
-            }
-
-            return true;
-        }
+        
     });
+    function validatePaymentAmounts(total, enganche) {
+        let sum = 0;
+        
+        // Sumar las cantidades de los inputs seleccionados
+        if ($('#amount_card').is(':enabled')) {
+            sum += parseFloat($('#amount_card').val()) || 0;
+        }
+        if ($('#amount_transfer').is(':enabled')) {
+            sum += parseFloat($('#amount_transfer').val()) || 0;
+        }
+        if ($('#amount_cash_deposit').is(':enabled')) {
+            sum += parseFloat($('#amount_cash_deposit').val()) || 0;
+        }
+        if ($('#amount_cash').is(':enabled')) {
+            sum += parseFloat($('#amount_cash').val()) || 0;
+        }
 
+        // Verificar que la suma no exceda el enganche o total final
+        if (selectedPaymentValue === 1 && sum > total) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'La suma de los montos no puede exceder el total final.',
+            });
+            return false;
+        } else if (selectedPaymentValue !== 1 && sum > enganche) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'La suma de los montos no puede exceder el enganche.',
+            });
+            return false;
+        }
+
+        if (selectedPaymentValue === 1 && sum < total) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'La suma de los montos no puede ser menor que el total final.',
+            });
+            return false;
+        } else if (selectedPaymentValue !== 1 && sum < enganche) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'La suma de los montos no puede ser menor que el enganche.',
+            });
+            return false;
+        }
+
+        return true;
+    }
 
 
 });
