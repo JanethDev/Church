@@ -8,7 +8,7 @@ $_title = 'Solicitud | Catedral Tijuana';
             <a class="nav-item nav-link active" id="nav-zona-tab" data-toggle="tab" href="#nav-zona" role="tab" aria-controls="nav-zona" aria-selected="true">Zonas</a>
             <a class="nav-item nav-link" id="nav-area-tab" data-toggle="tab" href="#nav-area" role="tab" aria-controls="nav-area" aria-selected="false">Areas</a>
             <a class="nav-item nav-link" id="nav-criptas-tab" data-toggle="tab" href="#nav-criptas" role="tab" aria-controls="nav-criptas" aria-selected="false">Criptas</a>
-            <a class="nav-item nav-link disable" id="nav-forma-pago-tab" data-toggle="tab" href="#nav-forma-pago" role="tab" aria-controls="nav-forma-pago" aria-selected="false">Forma de pago</a>
+            <a class="nav-item nav-link " id="nav-forma-pago-tab" data-toggle="tab" href="#nav-forma-pago" role="tab" aria-controls="nav-forma-pago" aria-selected="false">Forma de pago</a>
         </div>
     </nav>
     <div class="tab-content">
