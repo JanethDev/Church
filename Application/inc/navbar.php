@@ -26,13 +26,16 @@
 
                             <li style="margin-right:15px; color:white"><a <?php if ($current_page == 'solicitud') echo 'class="active"' ?> href="solicitud">Solicitud</a></li>
                             <li style="margin-right:15px; color:white"><a <?php if ($current_page == 'solicitudes') echo 'class="active"' ?> href="solicitudes">Solicitudes()</a></li>
-                            <li style="margin-right:15px; color:white"><a <?php if ($current_page == 'pagos') echo 'class="active"' ?> href="pagos">Pagos</a></li>
+                            <!--<li style="margin-right:15px; color:white"><a <?php //if ($current_page == 'pagos') echo 'class="active"' ?> href="pagos">Pagos</a></li>-->
                             <li class="nav-item dropdown csDropdown">
-                                <a <?php if ($current_page == 'aviso_de_privacidad' ||$current_page == 'reglamento_columbario' ) echo 'class="active"' ?> href="#" data-toggle="dropdown" class="dropdown-toggle" style="margin-right:15px">Documentos<span class="caret"></span></a>
+                                <a <?php if ($current_page == 'aviso_de_privacidad' || $current_page == 'reglamento_columbario') echo 'class="active"' ?> href="#" data-toggle="dropdown" class="dropdown-toggle" style="margin-right:15px">Documentos<span class="caret"></span></a>
                                 <ul class="dropdown-menu csWidth100" style="color:black">
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="aviso_de_privacidad">Aviso de privacidad</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="reglamento_columbario">Reglamento del columbario</a></li>
-                                
+                                    <li style="margin-right:15px; margin-left:10px; color:white">
+                                        <a href="#" onclick="downloadDocument('aviso_de_privacidad')">Aviso de privacidad</a>
+                                    </li>
+                                    <li style="margin-right:15px; margin-left:10px; color:white">
+                                        <a href="#" onclick="downloadDocument('reglamento_columbario')">Reglamento del columbario</a>
+                                    </li>
                                 </ul>
                             </li>
                         <?php }?>
@@ -58,39 +61,39 @@
                                                 $current_page == 'usuarios'  ) echo 'class="active"' ?> href="#" data-toggle="dropdown" class="dropdown-toggle" style="margin-right:15px">Catálogos<span class="caret"></span></a>
                                 <ul class="dropdown-menu csWidth100" style="color:black">
                                 <?php if($role = 'Administrador' ) {?>
-                                    <li style="margin-right:15px; margin-left:10px;  color:white"><a href="aniversario_luctuoso">Aniversario luctuoso</a></li>
+                                    <!-- <li style="margin-right:15px; margin-left:10px;  color:white"><a href="aniversario_luctuoso">Aniversario luctuoso</a></li>
                                     <li style="margin-right:15px; margin-left:10px;  color:white"><a href="catedral">Catedral</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="ciudad">Ciudad</a></li>
+                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="ciudad">Ciudad</a></li>-->
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="clientes">Clientes</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="clientes_prospectos">Clientes prospectos</a></li>
+                                    <!--<li style="margin-right:15px; margin-left:10px; color:white"><a href="clientes_prospectos">Clientes prospectos</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="cryptType">Criptas</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="comisionistas">Comisionistas</a></li>
+                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="comisionistas">Comisionistas</a></li> -->
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="cuota_de_mantenimiento">Cuota de mantenimiento</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="descuentos">Descuentos</a></li>
+                                    <!--<li style="margin-right:15px; margin-left:10px; color:white"><a href="descuentos">Descuentos</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="descuento_contado">Descuento contado</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="estado_Civil">Estado Civil</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="estados">Estados</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="horarios_misa">Horarios misa</a></li>
+                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="estados">Estados</a></li>-->
+                                    <!--<li style="margin-right:15px; margin-left:10px; color:white"><a href="horarios_misa">Horarios misa</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="impuesto_Federal">Impuesto Federal</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="intenciones">Intenciones</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="notificaciones">Notificaciones</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="tipo_de_cambio">Tipo de cambio</a></li>
+                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="tipo_de_cambio">Tipo de cambio</a></li>-->
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="usuarios">Usuarios</a></li>
 
                                 <?php }elseif($role = 'Caja'){?>  
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="aniversario_luctuoso">Aniversario luctuoso</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="intenciones">Intenciones</a></li>
+                                    <!--<li style="margin-right:15px; margin-left:10px; color:white"><a href="aniversario_luctuoso">Aniversario luctuoso</a></li>
+                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="intenciones">Intenciones</a></li> -->
 
                                     <?php }elseif($role = 'Facturacion'){?>  
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="clientes">Clientes</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="cuota_de_mantenimiento">Cuota de mantenimiento</a></li>
+                                    <!-- <li style="margin-right:15px; margin-left:10px; color:white"><a href="clientes">Clientes</a></li>
+                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="cuota_de_mantenimiento">Cuota de mantenimiento</a></li>-->
 
                                     <?php }elseif($role = 'Ventas'){?>  
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="clientes">Clientes</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="clientes_prospectos">Clientes prospectos</a></li>
+                                    <!-- <li style="margin-right:15px; margin-left:10px; color:white"><a href="clientes">Clientes</a></li>
+                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="clientes_prospectos">Clientes prospectos</a></li>-->
 
                                     <?php }elseif($role = 'Encargado'){?>  
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="aniversario_luctuoso">Aniversario luctuoso</a></li>
+                                    <!--<li style="margin-right:15px; margin-left:10px; color:white"><a href="aniversario_luctuoso">Aniversario luctuoso</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="catedral">Catedral</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="ciudad">Ciudad</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="clientes">Clientes</a></li>
@@ -103,13 +106,13 @@
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="estados">Estados</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="impuesto_Federal">Impuesto Federal</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="tipo_de_cambio">Tipo de cambio</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="usuarios">Usuarios</a></li>
+                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="usuarios">Usuarios</a></li>-->
 
                                     <?php }  ?>
                                 </ul>
                             </li>
                             <?php if($role = 'Administrador' ) {?>
-                                <li style="margin-right:15px; color:white"><a <?php if ($current_page == 'pagos_criptas') echo 'class="active"' ?> href="pagos_criptas">Pagos Criptas</a></li>
+                                <!-- <li style="margin-right:15px; color:white"><a <?php //if ($current_page == 'pagos_criptas') echo 'class="active"' ?> href="pagos_criptas">Pagos Criptas</a></li> -->
                              <?php } ?>
                     </ul>
                     </div>
@@ -131,3 +134,31 @@
         </div>       
     </nav>
 </div>
+<script>
+function downloadDocument(doc) {
+    // Crear un elemento de anclaje
+    const link = document.createElement('a');
+    
+    switch (doc) {
+        case 'aviso_de_privacidad':
+            link.href = '../views/aviso_de_privacidad.php';
+            break;
+        case 'reglamento_columbario':
+            link.href = '../views/reglamento_columbario.php';
+            break;
+        default:
+            die('Documento no válido.');
+        }
+    // Establecer el atributo de descarga
+    link.download = doc + '.pdf'; // Opcional: establece un nombre de archivo
+    
+    // Agregar el enlace al DOM
+    document.body.appendChild(link);
+    
+    // Hacer clic en el enlace para iniciar la descarga
+    link.click();
+    
+    // Remover el enlace del DOM
+    document.body.removeChild(link);
+}
+</script>
