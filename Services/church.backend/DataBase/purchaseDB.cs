@@ -106,7 +106,7 @@ namespace church.backend.DataBase
                                                 , data.cryptSpaces
                                                 , data.maintenanceFee
                                                 , data.federalTax
-                                                , data.discountId
+                                                , nullIntDataBase(data.discountId)
                                                 , data.discountAmount
                                                 , data.ashDeposit
                                                 , data.customerId
@@ -159,6 +159,7 @@ namespace church.backend.DataBase
                             };
                             CreatePayment(payment, response.code);
                         }
+                        response.code = 1;
                     }
                 }
                 return response;
@@ -170,6 +171,14 @@ namespace church.backend.DataBase
                     code = -1,
                     message = ex.Message
                 };
+            }
+        }
+        string nullIntDataBase(int value){
+            if(value<=0){
+                return "null";
+            }
+            else{
+                return "'"+value+"'";
             }
         }
 
@@ -232,7 +241,7 @@ namespace church.backend.DataBase
                                     federalTax = _nv.nullDouble(reader["federal_tax"].ToString()!),
                                     discountId = _nv.nullInt(reader["cat_discounts_id"].ToString()!),
                                     discountAmount = _nv.nullDouble(reader["discount"].ToString()!),
-                                    ashDeposit = _nv.nullDouble(reader["ash_deposit"].ToString()!),
+                                    ashDeposit = _nv.nullDouble(reader["ash_deposits"].ToString()!),
                                     customerId = _nv.nullInt(reader["cat_customers_id"].ToString()!),
                                     userId = _nv.nullInt(reader["cat_customers_id"].ToString()!),
                                     monthlyPayments = _nv.nullInt(reader["monthly_payments"].ToString()!),
