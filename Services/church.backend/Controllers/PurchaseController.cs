@@ -1,8 +1,7 @@
-﻿using church.backend.Models.purchase;
+using church.backend.Models.purchase;
+using church.backend.services.JsonWebToken;
 using church.backend.services.Models;
 using church.backend.services.Models.enums;
-using church.backend.services.Models.register;
-using church.backend.services.Services;
 using church.backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +22,7 @@ namespace church.backend.Controllers
         /// <response code="200">Listado de tipo de moneda</response>
         /// <response code="400">Retorna algun error</response>
         [HttpGet]
+        [JwtAuthentication]
         [Route("purchase/currency")]
         public IActionResult consultCurrencies()
         {
@@ -41,6 +41,7 @@ namespace church.backend.Controllers
         /// <response code="200">Listado de tipo de pago</response>
         /// <response code="400">Retorna algun error</response>
         [HttpGet]
+        [JwtAuthentication]
         [Route("purchase/TypePayments")]
         public IActionResult consultTypePayments()
         {
@@ -88,6 +89,7 @@ namespace church.backend.Controllers
         /// <response code="200">Significa que agregó la compra correctamente</response>
         /// <response code="400">Retorna algun error del usuario</response>
         [HttpPost]
+        [JwtAuthentication]
         [Route("purchase/create")]
         public IActionResult CreatePurchase([FromBody] purchase_request data)
         {
@@ -138,6 +140,7 @@ namespace church.backend.Controllers
         /// <response code="200">Significa que agregó la compra correctamente</response>
         /// <response code="400">Retorna algun error del usuario</response>
         [HttpPost]
+        [JwtAuthentication]
         [Route("purchase/reserve")]
         public IActionResult ReservePurchase([FromBody] purchase_request data)
         {
@@ -159,6 +162,7 @@ namespace church.backend.Controllers
         /// <response code="200">lista las compras por cliente</response>
         /// <response code="400">Retorna algun error</response>
         [HttpGet]
+        [JwtAuthentication]
         [Route("purchase/by/customer")]
         public IActionResult ConsultPurchaceByClient([FromQuery] int customerId)
         {
@@ -177,6 +181,7 @@ namespace church.backend.Controllers
         /// <response code="200">lista las compras reservadas/apartadas</response>
         /// <response code="400">Retorna algun error</response>
         [HttpGet]
+        [JwtAuthentication]
         [Route("purchase/reserved")]
         public IActionResult PurchaseReserved()
         {
