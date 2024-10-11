@@ -236,7 +236,6 @@ namespace church.backend.services.DataBase
                         , data.house_number
                         , data.apt_number
                         , data.neighborhood
-                        , data.customer_municipality
                     );
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -302,7 +301,6 @@ namespace church.backend.services.DataBase
                         , data.house_number
                         , data.apt_number
                         , data.neighborhood
-                        , data.customer_municipality
                         , data.id
                     );
                     using (SqlCommand command = new SqlCommand(query, connection))
@@ -518,7 +516,6 @@ namespace church.backend.services.DataBase
                                     house_number = reader["house_number"].ToString()!,
                                     apt_number = reader["apt_number"].ToString()!,
                                     neighborhood = reader["neighborhood"].ToString()!,
-                                    customer_municipality = reader["customer_municipality"].ToString()!,
                                 });
                             }
                         }
