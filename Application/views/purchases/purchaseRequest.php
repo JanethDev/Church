@@ -208,7 +208,7 @@ require_once('auth/session.php');
                             
                         </tr>
                         <tr>
-                            <td colspan="2"><input type="text" class="form-control" id="customer_municipality" name="customer_municipality" value="" /></td>
+                            <td colspan="2"><input type="text" class="form-control" id="neighborhood" name="neighborhood" value="" /></td>
                             <td ><input type="text" class="form-control" id="zip_code" name="zip_code" value="" /></td>
                             
                         </tr>
@@ -413,6 +413,30 @@ require_once('auth/session.php');
                             <?php endif; ?>
                         </tr>
                     </table>
+                    <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
+                        <tr>
+                            <td style="border: none;"></td>
+                            <td style="border: none;"></td>
+                            <td>DIA</td>
+                            <td>MES</td>
+                            <td>AÑO</td>
+                            <td style="border: none;"></td>
+                            <td style="border: none;"></td>
+                            <td>DIA</td>
+                            <td>MES</td>
+                            <td>AÑO</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">SIENDO EL PRIMERO DE ELLOS EN</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td colspan="2">Y EL ULTIMO EN</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
 
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
                         <tr><td colspan="2" style="text-align:center"><strong>ADICIONAL</strong></td></tr>
@@ -588,7 +612,9 @@ $(document).ready(function() {
                             business_state: customer.business_state,
                             business_phone: customer.business_phone,
                             business_ext: customer.business_ext,
-                            deputation: customer.deputation,
+                            house_number: customer.house_number,
+                            apt_number: customer.apt_number,
+                            customer_municipality: customer.customer_municipality,
                             average_income: customer.average_income
                         };
                     })
@@ -617,6 +643,10 @@ $(document).ready(function() {
         $('#catTownsId').val(selectedCustomer.catTownsId); // Ciudad de nacimiento
         $('#CivilStatus').val(selectedCustomer.civil_status); // Estado civil
         $('#Occupation').val(selectedCustomer.occupation); // Ocupación
+        $('#address').val(selectedCustomer.address);
+        $('#house_number').val(selectedCustomer.average_income);
+        $('#apt_number').val(selectedCustomer.average_income);
+        $('#neighborhood').val(selectedCustomer.neighborhood);
 
         // Asignar datos de la empresa
         $('#Company').val(selectedCustomer.business_name); // Nombre de la empresa
@@ -627,7 +657,8 @@ $(document).ready(function() {
         $('#StateAddressCompany').val(selectedCustomer.business_state); // Estado de la empresa
         $('#ExtPhoneCompany').val(selectedCustomer.business_ext); // Extensión de teléfono
         $('#DelegationAddressCompany').val(selectedCustomer.deputation); // Delegación
-        $('#Income').val(selectedCustomer.average_income); // Ingreso promedio
+        $('#Income').val(selectedCustomer.average_income);
+       
 
         // Disparar los eventos 'change' para que los campos dependientes actualicen su contenido
         $('#CivilStatus').trigger('change');

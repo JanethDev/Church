@@ -447,6 +447,7 @@ namespace church.backend.services.DataBase
                                     house_number = reader["house_number"].ToString()!,
                                     apt_number = reader["apt_number"].ToString()!,
                                     customer_municipality = reader["customer_municipality"].ToString()!,
+                                    neighborhood = reader["neighborhood"].ToString()!,
                                 });
                             }
                         }
