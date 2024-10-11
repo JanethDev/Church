@@ -116,6 +116,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
+    $beneficiaries = [];
+    if (isset($_POST['beneficiaries']) && is_array($_POST['beneficiaries'])) {
+        foreach ($_POST['beneficiaries'] as $beneficiary) {
+            $beneficiaries[] = [
+                'name' => $beneficiary['name'] ?? null,
+                'surnames' => $beneficiary['surnames'] ?? null,
+                'birthdate' => $beneficiary['birthdate'] ?? null,
+                'phone' => $beneficiary['phone'] ?? null,
+                'relationship' => $beneficiary['relationship'] ?? null,
+                'customerId' => $beneficiary['customerId'] ?? null,
+            ];
+        }
+    }
+
+    // Agrega los beneficiarios al arreglo de datos
+    $data['beneficiaries'] = $beneficiaries;
+
+
+
     // Ahora realiza la solicitud POST para la compra
     $jsonData = json_encode($dataPurchase, JSON_PRETTY_PRINT);
     try {
@@ -136,6 +155,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(["error" => "Error en la solicitud: " . $e->getMessage()]);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 } else {
     echo json_encode(["error" => "Método no permitido."]);
 }

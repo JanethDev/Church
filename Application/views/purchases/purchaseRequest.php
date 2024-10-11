@@ -192,7 +192,7 @@ require_once('auth/session.php');
                     <tr><td colspan="3" style="text-align:center;"><strong>DOMICILIO PARTICULAR</strong></td></tr>
                         <tr>
                             <td style="width:50%">CALLE, AV., BLDV. CALZ.*</td>
-                            <td style="width:25%">NUMERO </td>
+                            <td style="width:25%">NUMERO* </td>
                             <td style="width:25%">INTERIOR </td>
                             
                         </tr>
@@ -204,7 +204,7 @@ require_once('auth/session.php');
                         </tr>
                         <tr>
                             <td colspan="2">COLONIA*</td>
-                            <td >CODIGO POSTAL </td>
+                            <td >CODIGO POSTAL* </td>
                             
                         </tr>
                         <tr>
@@ -215,16 +215,16 @@ require_once('auth/session.php');
                         <tr>
                             <td >ESTADO*</td>
                             <td >DELEGACIÓN </td>
-                            <td >CIUDAD </td>
+                            <td >CIUDAD* </td>
                             
                         </tr>
                         <tr>
                             <td>
-                                <select class="form-control select2" id="catStatesId" name="catStatesIdy">
+                                <select class="form-control select2" id="catStatesId" name="catStatesId">
                                     <option value="">Seleccione un estado</option>
                                 </select>
                             <td>
-                                <input type="text" class="form-control" id="catMunicipalityAddress" name="catMunicipalityAddressCompany" value="" />
+                                <input type="text" class="form-control" id="Deputation" name="Deputation" value="" />
                             </td>
                             <td>
                                 <select class="form-control select2" id="catTownsId" name="catTownsId">
@@ -247,7 +247,7 @@ require_once('auth/session.php');
                     <table class="table table-bordered" style="background-color: white">
                         <tr>
                             <td style="width:25%">Razón Social</td>
-                            <td><input type="text" class="form-control" id="BusinessName" name="BusinessName" /></td>
+                            <td><input type="text" class="form-control" id="social_reason" name="social_reason" /></td>
                         </tr>
                         <tr>
                             <td style="width:25%">R.F.C o CURP</td>
@@ -614,7 +614,7 @@ $(document).ready(function() {
                             business_ext: customer.business_ext,
                             house_number: customer.house_number,
                             apt_number: customer.apt_number,
-                            customer_municipality: customer.customer_municipality,
+                            neighborhood: customer.neighborhood,
                             average_income: customer.average_income
                         };
                     })
@@ -644,9 +644,10 @@ $(document).ready(function() {
         $('#CivilStatus').val(selectedCustomer.civil_status); // Estado civil
         $('#Occupation').val(selectedCustomer.occupation); // Ocupación
         $('#address').val(selectedCustomer.address);
-        $('#house_number').val(selectedCustomer.average_income);
-        $('#apt_number').val(selectedCustomer.average_income);
+        $('#house_number').val(selectedCustomer.house_number);
+        $('#apt_number').val(selectedCustomer.apt_number);
         $('#neighborhood').val(selectedCustomer.neighborhood);
+        $('#social_reason').val(selectedCustomer.social_reason);
 
         // Asignar datos de la empresa
         $('#Company').val(selectedCustomer.business_name); // Nombre de la empresa
@@ -1053,7 +1054,61 @@ $(document).ready(function() {
         const selectedCivilStatusId = $(this).val();
     });
    
-    $('#btnQuotation').on('click', function() {
+    function validatePaymentAmounts(total, enganche) {
+        let sum = 0;
+        
+        // Sumar las cantidades de los inputs seleccionados
+        if ($('#amount_card').is(':enabled')) {
+            sum += parseFloat($('#amount_card').val()) || 0;
+        }
+        if ($('#amount_transfer').is(':enabled')) {
+            sum += parseFloat($('#amount_transfer').val()) || 0;
+        }
+        if ($('#amount_cash_deposit').is(':enabled')) {
+            sum += parseFloat($('#amount_cash_deposit').val()) || 0;
+        }
+        if ($('#amount_cash').is(':enabled')) {
+            sum += parseFloat($('#amount_cash').val()) || 0;
+        }
+
+        // Verificar que la suma no exceda el enganche o total final
+        if (selectedPaymentValue === 1 && sum > total) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'La suma de los montos no puede exceder el total final.',
+            });
+            return false;
+        } else if (selectedPaymentValue !== 1 && sum > enganche) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'La suma de los montos no puede exceder el enganche.',
+            });
+            return false;
+        }
+
+        if (selectedPaymentValue === 1 && sum < total) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'La suma de los montos no puede ser menor que el total final.',
+            });
+            return false;
+        } else if (selectedPaymentValue !== 1 && sum < enganche) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'La suma de los montos no puede ser menor que el enganche.',
+            });
+            return false;
+        }
+
+        return true;
+    }
+
+    
+    $('#btnSave').on('click', function() {
         // Variables para verificar campos
         const missingFields = []; // Array para almacenar campos faltantes
         const apellidoPaterno = $('#PSurname').val();
@@ -1062,6 +1117,13 @@ $(document).ready(function() {
         const telefonoParticular = $('#CelPhone').val();
         const correoElectronico = $('#Email').val();
         const customerId = $('#CustomerID').val();
+        const address = $('#address').val();
+        const house_number = $('#house_number').val();
+        const neighborhood = $('#neighborhood').val();
+        const catStates = $('#catStatesId').val();
+        const catTowns = $('#catTownsId').val();
+        const zip_code = $('#zip_code').val();
+        const dateBirth = $('#DateOfBirth').val();
         
         // Referencias
         const referenceCustomer1 = $('#ReferenceCustomer1').val();
@@ -1073,6 +1135,12 @@ $(document).ready(function() {
         if (!nombres) missingFields.push("Nombres*");
         if (!telefonoParticular) missingFields.push("Teléfono Particular*");
         if (!correoElectronico) missingFields.push("Correo Electrónico*");
+        if (!dateBirth) missingFields.push("Fecha de nacimiento*");
+        if (!address) missingFields.push("Dirección*");
+        if (!neighborhood) missingFields.push("Colonia*");
+        if (!catStates) missingFields.push("Estado*");
+        if (!catTowns) missingFields.push("Ciudad*");
+        if (!zip_code) missingFields.push("Código Postal*");
 
         // Validar referencias
         if (!referenceCustomer1) missingFields.push("Referencia Nombre*");
@@ -1178,75 +1246,208 @@ $(document).ready(function() {
 
         // Envía la solicitud AJAX
         $.ajax({
-            url: 'api/purchases/sendPurchase.php', // Cambia esto por la ruta a tu archivo PHP
+            url: 'api/purchases/createPurchase.php', // Cambia esto por la ruta a tu archivo PHP
             type: 'POST',
             data: formData,
             contentType: false,
             processData: false,
             success: function(response) {
                 // Maneja la respuesta del servidor aquí
+                Swal.fire({
+                    title: 'Cotización guardada con éxito',
+                    text: 'Esta cotización sólo es temporal y no registra un apartado del nicho. ' + response,
+                    icon: 'success',
+                    confirmButtonText: 'Ver ahora'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        //window.location.href = 'purchases'; 
+                    }
+                });
+
+
                 alert('Solicitud enviada con éxito: ' + response);
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                alert('Error al enviar la solicitud: ' + textStatus);
+                Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: response,
+                });
             }
         });
 
-        // Función para validar los montos de los métodos de pago
+        
         
     });
-    function validatePaymentAmounts(total, enganche) {
-        let sum = 0;
+    
+    $('#btnQuotation').on('click', function() {
+        // Variables para verificar campos
+        const missingFields = []; // Array para almacenar campos faltantes
+        const apellidoPaterno = $('#PSurname').val();
+        const apellidoMaterno = $('#MSurname').val();
+        const nombres = $('#Name').val();
+        const telefonoParticular = $('#CelPhone').val();
+        const correoElectronico = $('#Email').val();
+        const customerId = $('#CustomerID').val();
+        const address = $('#address').val();
+        const house_number = $('#house_number').val();
+        const neighborhood = $('#neighborhood').val();
+        const catStates = $('#catStatesId').val();
+        const catTowns = $('#catTownsId').val();
+        const zip_code = $('#zip_code').val();
+        const dateBirth = $('#DateOfBirth').val();
         
-        // Sumar las cantidades de los inputs seleccionados
-        if ($('#amount_card').is(':enabled')) {
-            sum += parseFloat($('#amount_card').val()) || 0;
-        }
-        if ($('#amount_transfer').is(':enabled')) {
-            sum += parseFloat($('#amount_transfer').val()) || 0;
-        }
-        if ($('#amount_cash_deposit').is(':enabled')) {
-            sum += parseFloat($('#amount_cash_deposit').val()) || 0;
-        }
-        if ($('#amount_cash').is(':enabled')) {
-            sum += parseFloat($('#amount_cash').val()) || 0;
+        // Referencias
+        const referenceCustomer1 = $('#ReferenceCustomer1').val();
+        const referenceCustomerPhone1 = $('#ReferenceCustomerPhone1').val();
+
+        // Validar campos requeridos
+        if (!apellidoPaterno) missingFields.push("Apellido Paterno*");
+        if (!apellidoMaterno) missingFields.push("Apellido Materno*");
+        if (!nombres) missingFields.push("Nombres*");
+        if (!telefonoParticular) missingFields.push("Teléfono Particular*");
+        if (!correoElectronico) missingFields.push("Correo Electrónico*");
+        if (!dateBirth) missingFields.push("Fecha de nacimiento*");
+        if (!address) missingFields.push("Dirección*");
+        if (!neighborhood) missingFields.push("Colonia*");
+        if (!catStates) missingFields.push("Estado*");
+        if (!catTowns) missingFields.push("Ciudad*");
+        if (!zip_code) missingFields.push("Código Postal*");
+
+        // Validar referencias
+        if (!referenceCustomer1) missingFields.push("Referencia Nombre*");
+        if (!referenceCustomerPhone1) missingFields.push("Referencia Teléfono*");
+
+        // Validar método de pago inicial
+        const paymentMethods = $('.typepay:checked'); // Obtener métodos de pago seleccionados
+        if (paymentMethods.length === 0) {
+            missingFields.push("Seleccionar al menos un método de pago inicial*");
         }
 
-        // Verificar que la suma no exceda el enganche o total final
-        if (selectedPaymentValue === 1 && sum > total) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'La suma de los montos no puede exceder el total final.',
-            });
-            return false;
-        } else if (selectedPaymentValue !== 1 && sum > enganche) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'La suma de los montos no puede exceder el enganche.',
-            });
-            return false;
+        // Obtiene el arreglo de beneficiarios
+        const beneficiarios = getBeneficiarios();
+        
+        // Validar que exista al menos un beneficiario
+        if (beneficiarios.length === 0) {
+            missingFields.push("Debe agregar al menos un beneficiario*");
         }
 
-        if (selectedPaymentValue === 1 && sum < total) {
+        // Si hay campos faltantes, mostrar SweetAlert
+        if (missingFields.length > 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'La suma de los montos no puede ser menor que el total final.',
+                text: 'Faltan los siguientes campos: ' + missingFields.join(', '),
             });
-            return false;
-        } else if (selectedPaymentValue !== 1 && sum < enganche) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'La suma de los montos no puede ser menor que el enganche.',
-            });
-            return false;
+            return; // Detiene la ejecución si hay campos faltantes
         }
 
-        return true;
-    }
+        // Captura los valores de condiciones económicas
+        const paymentPlan = $('#paymentPlanLabel').text();
+        const cryptKey = $('#cryptKeyLabel').text();
+        const level = $('#levelLabel').text();
+        const area = $('#areaLabel').text();
+        const zone = $('#zoneLabel').text();
+        const totalAmount = parseFloat($('#totalAmountLabel').text().replace(/[^0-9.-]+/g,"")) || 0; 
+        const appliedDiscount =  parseFloat($('#appliedDiscountLabel').text().replace(/[^0-9.-]+/g,"")) || 0;
+        const initialPayment = parseFloat($('#initialPaymentLabel').text().replace(/[^0-9.-]+/g,"")) || 0;
+        const balance = parseFloat($('#balanceLabel').text().replace(/[^0-9.-]+/g,"")) || 0 ;
+
+        const enganche = initialPayment;
+        const totalFinal = totalAmount;
+
+        // Validar montos de los métodos de pago seleccionados
+        if (!validatePaymentAmounts(totalFinal, enganche)) {
+            return; // Detener la ejecución si la validación falla
+        }
+
+        // Serializa los datos del formulario
+        var formData = new FormData($('#PurchaseRequestCreateForm')[0]);
+
+        // Excluir campos específicos de beneficiario
+        formData.delete('BeneficiaryName');
+        formData.delete('BeneficiarySurnames');
+        formData.delete('BeneficiaryBirthdate');
+        formData.delete('BeneficiaryCelPhone');
+        formData.delete('BeneficiaryRelationship');
+        formData.delete('BeneficiaryCustomerID');
+
+        // Agrega el arreglo de beneficiarios al FormData
+        beneficiarios.forEach((beneficiary, index) => {
+            formData.append(`beneficiaries[${index}][name]`, beneficiary.name);
+            formData.append(`beneficiaries[${index}][surnames]`, beneficiary.surnames);
+            formData.append(`beneficiaries[${index}][birthdate]`, beneficiary.birthdate);
+            formData.append(`beneficiaries[${index}][phone]`, beneficiary.phone);
+            formData.append(`beneficiaries[${index}][relationship]`, beneficiary.relationship);
+            formData.append(`beneficiaries[${index}][customerId]`, customerId);
+        });
+
+        const payments = [];
+        paymentMethods.each(function() {
+            const row = $(this).closest('tr');
+            const amount = row.find('input[type="number"]').val();
+            const paymentType = parseInt($(this).val());
+
+            // Solo agrega si se ha ingresado un monto
+            if (amount) {
+                payments.push({
+                    paymentAmount: parseFloat(amount), // Convierte a número
+                    concept: "Pago inicial", // Puedes ajustar esto si es necesario
+                    typePaymentId: paymentType,
+                    currencyId: 1 // Ajusta según tu necesidad
+                });
+            }
+        });
+
+        // Agrega el arreglo de pagos al FormData
+        payments.forEach((payment, index) => {
+            formData.append(`payments[${index}][paymentAmount]`, payment.paymentAmount);
+            formData.append(`payments[${index}][concept]`, payment.concept);
+            formData.append(`payments[${index}][typePaymentId]`, payment.typePaymentId);
+            formData.append(`payments[${index}][currencyId]`, payment.currencyId);
+        });
+        formData.append('paymentPlan', paymentPlan);
+        formData.append('cryptKey', cryptKey);
+        formData.append('level', level);
+        formData.append('area', area);
+        formData.append('zone', zone);
+        formData.append('totalAmount', totalAmount);
+        formData.append('appliedDiscount', appliedDiscount);
+        formData.append('initialPayment', initialPayment);
+        formData.append('balance', balance);
+
+        // Envía la solicitud AJAX
+        $.ajax({
+            url: 'api/purchases/reservePurchase.php', 
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                Swal.fire({
+                    title: 'Cotización registrada con éxito',
+                    text: response.message,
+                    icon: 'success',
+                    confirmButtonText: 'Ver ahora'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        //window.location.href = 'purchases'; 
+                    }
+                });
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+
+                alert('Error al enviar la solicitud: ' + textStatus);
+                /*Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: textStatus,
+                });*/
+            }
+        });
+
+        
+    });
 
 
 });
