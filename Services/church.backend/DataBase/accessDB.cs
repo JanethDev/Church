@@ -233,6 +233,10 @@ namespace church.backend.services.DataBase
                         , data.business_city
                         , data.business_municipality
                         , data.business_state
+                        , data.house_number
+                        , data.apt_number
+                        , data.customer_municipality
+                        , data.neighborhood
                     );
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
