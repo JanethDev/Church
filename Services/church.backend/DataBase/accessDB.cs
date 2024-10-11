@@ -236,6 +236,74 @@ namespace church.backend.services.DataBase
                         , data.house_number
                         , data.apt_number
                         , data.neighborhood
+                        , data.customer_municipality
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = ex.Message
+                };
+            }
+        }
+
+        public GeneralResponse updateCustomer(customer_response data, int user_id)
+        {
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:access:updateCustomer"]!
+                        , user_id
+                        , data.name
+                        , data.father_last_name
+                        , data.mother_last_name
+                        , data.phone
+                        , data.email
+                        , data.rfc
+                        , data.zip_code
+                        , data.address
+                        , data.catStatesId
+                        , data.catTownsId
+                        , data.social_reason
+                        , data.birthdate.ToString("yyyy-MM-dd")
+                        , data.birth_place
+                        , data.civil_status
+                        , data.occupation
+                        , data.business_name
+                        , data.business_address
+                        , data.business_phone
+                        , data.business_ext
+                        , data.deputation
+                        , data.average_income
+                        , data.business_city
+                        , data.business_municipality
+                        , data.business_state
+                        , data.house_number
+                        , data.apt_number
+                        , data.neighborhood
+                        , data.customer_municipality
+                        , data.id
                     );
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -450,6 +518,7 @@ namespace church.backend.services.DataBase
                                     house_number = reader["house_number"].ToString()!,
                                     apt_number = reader["apt_number"].ToString()!,
                                     neighborhood = reader["neighborhood"].ToString()!,
+                                    customer_municipality = reader["customer_municipality"].ToString()!,
                                 });
                             }
                         }
