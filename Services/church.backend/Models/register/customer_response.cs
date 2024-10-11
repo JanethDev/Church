@@ -31,6 +31,9 @@ namespace church.backend.Models.register
         public string business_phone { get; set; } = string.Empty;
         public string business_ext { get; set; } = string.Empty;
         public string deputation { get; set; } = string.Empty;
+        public string house_number { get; set; } = string.Empty;
+        public string apt_number { get; set; } = string.Empty;
+        public string customer_municipality { get; set; } = string.Empty;
         public double average_income { get; set; } = new double();
     }
 }

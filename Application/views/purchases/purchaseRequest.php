@@ -189,12 +189,58 @@ require_once('auth/session.php');
                         </tr>
                     </table>
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
+                    <tr><td colspan="3" style="text-align:center;"><strong>DOMICILIO PARTICULAR</strong></td></tr>
                         <tr>
-                            <td style="width:25%">TELEFONO PARTICULAR*</td>
-                            <td><input type="text" class="form-control phone control-customer" id="CelPhone" name="CelPhone" /></td>
+                            <td style="width:50%">CALLE, AV., BLDV. CALZ.*</td>
+                            <td style="width:25%">NUMERO </td>
+                            <td style="width:25%">INTERIOR </td>
+                            
                         </tr>
                         <tr>
-                            <td style="width:25%">CORREO ELECTRONICO*</td>
+                            <td ><input type="text" class="form-control" id="address" name="address" value="" /></td>
+                            <td ><input type="text" class="form-control" id="house_number" name="house_number" value="" /></td>
+                            <td ><input type="text" class="form-control" id="apt_number" name="apt_number" value="" /></td>
+                            
+                        </tr>
+                        <tr>
+                            <td colspan="2">COLONIA*</td>
+                            <td >CODIGO POSTAL </td>
+                            
+                        </tr>
+                        <tr>
+                            <td colspan="2"><input type="text" class="form-control" id="customer_municipality" name="customer_municipality" value="" /></td>
+                            <td ><input type="text" class="form-control" id="zip_code" name="zip_code" value="" /></td>
+                            
+                        </tr>
+                        <tr>
+                            <td >ESTADO*</td>
+                            <td >DELEGACIÓN </td>
+                            <td >CIUDAD </td>
+                            
+                        </tr>
+                        <tr>
+                            <td>
+                                <select class="form-control select2" id="catStatesId" name="catStatesIdy">
+                                    <option value="">Seleccione un estado</option>
+                                </select>
+                            <td>
+                                <input type="text" class="form-control" id="catMunicipalityAddress" name="catMunicipalityAddressCompany" value="" />
+                            </td>
+                            <td>
+                                <select class="form-control select2" id="catTownsId" name="catTownsId">
+                                    <option value="">Seleccione una ciudad</option>
+                                </select>
+                            </td>
+                            
+                        </tr>
+                    </table>
+                    <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
+                        <tr>
+                            <td >TELEFONO PARTICULAR*</td>
+                            <td>CORREO ELECTRONICO*</td>  
+                        </tr>
+                        <tr>
+                            <td><input type="text" class="form-control phone control-customer" id="CelPhone" name="CelPhone" /></td>
                             <td><input type="text" class="form-control control-customer" id="Email" name="Email" /></td>
                         </tr>
                     </table>
@@ -567,6 +613,8 @@ $(document).ready(function() {
         $('#RFCCURP').val(selectedCustomer.rfc); // RFC
         $('#DateOfBirth').val(selectedCustomer.birthdate.split('T')[0]); // Fecha de nacimiento
         $('#CityOfBirth').val(selectedCustomer.birth_place); // Ciudad de nacimiento
+        $('#catStatesId').val(selectedCustomer.catStatesId); // Ciudad de nacimiento
+        $('#catTownsId').val(selectedCustomer.catTownsId); // Ciudad de nacimiento
         $('#CivilStatus').val(selectedCustomer.civil_status); // Estado civil
         $('#Occupation').val(selectedCustomer.occupation); // Ocupación
 
@@ -585,6 +633,9 @@ $(document).ready(function() {
         $('#CivilStatus').trigger('change');
         $('#StateAddressCompany').trigger('change');
         $('#CityAddressCompany').trigger('change');
+
+        $('#catStatesId').trigger('change');
+        $('#catTownsId').trigger('change');
 
         // Mostrar los campos de nuevo cliente para permitir editar
         $('.tr-new-customer').show();
@@ -648,6 +699,7 @@ $(document).ready(function() {
                 // Llenar el select de estados
                 $.each(data, function(index, item) {
                     $('#StateAddressCompany').append(new Option(item.state.state_name, item.state.id));
+                    $('#catStatesId').append(new Option(item.state.state_name, item.state.id));
                 });
             } else {
                 console.error("Error en la respuesta de la API: ", data.error);
@@ -655,6 +707,36 @@ $(document).ready(function() {
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.error("Error en la solicitud: ", textStatus);
+        }
+    }); 
+    
+
+    // Obtener ciudades según el estado seleccionado
+    $('#catStatesId').change(function() {
+        const stateId = $(this).val();
+        $('#catTownsId').empty().append(new Option("Seleccione una ciudad", ""));
+
+        if (stateId) {
+            // Buscar las ciudades en el JSON que se obtuvieron previamente
+            $.ajax({
+                url: 'api/general/stateTowns.php', // Vuelve a llamar a la API para obtener la lista completa
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (Array.isArray(data)) {
+                        // Filtrar las ciudades del estado seleccionado
+                        const towns = data.find(item => item.state.id == stateId)?.towns_list || [];
+                        $.each(towns, function(index, town) {
+                            $('#catTownsId').append(new Option(town.town_name, town.id));
+                        });
+                    } else {
+                        console.error("Error en la respuesta de la API: ", data.error);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error en la solicitud: ", textStatus);
+                }
+            });
         }
     });
 

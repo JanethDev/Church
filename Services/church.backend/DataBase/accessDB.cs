@@ -444,6 +444,9 @@ namespace church.backend.services.DataBase
                                     business_ext = reader["business_ext"].ToString()!,
                                     deputation = reader["deputation"].ToString()!,
                                     average_income = _nv.nullDouble(reader["average_income"].ToString()??"0"),
+                                    house_number = reader["house_number"].ToString()!,
+                                    apt_number = reader["apt_number"].ToString()!,
+                                    customer_municipality = reader["customer_municipality"].ToString()!,
                                 });
                             }
                         }

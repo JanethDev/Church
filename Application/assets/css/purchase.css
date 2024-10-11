@@ -1,3 +1,9 @@
+.container {
+    display: flex; /* Usa flexbox para alinear las tablas en la misma fila */
+    justify-content: space-between; /* Espacio entre las tablas */
+    width: 100%; /* Ocupa todo el ancho del contenedor */
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -82,96 +88,4 @@ table,
 tbody {
     vertical-align: top;
     overflow: visible;
-}
-
-/* Aplica estilos generales a la tabla */
-.styled-table {
-    border-collapse: collapse;
-    margin-left: 3pt;
-}
-
-.table-cell {
-    width: 100pt;
-    border: 1pt solid black;
-    padding: 2pt;
-    text-align: left;
-    height: 10pt;
-}
-
-/* Estilos para los párrafos dentro de las celdas */
-.content {
-    padding-top: 2pt;
-    padding-left: 2pt;
-    text-indent: 0pt;
-    line-height: 6pt;
-    margin: 0;
-}
-
-.section-title {
-    padding-top: 4pt;
-    padding-bottom: 2pt;
-    padding-left: 8pt;
-    text-align: center;
-}
-
-.data-table {
-    border-collapse: collapse;
-    margin-left: 8pt;
-    width: 100%;
-}
-
-.label {
-    width: auto;
-    padding: 2pt;
-    border: 1pt solid #000;
-    text-align: left;
-}
-
-.input-field {
-    width: auto;
-    border: 1pt solid #000;
-}
-
-.centered {
-    text-align: center;
-}
-
-input,
-select {
-    width: 100%;
-    padding: 4pt;
-    margin: 2pt 0;
-}
-
-h2 {
-    padding-top: 4pt;
-    padding-bottom: 2pt;
-    padding-left: 8pt;
-    text-indent: 0pt;
-    text-align: center;
-}
-
-table {
-    border-collapse: collapse;
-    margin-left: 8pt;
-}
-
-td {
-    border: solid 1pt;
-    padding: 2pt;
-    line-height: 6pt;
-}
-
-p {
-    text-indent: 0pt;
-}
-
-.textbox {
-    border: 0.5pt solid #000000;
-    display: block;
-    min-height: 24.0pt;
-    width: 117.8pt;
-    padding-top: 2pt;
-    padding-left: 1pt;
-    text-align: left;
 }
