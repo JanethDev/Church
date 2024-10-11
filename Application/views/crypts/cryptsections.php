@@ -112,7 +112,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                                 data-aisle="<?=  htmlspecialchars($pos['aisle']); ?>"
                                 data-status="<?= htmlspecialchars($pos['status']) ?>">
                                 <div class="td-inner">
-                                    <img src="<?= $pos['status'] == 'disponible' ? '../../assets/img/cuadro.png' : '../../assets/img/cuadro-disabled.png' ?>" alt="<?= $pos['status'] ?>">
+                                    <?php
+                                    if ($pos['is_shared'] && $pos['status'] == 'disponible') {
+                                        $imgSrc = '../../assets/img/cuadro-compartida.png';
+                                    } else {
+                                        switch ($pos['status']) {
+                                            case 'disponible':
+                                                $imgSrc = '../../assets/img/cuadro.png';
+                                                break;
+                                            case 'apartado':
+                                                $imgSrc = '../../assets/img/cuadro-apartado.png';
+                                                break;
+                                            case 'temporal':
+                                                $imgSrc = '../../assets/img/cuadro-temporal.png';
+                                                break;
+                                            case 'vendido':
+                                                $imgSrc = '../../assets/img/cuadro-disabled.png';
+                                                break;
+                                            default:
+                                                $imgSrc = '../../assets/img/cuadro.png';
+                                                break;
+                                        }
+                                    }
+                                    ?>
+                                    <img src="<?= $imgSrc ?>" alt="<?= $pos['status'] ?>" ></img>
                                     <span class="position-name"><?= getPositionName($pos) ?></span>
                                 </div>
                             </td>
@@ -140,35 +163,59 @@ document.querySelectorAll('#tablecryptsection .disponible').forEach(td => {
         } else {
             document.querySelectorAll('#tablecryptsection .disponible').forEach(el => {
                 el.classList.remove('selected');
-                el.querySelector('.td-inner img').src = '../../assets/img/cuadro.png';
+                
+                // Restaurar la imagen original según el estado del elemento
+                if (el.dataset.isShared == 1 && el.dataset.status === 'disponible') {
+                    el.querySelector('.td-inner img').src = '../../assets/img/cuadro-compartida.png';
+                } else {
+                    switch (el.dataset.status) {
+                        case 'disponible':
+                            el.querySelector('.td-inner img').src = '../../assets/img/cuadro.png';
+                            break;
+                        case 'apartado':
+                            el.querySelector('.td-inner img').src = '../../assets/img/cuadro-apartado.png';
+                            break;
+                        case 'temporal':
+                            el.querySelector('.td-inner img').src = '../../assets/img/cuadro-temporal.png';
+                            break;
+                        case 'vendido':
+                            el.querySelector('.td-inner img').src = '../../assets/img/cuadro-disabled.png';
+                            break;
+                        default:
+                            el.querySelector('.td-inner img').src = '../../assets/img/cuadro.png';
+                            break;
+                    }
+                }
             });
+
+            // Cambiar imagen de la celda seleccionada a 'cuadro-selected.png'
             this.classList.add('selected');
             this.querySelector('.td-inner img').src = '../../assets/img/cuadro-selected.png';
+
+            // Actualizar los detalles de la posición seleccionada
             document.getElementById('posicion').textContent = this.dataset.fullPosition;
             document.getElementById('aisle').textContent = this.dataset.aisle;
             document.getElementById('urna').textContent = this.dataset.positionName;
             const tipo = this.dataset.isShared == 1 ? 'Individual' : 'Familiar';
             document.getElementById('tipo').textContent = tipo;
 
-
             // Condición basada en is_shared
             if (this.dataset.isShared == 1) {
-            // Si is_shared es 1, obtenemos el tipo de cambio
-            fetch('../../api/purchases/exchangeRate.php') 
-                .then(response => response.json())
-                .then(data => {
-                    const tipoCambio = data.tipo_cambio;
-                    if (tipoCambio) {
-                        const precioEnPesos = parseFloat(this.dataset.priceShared) * tipoCambio; // Convertir a número
-                        document.getElementById('precio').textContent = formatPrice(precioEnPesos); // Formatear precio
-                    } else {
-                        document.getElementById('precio').textContent = 'No disponible (Error en el tipo de cambio)';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al obtener el tipo de cambio:', error);
-                    document.getElementById('precio').textContent = 'No disponible (Error al conectar con la API)';
-                });
+                fetch('../../api/purchases/exchangeRate.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        const tipoCambio = data.tipo_cambio;
+                        if (tipoCambio) {
+                            const precioEnPesos = parseFloat(this.dataset.priceShared) * tipoCambio; // Convertir a número
+                            document.getElementById('precio').textContent = formatPrice(precioEnPesos); // Formatear precio
+                        } else {
+                            document.getElementById('precio').textContent = 'No disponible (Error en el tipo de cambio)';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener el tipo de cambio:', error);
+                        document.getElementById('precio').textContent = 'No disponible (Error al conectar con la API)';
+                    });
             } else {
                 const precio = parseFloat(this.dataset.price); // Convertir a número
                 document.getElementById('precio').textContent = formatPrice(precio); // Formatear precio

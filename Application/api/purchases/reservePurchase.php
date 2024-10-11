@@ -7,11 +7,13 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $clientId = isset($_POST['CustomerID']) ? (int)$_POST['CustomerID'] : null;
+    $clientId = !empty($_POST['CustomerID']) ? (int)$_POST['CustomerID'] : 0;
     $referencePersonPhone1 = $_POST['ReferenceCustomerPhone1'] ?? null;
     $referencePersonPhone2 = $_POST['ReferenceCustomerPhone2'] ?? null;
+    $customerPhone= $_POST['CelPhone'] ?? null;
     $formattedPhone1 = preg_replace('/\D/', '', $referencePersonPhone1);
     $formattedPhone2 = preg_replace('/\D/', '', $referencePersonPhone2);
+    $phone = preg_replace('/\D/', '', $customerPhone);
 
     $dataPurchase = [
         'tuition' => '001215',
@@ -51,35 +53,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $client = new Client(['base_uri' => API_SERVICES]);
 
     // Si el customerId es null, creamos el cliente
-    if ($clientId === null) {
+    if ($clientId === 0) {
         $customerData = [
             'email' => $_POST['Email'] ?? '',
             'name' => $_POST['Name'] ?? '',
             'father_last_name' => $_POST['PSurname'] ?? '',
             'mother_last_name' => $_POST['MSurname'] ?? '',
-            'phone' => $formattedPhone1,
+            'phone' => $phone,
             'rfc' => $_POST['RFCCURP'] ?? '',
-            'zip_code' => $_POST['zip_code'] ?? 0,
+            'zip_code' =>  isset($_POST['zip_code']) ? (int)$_POST['zip_code'] : 0, 
             'address' => $_POST['address'] ?? '',
-            'catStatesId' => $_POST['catStatesId'] ?? 0,
-            'catTownsId' => $_POST['catTownsId'] ?? 0,
+            'catStatesId' => isset($_POST['catStatesId']) ? (int)$_POST['catStatesId'] : 0,  
+            'catTownsId' => isset($_POST['catTownsId']) ? (int)$_POST['catTownsId'] : 0,
             'social_reason' => $_POST['social_reason'] ?? '',
-            'birthdate' => $_POST['birthdate'] ?? '',
-            'birth_place' => $_POST['birth_place'] ?? '',
-            'civil_status' => $_POST['civil_status'] ?? '',
-            'occupation' => $_POST['occupation'] ?? '',
-            'business_name' => $_POST['business_name'] ?? '',
-            'business_address' => $_POST['business_address'] ?? '',
-            'business_city' => $_POST['business_city'] ?? '',
-            'business_municipality' => $_POST['business_municipality'] ?? '',
-            'business_state' => $_POST['business_state'] ?? '',
-            'business_phone' => $_POST['business_phone'] ?? '',
-            'business_ext' => $_POST['business_ext'] ?? '',
-            'deputation' => $_POST['deputation'] ?? '',
-            'average_income' => $_POST['average_income'] ?? 0,
+            'birthdate' => $_POST['DateOfBirth'] ?? '',
+            'birth_place' => $_POST['CityOfBirth'] ?? '',
+            'civil_status' => $_POST['CivilStatus'] ?? '',
+            'occupation' => $_POST['Occupation'] ?? '',
+            'business_name' => $_POST['Company'] ?? '',
+            'business_address' => $_POST['AddressCompany'] ?? '',
+            'business_city' => $_POST['CityAddressCompany'] ?? '',
+            'business_municipality' => $_POST['MunicipalityAddressCompany'] ?? '',
+            'business_state' => $_POST['StateAddressCompany'] ?? '',
+            'business_phone' => $_POST['PhoneCompany'] ?? '',
+            'business_ext' => $_POST['ExtPhoneCompany'] ?? '',
+            'deputation' => $_POST['Deputation'] ?? '',
+            'house_number' => $_POST['house_number'] ?? '',
+            'apt_number' => $_POST['apt_number'] ?? '',
+            'neighborhood' => $_POST['neighborhood'] ?? '',
+            'average_income' => isset($_POST['Income']) ? (float)$_POST['Income'] : 0.0,
+
         ];
 
-        $jsonCustomerData = json_encode($customerData);
+        $jsonCustomerData = json_encode($customerData, JSON_PRETTY_PRINT);
+
+        //echo '<script> console.log(JSON.stringify(' . $jsonCustomerData . ', null, 2)); </script>';
 
         try {
             // Realiza la solicitud POST para crear el cliente
@@ -91,7 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Obtén el ID del nuevo cliente de la respuesta
             $body = $response->getBody()->getContents();
             $newCustomer = json_decode($body, true);
-            $clientId = $newCustomer['customerId'];  // Asegúrate de que este campo exista en la respuesta
+            
+            $clientId = $newCustomer;  
 
             // Agrega el nuevo customerId al arreglo de la compra
             $dataPurchase['customerId'] = $clientId;
@@ -107,19 +116,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
-
     // Ahora realiza la solicitud POST para la compra
     $jsonData = json_encode($dataPurchase, JSON_PRETTY_PRINT);
-
     try {
-        $response = $client->request('POST', 'purchase/create', [
+        $response = $client->request('POST', 'purchase/reserve', [
             'headers' => $headers,
             'body' => $jsonData,
         ]);
 
         $body = $response->getBody()->getContents();
         header('Content-Type: application/json');
-        echo $body;
+        echo json_encode($body);
 
     } catch (RequestException $e) {
         if ($e->hasResponse()) {
