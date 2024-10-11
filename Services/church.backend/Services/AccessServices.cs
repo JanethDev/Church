@@ -1,4 +1,4 @@
-﻿using church.backend.Models.register;
+using church.backend.Models.register;
 using church.backend.services.DataBase;
 using church.backend.services.JsonWebToken;
 using church.backend.services.Models;
@@ -244,6 +244,19 @@ namespace church.backend.services.Services
             return _accessDB.createCustomer(data);
         }
 
+        public GeneralResponse updateCustomer(customer_response data, int user_id)
+        {
+            if (user_id <= 0)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un id de usaurio"
+                };
+            }
+
+            return _accessDB.updateCustomer(data, user_id);
+        }
         public GeneralResponse createBeneficiaries(BeneficiarieRequest data, int user_id)
         {
             if (data.customerId < 0)
