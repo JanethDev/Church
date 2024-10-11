@@ -1,4 +1,4 @@
-﻿namespace church.backend.Models.catalogue.crypts
+namespace church.backend.Models.catalogue.crypts
 {
     public class crypt
     {
@@ -8,6 +8,7 @@
         public string full_position { get; set; } = string.Empty;
         public string zone { get; set; } = string.Empty;
         public string level { get; set; } = string.Empty;
+        public int levelNumber { get; set; } = new int();
         public string position { get; set; } = string.Empty;
         public string aisle { get; set; } = string.Empty;
         public bool is_shared { get; set; } = new bool();
