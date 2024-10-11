@@ -235,7 +235,6 @@ namespace church.backend.services.DataBase
                         , data.business_state
                         , data.house_number
                         , data.apt_number
-                        , data.customer_municipality
                         , data.neighborhood
                     );
                     using (SqlCommand command = new SqlCommand(query, connection))
@@ -450,7 +449,6 @@ namespace church.backend.services.DataBase
                                     average_income = _nv.nullDouble(reader["average_income"].ToString()??"0"),
                                     house_number = reader["house_number"].ToString()!,
                                     apt_number = reader["apt_number"].ToString()!,
-                                    customer_municipality = reader["customer_municipality"].ToString()!,
                                     neighborhood = reader["neighborhood"].ToString()!,
                                 });
                             }
