@@ -1,5 +1,6 @@
-﻿using church.backend.Models.catalogue.crypts;
+using church.backend.Models.catalogue.crypts;
 using church.backend.services.Models;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Data.SqlClient;
 
 namespace church.backend.services.DataBase
@@ -48,10 +49,22 @@ namespace church.backend.services.DataBase
 
                         foreach(crypt item in response.data.crypts)
                         {
-                            if(!response.data.levels.Contains(item.level))
+                            if(!response.data.levels.Exists((element)=>element.leter == item.level))
                             {
-                                response.data.levels.Add(item.level);
+                                level temp = new level()
+                                {
+                                    leter = item.level
+                                };
+                                response.data.levels.Add(temp);
                             }
+                        }
+                        for(int index = 0; index < response.data.levels.Count; index++)
+                        {
+                            response.data.levels[index].number = response.data.levels.Count - index;
+                        }
+                        for(int index = 0; index < response.data.crypts.Count; index++)
+                        {
+                            response.data.crypts[index].levelNumber = response.data.levels.Find((element) => element.leter == response.data.crypts[index].level)!.number;
                         }
                     }
                 }
