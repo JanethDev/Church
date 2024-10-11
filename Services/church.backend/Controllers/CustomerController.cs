@@ -1,4 +1,4 @@
-﻿using church.backend.services.Models.register;
+using church.backend.services.Models.register;
 using church.backend.services.Models;
 using church.backend.services.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +45,64 @@ namespace church.backend.Controllers
         public IActionResult createCustomer([FromBody] create_customer_request data)
         {
             GeneralResponse customer = _AccessServices.createCustomer(data);
+            if (customer.code != 1)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, customer.message);
+            }
+            return Ok(customer.message);
+        }
+
+        /// <summary>
+        /// Actualización de clientes, requiere token
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>atualiza un nuevo cliente</returns>
+        /// <remarks>
+        /// Ejemplo de llenado:
+        ///
+        ///     {
+        ///        "id" : 1,
+        ///        "email": "ejemplo@correo.com",
+        ///        "name": "Juanito",
+        ///        "father_last_name": "Perez",
+        ///        "mother_last_name": "Lopez",
+        ///        "phone" : "6631234567",
+        ///        "rfc" : "GODA08492DFHD",
+        ///        "zip_code" : 24523,
+        ///        "address" : "calle bonita #35",
+        ///        "catStatesId" : 1,
+        ///        "catTownsId" : 1 ,
+        ///        "social_reason" : "test,
+        ///        "birthdate": "20204-10-10",
+        ///        "birth_place" : "test",
+        ///        "civil_status" : "soltero",
+        ///        "occupation" : "test",
+        ///        "business_name" : "test",
+        ///        "business_address" : "test",
+        ///        "business_city" : "test",
+        ///        "business_municipality" : "test",
+        ///        "business_state" : "test",
+        ///        "business_phone" : "11111111",
+        ///        "business_ext" : "112",
+        ///        "deputation" : "test",
+        ///        "house_number" : "",
+        ///        "apt_number": "",
+        ///        "neighborhood" : "",
+        ///        "customer_municipality" : "",
+        ///        "average_income" : 10.0
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="200">Significa que Actualizó al cliente correctamente</response>
+        /// <response code="400">Retorna algun error del cliente</response>
+        [HttpPost]
+        [JwtAuthentication]
+        [Route("customer/update")]
+        public IActionResult updateCustomer([FromBody] customer_response data)
+        {
+            var claims = HttpContext.Items["Claims"] as IDictionary<string, string>;
+            int user_id = int.Parse(claims?["user_id"] ?? "0");
+            GeneralResponse customer = _AccessServices.updateCustomer(data, user_id);
             if (customer.code != 1)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, customer.message);
