@@ -236,6 +236,7 @@ namespace church.backend.services.DataBase
                         , data.house_number
                         , data.apt_number
                         , data.neighborhood
+                        , data.customer_municipality
                     );
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -301,6 +302,7 @@ namespace church.backend.services.DataBase
                         , data.house_number
                         , data.apt_number
                         , data.neighborhood
+                        , data.customer_municipality
                         , data.id
                     );
                     using (SqlCommand command = new SqlCommand(query, connection))
@@ -346,6 +348,50 @@ namespace church.backend.services.DataBase
                         , data.phone
                         , data.relationship
                         , data.user_id
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = ex.Message
+                };
+            }
+        }
+
+        public GeneralResponse updateBeneficiaries(Beneficiarie data, int user_id)
+        {
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:access:updateBeneficiaries"]!
+                        , data.id
+                        , data.name
+                        , data.lastname
+                        , data.birthdate.ToString("yyyy-MM-dd")
+                        , data.phone
+                        , data.relationship
+                        , user_id
                     );
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -516,6 +562,7 @@ namespace church.backend.services.DataBase
                                     house_number = reader["house_number"].ToString()!,
                                     apt_number = reader["apt_number"].ToString()!,
                                     neighborhood = reader["neighborhood"].ToString()!,
+                                    customer_municipality = reader["customer_municipality"].ToString()!,
                                 });
                             }
                         }
