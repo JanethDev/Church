@@ -50,7 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'Content-Type' => 'application/json',
     ];
 
-    $client = new Client(['base_uri' => API_SERVICES]);
+    $client = new Client([
+        'base_uri' => API_SERVICES,  // Debe ser la URL base de la API
+        'headers' => $headers,
+    ]);
 
     // Si el customerId es null, creamos el cliente
     if ($clientId === 0) {
@@ -115,54 +118,156 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
         }
-    }
-    $beneficiaries = [];
-
-    if (isset($_POST['beneficiaries']) && is_array($_POST['beneficiaries'])) {
-        foreach ($_POST['beneficiaries'] as $beneficiary) {
+    }else{
+        $customerData = [
+            'id' => $clientId ?? '',
+            'email' => $_POST['Email'] ?? '',
+            'name' => $_POST['Name'] ?? '',
+            'father_last_name' => $_POST['PSurname'] ?? '',
+            'mother_last_name' => $_POST['MSurname'] ?? '',
+            'phone' => $phone,
+            'rfc' => $_POST['RFCCURP'] ?? '',
+            'zip_code' =>  isset($_POST['zip_code']) ? (int)$_POST['zip_code'] : 0, 
+            'address' => $_POST['address'] ?? '',
+            'catStatesId' => isset($_POST['catStatesId']) ? (int)$_POST['catStatesId'] : 0,  
+            'catTownsId' => isset($_POST['catTownsId']) ? (int)$_POST['catTownsId'] : 0,
+            'social_reason' => $_POST['social_reason'] ?? '',
+            'birthdate' => $_POST['DateOfBirth'] ?? '',
+            'birth_place' => $_POST['CityOfBirth'] ?? '',
+            'civil_status' => $_POST['CivilStatus'] ?? '',
+            'occupation' => $_POST['Occupation'] ?? '',
+            'business_name' => $_POST['Company'] ?? '',
+            'business_address' => $_POST['AddressCompany'] ?? '',
+            'business_city' => $_POST['CityAddressCompany'] ?? '',
+            'business_municipality' => $_POST['MunicipalityAddressCompany'] ?? '',
+            'business_state' => $_POST['StateAddressCompany'] ?? '',
+            'business_phone' => $_POST['PhoneCompany'] ?? '',
+            'business_ext' => $_POST['ExtPhoneCompany'] ?? '',
+            'deputation' => $_POST['Deputation'] ?? '',
+            'house_number' => $_POST['house_number'] ?? '',
+            'apt_number' => $_POST['apt_number'] ?? '',
+            'neighborhood' => $_POST['neighborhood'] ?? '',
+            'average_income' => isset($_POST['Income']) ? (float)$_POST['Income'] : 0.0,
+        ];
     
-            // Limpiar el número de teléfono, removiendo caracteres no numéricos
-            $phoneBeneficiary = isset($beneficiary['phone']) ? preg_replace('/\D/', '', $beneficiary['phone']) : null;
+        $jsonCustomerData = json_encode($customerData, JSON_PRETTY_PRINT);
     
-            // Construimos el array del beneficiario
-            $singleBeneficiary = [
-                'customerId' => $beneficiary['customerId'] ?? null,
-                'name' => $beneficiary['name'] ?? null,
-                'lastname' => $beneficiary['surnames'] ?? null,
-                'phone' => $phoneBeneficiary,
-                'birthdate' => $beneficiary['birthdate'] ?? null,
-                'relationship' => $beneficiary['relationship'] ?? null,
-            ];
+        try {
+            // Realiza la solicitud PUT o POST para actualizar el cliente
+            $response = $client->request('POST', 'customer/update', [
+                'headers' => $headers,
+                'body' => $jsonCustomerData,
+            ]);
     
-            // Convertimos el beneficiario a JSON
-            $jsonBeneficiaryData = json_encode($singleBeneficiary, JSON_PRETTY_PRINT);
+            // Obtén la respuesta del servidor
+            $body = $response->getBody()->getContents();
+            //echo '<script> console.log(JSON.stringify(' . $jsonCustomerData . ', null, 2)); </script>';
     
-            try {
-                // Realiza la solicitud POST para cada beneficiario
-                $response = $client->request('POST', 'customer/create/beneficiarie', [
-                    'headers' => $headers,
-                    'body' => $jsonBeneficiaryData,
-                ]);
-    
-                // Obtén la respuesta del servidor
-                $body = $response->getBody()->getContents();
-                echo '<script> console.log(JSON.stringify(' . $jsonBeneficiaryData  . ', null, 2)); </script>';
-                echo json_encode(["message" => "Beneficiario creado: " . $body]);
-    
-            } catch (RequestException $e) {
-                if ($e->hasResponse()) {
-                    $errorBody = $e->getResponse()->getBody()->getContents();
-                    echo json_encode(["error" => "Error al crear beneficiario: " . $errorBody]);
-                    exit;
-                } else {
-                    echo json_encode(["error" => "Error al crear beneficiario: " . $e->getMessage()]);
-                    exit;
-                }
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+                $errorBody = $e->getResponse()->getBody()->getContents();
+                echo json_encode(["error" => "Error al actualizar cliente: " . $errorBody]);
+                exit;
+            } else {
+                echo json_encode(["error" => "Error al actualizar cliente: " . $e->getMessage()]);
+                exit;
             }
         }
     }
+    $beneficiary =[];
+    try {
+        // Paso 1: Realizar la solicitud GET para obtener los beneficiarios existentes
+        $response = $client->request('GET', 'customer/consult/beneficiaries', [
+            'query' => [
+                'customerId' => $clientId, // Aquí va el parámetro de búsqueda
+            ],
+        ]);
+    
+        // Obtener el contenido de la respuesta
+        $existingBeneficiaries = json_decode($response->getBody()->getContents(), true);
 
+        //echo '<script> console.log(JSON.stringify(' . $existingBeneficiaries . ', null, 2)); </script>';
 
+    
+        // Paso 2: Eliminar beneficiarios existentes uno por uno
+        if (!empty($existingBeneficiaries)) {
+            foreach ($existingBeneficiaries as $beneficiary) {
+                $beneficiaryId = $beneficiary['id']; // Asegúrate de que 'id' es el campo correcto
+    
+                try {
+                    // Realiza la solicitud DELETE para cada beneficiario existente
+                    $deleteResponse = $client->request('GET', 'customer/delete/beneficiarie', [
+                        'query' => ['beneficiarieId' => $beneficiaryId],
+                    ]);
+                    // Puedes manejar la respuesta del DELETE si lo deseas
+                    $deleteBody = $deleteResponse->getBody()->getContents();
+                    // echo "Beneficiario eliminado: " . $deleteBody;
+    
+                } catch (RequestException $e) {
+                    if ($e->hasResponse()) {
+                        $errorBody = $e->getResponse()->getBody()->getContents();
+                        echo json_encode(["error" => "Error al eliminar beneficiario: " . $errorBody]);
+                        exit;
+                    } else {
+                        echo json_encode(["error" => "Error al eliminar beneficiario: " . $e->getMessage()]);
+                        exit;
+                    }
+                }
+            }
+        }
+    
+        // Paso 3: Insertar nuevos beneficiarios después de eliminar los existentes
+        if (isset($_POST['beneficiaries']) && is_array($_POST['beneficiaries'])) {
+            foreach ($_POST['beneficiaries'] as $beneficiary) {
+            
+                // Limpiar el número de teléfono
+                $phoneBeneficiary = isset($beneficiary['phone']) ? preg_replace('/\D/', '', $beneficiary['phone']) : null;
+            
+                // Construir el array del beneficiario
+                $singleBeneficiary = [
+                    'customerId' => $beneficiary['customerId'] ?? null,
+                    'name' => $beneficiary['name'] ?? null,
+                    'lastname' => $beneficiary['surnames'] ?? null,
+                    'phone' => $phoneBeneficiary,
+                    'birthdate' => $beneficiary['birthdate'] ?? null,
+                    'relationship' => $beneficiary['relationship'] ?? null,
+                ];
+    
+                // Convertir a JSON
+                $jsonBeneficiaryData = json_encode($singleBeneficiary, JSON_PRETTY_PRINT);
+    
+                try {
+                    // Realiza la solicitud POST para cada nuevo beneficiario
+                    $response = $client->request('POST', 'customer/create/beneficiarie', [
+                        'headers' => $headers,
+                        'body' => $jsonBeneficiaryData,
+                    ]);
+    
+                    // Obtener la respuesta del servidor
+                    $body = $response->getBody()->getContents();
+                    // echo json_encode(["message" => "Beneficiario creado: " . $body]);
+    
+                } catch (RequestException $e) {
+                    if ($e->hasResponse()) {
+                        $errorBody = $e->getResponse()->getBody()->getContents();
+                        echo json_encode(["error" => "Error al crear beneficiario: " . $errorBody]);
+                        exit;
+                    } else {
+                        echo json_encode(["error" => "Error al crear beneficiario: " . $e->getMessage()]);
+                        exit;
+                    }
+                }
+            }
+        }
+    
+    } catch (RequestException $e) {
+        if ($e->hasResponse()) {
+            $errorBody = $e->getResponse()->getBody()->getContents();
+            //echo json_encode(["error" => "Error en la solicitud: " . $errorBody]);
+        } else {
+           // echo json_encode(["error" => "Error en la solicitud: " . $e->getMessage()]);
+        }
+    }
 
     // Ahora realiza la solicitud POST para la compra
     $jsonData = json_encode($dataPurchase, JSON_PRETTY_PRINT);
@@ -173,6 +278,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         $body = $response->getBody()->getContents();
+
+        //var_dump($body);
+
         header('Content-Type: application/json');
         echo json_encode($body);
 

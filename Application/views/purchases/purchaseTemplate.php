@@ -1,5 +1,5 @@
 <?php
-$CustomerSelect = $dataPurchase['CustomerSelect'];
+/*$CustomerSelect = $dataPurchase['CustomerSelect'];
 //$CustomerID = $dataPurchase['CustomerID'];
 $CustomerID = 1;
 $UserID = $dataPurchase['UserID'];
@@ -45,7 +45,7 @@ $totalAmount = $dataPurchase['totalAmount'];
 $appliedDiscount = $dataPurchase['appliedDiscount'];
 $initialPayment = $dataPurchase['initialPayment'];
 $balance = $dataPurchase['balance'];
-
+*/
 
 
 ?>
@@ -55,7 +55,99 @@ $balance = $dataPurchase['balance'];
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href="../../assets/css/purchase.css" id="bootstrap-style" rel="stylesheet" type="text/css">
+    <style>
+          .container {
+    display: flex; /* Usa flexbox para alinear las tablas en la misma fila */
+    justify-content: space-between; /* Espacio entre las tablas */
+    width: 100%; /* Ocupa todo el ancho del contenedor */
+}
+
+    * {
+        margin: 0;
+        padding: 0;
+        text-indent: 0;
+    }
+
+    h1 {
+        color: black;
+        font-family: Arial, sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 9pt;
+    }
+
+    .s1 {
+        color: black;
+        font-family: Arial, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 6pt;
+    }
+
+    p {
+        color: black;
+        font-family: Arial, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 6pt;
+        margin: 0pt;
+    }
+
+    .s2 {
+        color: black;
+        font-family: Arial, sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 6pt;
+    }
+
+    h2 {
+        color: black;
+        font-family: Arial, sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 8pt;
+    }
+
+    .a,
+    a {
+        color: black;
+        font-family: Arial, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 6pt;
+    }
+
+    .s3 {
+        color: black;
+        font-family: Arial, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 6pt;
+    }
+
+    .s4 {
+        color: black;
+        font-family: Arial, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 8pt;
+    }
+
+    table,
+    tbody {
+        vertical-align: top;
+        overflow: visible;
+    }
+    </style>
 </head>
 <div>
 
@@ -63,7 +155,7 @@ $balance = $dataPurchase['balance'];
     <tbody>
         <tr>
             <td rowspan="4" style="border: none !important; vertical-align: top; width: 40%; text-align: center;">
-                <img width="67" height="100" src="../../assets/img/LogoParroquia.png" alt="Logo"/>
+                <img width="67px" height="100px" src="../../assets/img/LogoParroquia.png" alt="Logo"/>
             </td>
         </tr>
         <tr>
@@ -80,7 +172,7 @@ $balance = $dataPurchase['balance'];
 <div class="container">
 <table style="border-collapse:collapse;" cellspacing="0">
     <tr style="height:13pt">
-        <td style="width:166pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
+        <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
             colspan="3">
             <p class="s2" style="padding-top: 5pt;text-indent: 0pt;line-height: 6pt;text-align: center;">FECHA</p>
         </td>

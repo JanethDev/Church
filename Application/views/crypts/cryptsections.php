@@ -108,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                                 data-price="<?= $pos['price'] ?> " 
                                 data-price-shared="<?= $pos['price_shared']?>"
                                 data-status-id="<?= $pos['status_id'] ?>"
-                                data-level="<?= $pos['level'] ?>"
+                                data-level="<?= $pos['levelNumber'] ?>"
                                 data-aisle="<?=  htmlspecialchars($pos['aisle']); ?>"
                                 data-status="<?= htmlspecialchars($pos['status']) ?>">
                                 <div class="td-inner">
@@ -121,10 +121,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                                                 $imgSrc = '../../assets/img/cuadro.png';
                                                 break;
                                             case 'apartado':
-                                                $imgSrc = '../../assets/img/cuadro-apartado.png';
+                                                $imgSrc = '../../assets/img/cuadro-temporal.png';
                                                 break;
                                             case 'temporal':
-                                                $imgSrc = '../../assets/img/cuadro-temporal.png';
+                                                $imgSrc = '../../assets/img/cuadro-apartado.png';
                                                 break;
                                             case 'vendido':
                                                 $imgSrc = '../../assets/img/cuadro-disabled.png';
@@ -173,10 +173,10 @@ document.querySelectorAll('#tablecryptsection .disponible').forEach(td => {
                             el.querySelector('.td-inner img').src = '../../assets/img/cuadro.png';
                             break;
                         case 'apartado':
-                            el.querySelector('.td-inner img').src = '../../assets/img/cuadro-apartado.png';
+                            el.querySelector('.td-inner img').src = '../../assets/img/cuadro-temporal.png';
                             break;
                         case 'temporal':
-                            el.querySelector('.td-inner img').src = '../../assets/img/cuadro-temporal.png';
+                            el.querySelector('.td-inner img').src = '../../assets/img/cuadro-apartado.png';
                             break;
                         case 'vendido':
                             el.querySelector('.td-inner img').src = '../../assets/img/cuadro-disabled.png';

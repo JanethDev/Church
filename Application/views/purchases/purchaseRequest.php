@@ -4,6 +4,9 @@
 <!-- Luego incluye Select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+
 <style>
  
 </style>
@@ -122,6 +125,7 @@ require_once('auth/session.php');
     echo "<script>var isShared = '" . addslashes($tipoSeleccionado) . "';</script>";
     
     $zone = substr($fullposition, 0, 1);
+
 ?>
 <div class="card">
     <div class="card-header card-header-green">
@@ -413,6 +417,7 @@ require_once('auth/session.php');
                             <?php endif; ?>
                         </tr>
                     </table>
+                    <?php if ($paymentMethods != 1): ?>
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
                         <tr>
                             <td style="border: none;"></td>
@@ -428,16 +433,16 @@ require_once('auth/session.php');
                         </tr>
                         <tr>
                             <td colspan="2">SIENDO EL PRIMERO DE ELLOS EN</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td><?php echo $diaPrimerPago; ?></td>
+                            <td><?php echo $mesPrimerPago; ?></td>
+                            <td><?php echo $yPrimerPago; ?></td>
                             <td colspan="2">Y EL ULTIMO EN</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td><?php echo $diaUltimoPago; ?></td>
+                            <td><?php echo $mesUltimoPago; ?></td>
+                            <td><?php echo $yUltimoPago; ?></td>
                         </tr>
                     </table>
-
+                    <?php endif; ?>
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
                         <tr><td colspan="2" style="text-align:center"><strong>ADICIONAL</strong></td></tr>
                         <tr>
@@ -598,8 +603,8 @@ $(document).ready(function() {
                             rfc: customer.rfc,
                             zip_code: customer.zip_code,
                             address: customer.address,
-                            state: customer.state,
-                            town: customer.town,
+                            catStatesId: customer.catStatesId,
+                            catTownsId: customer.catTownsId,
                             social_reason: customer.social_reason,
                             birthdate: customer.birthdate,
                             birth_place: customer.birth_place,
@@ -648,6 +653,7 @@ $(document).ready(function() {
         $('#apt_number').val(selectedCustomer.apt_number);
         $('#neighborhood').val(selectedCustomer.neighborhood);
         $('#social_reason').val(selectedCustomer.social_reason);
+        $('#zip_code').val(selectedCustomer.zip_code);
 
         // Asignar datos de la empresa
         $('#Company').val(selectedCustomer.business_name); // Nombre de la empresa
@@ -666,8 +672,8 @@ $(document).ready(function() {
         $('#StateAddressCompany').trigger('change');
         $('#CityAddressCompany').trigger('change');
 
-        $('#catStatesId').trigger('change');
-        $('#catTownsId').trigger('change');
+        $('#catStatesId').val(selectedCustomer.catStatesId).trigger('change');
+        $('#catTownsId').val(selectedCustomer.catTownsId).trigger('change');
 
         // Mostrar los campos de nuevo cliente para permitir editar
         $('.tr-new-customer').show();
@@ -1423,28 +1429,57 @@ $(document).ready(function() {
             data: formData,
             contentType: false,
             processData: false,
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Enviando información...',
+                    text: 'Por favor espera mientras procesamos tu solicitud.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();  // Muestra el icono de carga
+                    }
+                });
+            },
             success: function(response) {
                 Swal.fire({
                     title: 'Cotización registrada con éxito',
                     text: response.message,
                     icon: 'success',
                     confirmButtonText: 'Ver ahora'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        //window.location.href = 'purchases'; 
-                    }
-                });
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-
-                alert('Error al enviar la solicitud: ' + textStatus);
-                /*Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: textStatus,
-                });*/
-            }
-        });
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Segunda solicitud AJAX para obtener el contenido HTML
+                            $.ajax({
+                                url: '/views/purchases/purchaseTemplate.php',  // Ruta que genera el HTML
+                                type: 'POST',
+                                data: formData,  // Puedes ajustar esto según sea necesario
+                                contentType: false,
+                                processData: false,
+                                success: function(htmlContent) {
+                                    // Abrir una ventana emergente y escribir el contenido HTML dentro de ella
+                                    const newWindow = window.open('', '_blank', 'width=800,height=600');
+                                    newWindow.document.open();
+                                    newWindow.document.write(htmlContent);
+                                    newWindow.document.close();  // Finaliza la escritura en el documento
+                                },
+                                error: function(jqXHR, textStatus, errorThrown) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'Error al generar el contenido: ' + textStatus
+                                    });
+                                }
+                            });
+                        }
+                    });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: textStatus,
+                    });
+                }
+            });
 
         
     });

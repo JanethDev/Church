@@ -69,8 +69,8 @@ require_once 'inc/head.php';
 			<div class="modal-dialog modal-md">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title">Recuperar contraseña</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<!--<h4 class="modal-title">Recuperar contraseña</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
@@ -80,7 +80,7 @@ require_once 'inc/head.php';
 					</div>
 					<div class="modal-footer">
 						<h6 style="float: left;" id="message"></h6>
-						<button type="button" id="btnRecoverPassword" class="btn btn-default">Recuperar</button>
+						<!--<button type="button" id="btnRecoverPassword" class="btn btn-default">Recuperar</button>-->
 					</div>
 				</div>
 			</div>

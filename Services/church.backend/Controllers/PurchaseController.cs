@@ -185,7 +185,7 @@ namespace church.backend.Controllers
         [Route("purchase/reserved")]
         public IActionResult PurchaseReserved()
         {
-            PurchaseResponse response = _PurchaseServices.ConsultPurchaceByClient((int)purchase_status.presolicitud);
+            PurchaseResponse response = _PurchaseServices.ConsultPurchaceByStatus((int)purchase_status.presolicitud);
             if (response.code != 1)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, response.message);

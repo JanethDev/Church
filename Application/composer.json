@@ -3,6 +3,8 @@
         "firebase/php-jwt": "^6.10",
         "guzzlehttp/guzzle": "~7.0",
         "php-http/httplug": "^2.4",
-        "php-http/guzzle7-adapter": "^1.0"
+        "php-http/guzzle7-adapter": "^1.0",
+        "dompdf/dompdf": "^3.0",
+        "tecnickcom/tcpdf": "^6.7"
     }
 }
