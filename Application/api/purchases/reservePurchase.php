@@ -117,21 +117,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     $beneficiaries = [];
+
     if (isset($_POST['beneficiaries']) && is_array($_POST['beneficiaries'])) {
         foreach ($_POST['beneficiaries'] as $beneficiary) {
-            $beneficiaries[] = [
-                'name' => $beneficiary['name'] ?? null,
-                'surnames' => $beneficiary['surnames'] ?? null,
-                'birthdate' => $beneficiary['birthdate'] ?? null,
-                'phone' => $beneficiary['phone'] ?? null,
-                'relationship' => $beneficiary['relationship'] ?? null,
+    
+            // Limpiar el número de teléfono, removiendo caracteres no numéricos
+            $phoneBeneficiary = isset($beneficiary['phone']) ? preg_replace('/\D/', '', $beneficiary['phone']) : null;
+    
+            // Construimos el array del beneficiario
+            $singleBeneficiary = [
                 'customerId' => $beneficiary['customerId'] ?? null,
+                'name' => $beneficiary['name'] ?? null,
+                'lastname' => $beneficiary['surnames'] ?? null,
+                'phone' => $phoneBeneficiary,
+                'birthdate' => $beneficiary['birthdate'] ?? null,
+                'relationship' => $beneficiary['relationship'] ?? null,
             ];
+    
+            // Convertimos el beneficiario a JSON
+            $jsonBeneficiaryData = json_encode($singleBeneficiary, JSON_PRETTY_PRINT);
+    
+            try {
+                // Realiza la solicitud POST para cada beneficiario
+                $response = $client->request('POST', 'customer/create/beneficiarie', [
+                    'headers' => $headers,
+                    'body' => $jsonBeneficiaryData,
+                ]);
+    
+                // Obtén la respuesta del servidor
+                $body = $response->getBody()->getContents();
+                echo '<script> console.log(JSON.stringify(' . $jsonBeneficiaryData  . ', null, 2)); </script>';
+                echo json_encode(["message" => "Beneficiario creado: " . $body]);
+    
+            } catch (RequestException $e) {
+                if ($e->hasResponse()) {
+                    $errorBody = $e->getResponse()->getBody()->getContents();
+                    echo json_encode(["error" => "Error al crear beneficiario: " . $errorBody]);
+                    exit;
+                } else {
+                    echo json_encode(["error" => "Error al crear beneficiario: " . $e->getMessage()]);
+                    exit;
+                }
+            }
         }
     }
-
-    // Agrega los beneficiarios al arreglo de datos
-    $data['beneficiaries'] = $beneficiaries;
 
 
 
@@ -155,17 +184,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(["error" => "Error en la solicitud: " . $e->getMessage()]);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 } else {
