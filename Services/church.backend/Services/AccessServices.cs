@@ -300,6 +300,19 @@ namespace church.backend.services.Services
             return _accessDB.deleteBeneficiaries(beneficiarieId,user_id);
         }
 
+        public GeneralResponse updateBeneficiaries(Beneficiarie data, int user_id)
+        {
+            if (user_id < 0)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar un id de usuario"
+                };
+            }
+            return _accessDB.updateBeneficiaries(data,user_id);
+        }
+
         public BeneficiarieResponse consultBeneficiaries(int customerId)
         {
             if (customerId < 0)
