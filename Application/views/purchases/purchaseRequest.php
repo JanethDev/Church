@@ -183,7 +183,7 @@ require_once('auth/session.php');
                         </tr>
                         <tr class="tr-new-customer" style="display:none;">
                             <td>APELLIDO PATERNO*</td>
-                            <td>APELLIDO MATERNO*</td>
+                            <td>APELLIDO MATERNO</td>
                             <td>NOMBRES*</td>
                         </tr>
                         <tr class="tr-new-customer" style="display:none;">
@@ -444,10 +444,11 @@ require_once('auth/session.php');
                     </table>
                     <?php endif; ?>
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
-                        <tr><td colspan="2" style="text-align:center"><strong>ADICIONAL</strong></td></tr>
+                        <tr><td colspan="3" style="text-align:center"><strong>ADICIONAL</strong></td></tr>
                         <tr>
                             <td colspan="" style="width:50%">Cuota de mantenimiento anual</td>
                             <td style="width:50%">Deposito de cenizas</td>
+                            <td style="width:50%">Otro</td>
                         </tr>
                         <tr>
                             <td colspan="" style="">
@@ -459,6 +460,14 @@ require_once('auth/session.php');
                                 <input type="checkbox" id="ckAshDeposit" class="check-box" style="width: 30px; height: 30px;" />
                                 <label style="position: absolute; margin-top: 4px; margin-left: 15px">$ <span id="ashDeposit"></span> MXN</label>
                                 <input type="hidden" name="inAshDeposit" id="CheckAshDepositFee" value="False" />
+                            </td>
+                            <td style="">
+                                <input type="checkbox" id="ckOtherFee" class="check-box" style="width: 30px; height: 30px;" />
+                                <label style="position: absolute; margin-top: 4px; margin-left: 15px">$ <span id="ashDeposit"></span> MXN</label>
+                                <input type="hidden" name="inOtherFee" id="CheckOtherFee" value="False" />
+                                
+                                <!-- Input escondido inicialmente -->
+                                <input type="number" id="otherFeeAmount" class="form-control" placeholder="Ingresa la cantidad" style="display:none; width: 100px; margin-left: 15px;" step="0.01" min="0" />
                             </td>
                         </tr>
                     </table>
@@ -472,7 +481,7 @@ require_once('auth/session.php');
                             <td>No. DE CHEQUE</td>
                             <td>No. DE CUENTA</td>
                             <td>BANCO</td>
-                            <td>Comprobante</td>
+                            <!--<td>Comprobante</td>-->
                         </tr>
                         <tr>
                             <td><input type="checkbox" id="TypePay1" class="typepay" name="TypePay" value="1"></td>
@@ -481,7 +490,7 @@ require_once('auth/session.php');
                             <td><input type="text" id="check_number" class="form-control" name="check_number" placeholder="No. de Cheque" disabled></td>
                             <td><input type="text" id="account_number" class="form-control" name="account_number" placeholder="No. de Cuenta" disabled></td>
                             <td><input type="text" id="bank" class="form-control" name="bank" placeholder="Banco" disabled></td>
-                            <td></td> <!-- No input file para Cheque -->
+                            <!--<td></td>  No input file para Cheque -->
                         </tr>
                         <tr style="margin-bottom:5px">
                             <td><input type="checkbox" id="TypePay2" class="typepay" name="TypePay" value="2"></td>
@@ -490,21 +499,21 @@ require_once('auth/session.php');
                             <td><input type="text" id="card_number" class="form-control" name="card_number" placeholder="No. de Cheque" disabled></td>
                             <td><input type="text" id="account_card" class="form-control" name="account_card" placeholder="No. de Cuenta" disabled></td>
                             <td><input type="text" id="bank_card" class="form-control" name="bank_card" placeholder="Banco" disabled></td>
-                            <td></td> <!-- No input file para T. de Crédito/Debito -->
+                             <!--<td></td> No input file para T. de Crédito/Debito -->
                         </tr>
                         <tr>
                             <td><input type="checkbox" id="TypePay3" class="typepay" name="TypePay" value="3"></td>
                             <td>TRANSFERENCIA</td>
                             <td><input type="number" id="amount_transfer" class="form-control" name="amount_transfer" placeholder="Cantidad" disabled></td>
                             <td colspan="3"></td>
-                            <td><input type="file" class="form-control typepay3" id="TicketTransfer" name="TicketTransfer" disabled></td> <!-- Input file para Transferencia -->
+                            <!--<td><input type="file" class="form-control typepay3" id="TicketTransfer" name="TicketTransfer" disabled></td> Input file para Transferencia -->
                         </tr>
                         <tr>
                             <td><input type="checkbox" id="TypePay5" class="typepay" name="TypePay" value="5"></td>
                             <td>DEPOSITO EN EFECTIVO</td>
                             <td><input type="number" id="amount_cash_deposit" class="form-control" name="amount_cash_deposit" placeholder="Cantidad" disabled></td>
                             <td colspan="3"></td>
-                            <td><input type="file" class="form-control typepay5" id="TicketCashDeposit" name="TicketCashDeposit" disabled></td> <!-- Input file para Depósito en Efectivo -->
+                             <!-- <td><input type="file" class="form-control typepay5" id="TicketCashDeposit" name="TicketCashDeposit" disabled></td>Input file para Depósito en Efectivo -->
                         </tr>
                         <tr>
                             <td><input type="checkbox" id="TypePay4" class="typepay" name="TypePay" value="4"></td>
@@ -535,6 +544,7 @@ require_once('auth/session.php');
 
 <script>
 $(document).ready(function() {
+    $('.select2').select2();
     $('#btnNewCustomer').click(function() {
         $('.tr-search-customer').hide(); // Ocultar la búsqueda de cliente
         $('.tr-new-customer').show();    // Mostrar los campos de nuevo cliente
@@ -566,8 +576,46 @@ $(document).ready(function() {
         rightAlign: false,
         removeMaskOnSubmit: true // Esto quita la máscara al enviar el formulario si es necesario.
     });
+    $('#ckOtherFee').change(function() {
+        if ($(this).is(':checked')) {
+            // Mostrar el input para ingresar el monto
+            $('#otherFeeAmount').show();
+            $('#CheckOtherFee').val('True'); // Cambiar valor del campo hidden
+        } else {
+            // Ocultar el input y limpiar el valor
+            $('#otherFeeAmount').hide();
+            $('#otherFeeAmount').val(''); // Limpiar el valor del input
+            $('#CheckOtherFee').val('False'); // Cambiar valor del campo hidden
+        }
+    });
 
-    $('.select2').select2();
+    // Aplicar la máscara de entrada para números
+    $('#otherFeeAmount').inputmask({
+        alias: 'numeric',
+        groupSeparator: ',',
+        autoGroup: true,
+        digits: 2,
+        radixPoint: '.',
+        digitsOptional: false,
+        placeholder: "0",
+        rightAlign: false,
+        removeMaskOnSubmit: true // Esto quita la máscara al enviar el formulario si es necesario.
+    });
+
+    // Validación para que el monto no pueda ser cero o negativo
+    $('#otherFeeAmount').on('input', function() {
+        var amount = parseFloat($(this).val().replace(/,/g, ''));
+        if (amount <= 0 || isNaN(amount)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'El monto no puede ser cero o negativo.',
+            });
+            $(this).val(''); // Limpiar el valor si es incorrecto
+        }
+    });
+
+    
 
     function formatDateToYMD(dateString) {
         var parts = dateString.split('/');
@@ -1309,7 +1357,6 @@ $(document).ready(function() {
 
         // Validar campos requeridos
         if (!apellidoPaterno) missingFields.push("Apellido Paterno*");
-        if (!apellidoMaterno) missingFields.push("Apellido Materno*");
         if (!nombres) missingFields.push("Nombres*");
         if (!telefonoParticular) missingFields.push("Teléfono Particular*");
         if (!correoElectronico) missingFields.push("Correo Electrónico*");
@@ -1333,10 +1380,10 @@ $(document).ready(function() {
         // Obtiene el arreglo de beneficiarios
         const beneficiarios = getBeneficiarios();
         
-        // Validar que exista al menos un beneficiario
+        /* Validar que exista al menos un beneficiario
         if (beneficiarios.length === 0) {
             missingFields.push("Debe agregar al menos un beneficiario*");
-        }
+        }*/
 
         // Si hay campos faltantes, mostrar SweetAlert
         if (missingFields.length > 0) {
@@ -1424,62 +1471,31 @@ $(document).ready(function() {
 
         // Envía la solicitud AJAX
         $.ajax({
-            url: 'api/purchases/reservePurchase.php', 
+            url: '/views/purchases/purchaseTemplate.php',
             type: 'POST',
-            data: formData,
+            data: formData,  
             contentType: false,
             processData: false,
-            beforeSend: function() {
-                Swal.fire({
-                    title: 'Enviando información...',
-                    text: 'Por favor espera mientras procesamos tu solicitud.',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();  // Muestra el icono de carga
-                    }
-                });
+            xhrFields: {
+                responseType: 'blob'  // Importante para manejar el PDF
             },
-            success: function(response) {
+            success: function(pdfBlob) {
+                // Crear un enlace temporal para la descarga
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(pdfBlob);
+                link.download = 'Cotizacion.pdf';  // Nombre del archivo PDF
+                document.body.appendChild(link);
+                link.click();  // Desencadenar la descarga
+                document.body.removeChild(link);  // Remover el enlace temporal
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
                 Swal.fire({
-                    title: 'Cotización registrada con éxito',
-                    text: response.message,
-                    icon: 'success',
-                    confirmButtonText: 'Ver ahora'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Segunda solicitud AJAX para obtener el contenido HTML
-                            $.ajax({
-                                url: '/views/purchases/purchaseTemplate.php',  // Ruta que genera el HTML
-                                type: 'POST',
-                                data: formData,  // Puedes ajustar esto según sea necesario
-                                contentType: false,
-                                processData: false,
-                                success: function(htmlContent) {
-                                    // Abrir una ventana emergente y escribir el contenido HTML dentro de ella
-                                    const newWindow = window.open('', '_blank', 'width=800,height=600');
-                                    newWindow.document.open();
-                                    newWindow.document.write(htmlContent);
-                                    newWindow.document.close();  // Finaliza la escritura en el documento
-                                },
-                                error: function(jqXHR, textStatus, errorThrown) {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: 'Error al generar el contenido: ' + textStatus
-                                    });
-                                }
-                            });
-                        }
-                    });
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: textStatus,
-                    });
-                }
-            });
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al generar el PDF: ' + textStatus
+                });
+            }
+        });
 
         
     });

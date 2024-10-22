@@ -21,14 +21,16 @@ require_once 'inc/head.php';
 <body>
     <div class="container-full-height">
 		<div class="card text-dark bg-light mb-3 container-login">
-			<div class="card-header text-white">
-				<h4>Bienvenido al sistema de Catedral Tijuana</h4>
+			<div class="card-header text-white text-center">
+				<h4>Bienvenido al sistema de Arquidiócesis de Tijuana</h4>
 			</div>
 			<div class="card-body">
 				<form id="loginForm"  class="form-horizontal" role="form">
 					<div class="row">
 						<div class="col-12 text-center">
-							<img src="assets/img/LogoParroquia.png" height="140">
+							<img src="assets/img/Arquidiocesis_Color.png" height="140">
+							<img src="assets/img/LOGO_CATEDRAL_TIJUANA.png" height="140">
+							
 						</div>
 						<div class="col-12 form-group mt-2 upload-msg"></div>
 						<div class="col-12 form-group mt-3">

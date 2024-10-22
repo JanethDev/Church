@@ -1,110 +1,3 @@
-<?php
-require '../../vendor/autoload.php';
-
-$CustomerSelect = $_POST['CustomerSelect'];
-$CustomerID = $_POST['CustomerID'];
-$UserID = $_POST['UserID'];
-$PSurname = $_POST['PSurname'];
-$MSurname = $_POST['MSurname'];
-$Name = $_POST['Name'];
-$address = $_POST['address'];
-$house_number = $_POST['house_number'];
-$apt_number = $_POST['apt_number'];
-$neighborhood = $_POST['neighborhood'];
-$zip_code = $_POST['zip_code'];
-$catStatesId = $_POST['catStatesId'];
-$Deputation = $_POST['Deputation'];  // Verifica si este campo tiene valor o está vacío
-$catTownsId = $_POST['catTownsId'];
-$CelPhone = $_POST['CelPhone'];
-$Email = $_POST['Email'];
-$social_reason = $_POST['social_reason'];  // Puede que no tenga valor
-$RFCCURP = $_POST['RFCCURP'];
-$DateOfBirth = $_POST['DateOfBirth'];
-$CityOfBirth = $_POST['CityOfBirth'];
-$CivilStatus = $_POST['CivilStatus'];
-$Occupation = $_POST['Occupation'];
-$Company = $_POST['Company'];
-$PhoneCompany = $_POST['PhoneCompany'];
-$AddressCompany = $_POST['AddressCompany'];
-$ExtPhoneCompany = $_POST['ExtPhoneCompany'];
-$StateAddressCompany = $_POST['StateAddressCompany'];
-$MunicipalityAddressCompany = $_POST['MunicipalityAddressCompany'];
-$CityAddressCompany = $_POST['CityAddressCompany'];  // Puede que no tenga valor
-$Income = $_POST['Income'];
-
-// Referencias del cliente
-$ReferenceCustomer1 = $_POST['ReferenceCustomer1'];
-$ReferenceCustomerPhone1 = $_POST['ReferenceCustomerPhone1'];
-$ReferenceCustomer2 = $_POST['ReferenceCustomer2'];  // Puede que no tenga valor
-$ReferenceCustomerPhone2 = $_POST['ReferenceCustomerPhone2'];  // Puede que no tenga valor
-
-// Datos de la cripta
-$cryptId = $_POST['cryptId'];
-$cryptSpaces = $_POST['cryptSpaces'];
-$discountId = $_POST['discountId'];
-$federalTax = $_POST['federalTax'];
-$inMaintenance = $_POST['inMaintenance'] == 'False' ? false : true;
-$inAshDeposit = $_POST['inAshDeposit'] == 'False' ? false : true;
-$inOtherFee = $_POST['inOtherFee'] == 'False' ? false : true;
-$TypePay = $_POST['TypePay'];
-$amount_cash = $_POST['amount_cash'];
-
-// Beneficiarios (arreglo)
-$beneficiaries = [];
-if (isset($_POST['beneficiaries'])) {
-    foreach ($_POST['beneficiaries'] as $key => $beneficiary) {
-        $beneficiaries[] = [
-            'name' => $beneficiary['name'],
-            'surnames' => $beneficiary['surnames'],
-            'birthdate' => $beneficiary['birthdate'],
-            'phone' => $beneficiary['phone'],
-            'relationship' => $beneficiary['relationship'],
-            'customerId' => $beneficiary['customerId']
-        ];
-    }
-}
-
-// Pagos (arreglo)
-$payments = [];
-if (isset($_POST['payments'])) {
-    foreach ($_POST['payments'] as $key => $payment) {
-        $payments[] = [
-            'paymentAmount' => $payment['paymentAmount'],
-            'concept' => $payment['concept'],
-            'typePaymentId' => $payment['typePaymentId'],
-            'currencyId' => $payment['currencyId']
-        ];
-    }
-}
-
-// Otros datos de la operación
-$paymentPlan = $_POST['paymentPlan'];
-$cryptKey = $_POST['cryptKey'];
-$level = $_POST['level'];
-$area = $_POST['area'];
-$zone = $_POST['zone'];
-$totalAmount = $_POST['totalAmount'];
-$appliedDiscount = $_POST['appliedDiscount'];
-$initialPayment = $_POST['initialPayment'];
-$balance = $_POST['balance'];
-
- // Fecha actual
- $fechaActual = new DateTime();
-
-
- // Formatear la fecha para mostrar el día, mes y año
- $diaSolicitud = $fechaActual->format('d');
- $mesSolicitud = $fechaActual->format('m');
- $ySolicitud = $fechaActual->format('Y');
-
-use Dompdf\Dompdf;
-
-// Crear instancia de DOMPDF
-$dompdf = new Dompdf();
-//$logoBase64 = base64_encode(file_get_contents("C:/xampp/htdocs/Church/Application/assets/img/LOGO_CATEDRAL_TIJUANA.png"));
-
-$html = "
-
 <!DOCTYPE html>
 <html >
 <head>
@@ -178,26 +71,11 @@ p, td {
         font-weight: bold;
         text-decoration: none;
         font-size: 8pt;
-        margin: 0; 
-        padding: 4pt 0 0 0; 
+        margin: 0; /* Elimina cualquier margen por defecto */
+        padding: 4pt 0 0 0; /* Ajusta el padding superior, pero elimina el padding inferior */
         text-align: center;
     
     }
-    .watermark-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        font-size: 50pt;
-        color: rgba(122, 158, 230, 0.5); 
-        transform: translate(-50%, -50%) rotate(-45deg); 
-        z-index: 0; 
-        white-space: nowrap; 
-    }
-     .content {
-            position: relative;
-            z-index: 1; /* Asegura que el contenido esté sobre la marca de agua */
-            padding: 20px;
-        }
 
     .a,
     a {
@@ -234,15 +112,13 @@ p, td {
     }
     </style>
 </head>
-    <div class='watermark-text'>NO TIENE VALIDEZ</div>
-
-<div class='content'>
+<div>
 
 <table class='table' cellspacing='0' cellpadding='0' style='border: none !important; width: 100%;'>
     <tbody>
         <tr>
             <td rowspan='4' style='border: none !important; vertical-align: top; width: 40%; text-align: center;'>
-                <img width='100px' height='100px' src='C:/xampp/htdocs/Church/Application/assets/img/LOGO_CATEDRAL_TIJUANA.png' alt='Logo'/>
+                <img width='67px' height='100px' src='C:/xampp/htdocs/Church/Application/assets/img/LOGO_CATEDRAL_TIJUANA.png' alt='Logo'/>
             </td>
         </tr>
         <tr>
@@ -255,7 +131,7 @@ p, td {
         </tr>
     </tbody>
 </table>
-<table style='width:100%; border-collapse: collapse;margin-bottom: 15px;'>
+<table style='width:100%; border-collapse: collapse;'>
     <tr>
         <td style='vertical-align: top; width: auto;'>
             <!-- Primera tabla aquí -->
@@ -279,13 +155,13 @@ p, td {
                 </tr>
                 <tr style='height:10pt'>
                     <td style='width:55pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                        <p class='s1' style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>$diaSolicitud</p>
+                        <p class='s1' style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>6</p>
                     </td>
                     <td style='width:56pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                        <p class='s1' style='padding-top: 2pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>$mesSolicitud</p>
+                        <p class='s1' style='padding-top: 2pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>octubre</p>
                     </td>
                     <td style='width:55pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                        <p class='s1' style='padding-top: 2pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>$ySolicitud</p>
+                        <p class='s1' style='padding-top: 2pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>2024</p>
                     </td>
                 </tr>
             </table>
@@ -361,19 +237,20 @@ p, td {
         <td
             style='width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
-                style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>$PSurname
+                style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>PEREZ
             </p>
         </td>
         <td
             style='width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
-                style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>$MSurname
-                </p>
+                style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
+                TORRES</p>
         </td>
         <td
             style='width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
-                style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>$Name</p>
+                style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
+                MAGALI JANETH</p>
         </td>
     </tr>
 </table>
@@ -381,7 +258,7 @@ p, td {
     PARTICULAR</h2>
 <table style='border-collapse:collapse;width:100%;' cellspacing='0'>
     <tr style='height:10pt'>
-        <td colspan = '2'
+        <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s2' style='padding-top: 2pt;text-indent: 0pt;line-height: 6pt;text-align: center;'>CALLE, AV.,
                 BLVD. CALZ</p>
@@ -397,21 +274,21 @@ p, td {
         </td>
     </tr>
     <tr style='height:10pt'>
-        <td colspan = '2'
+        <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p style='text-indent: 0pt;text-align: left;'>$address</p>
+            <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p style='text-indent: 0pt;text-align: left;'>$house_number </p>
+            <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p style='text-indent: 0pt;text-align: left;'>$apt_number</p>
+            <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
     </tr>
     <tr style='height:10pt'>
-        <td colspan = '2'
+        <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s2' style='padding-top: 2pt;text-indent: 0pt;line-height: 6pt;text-align: center;'>COLONIA</p>
         </td>
@@ -422,13 +299,13 @@ p, td {
         </td>
     </tr>
     <tr style='height:10pt'>
-        <td colspan = '2'
+        <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p style='text-indent: 0pt;text-align: left;'>$neighborhood</p>
+            <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
         <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
             colspan='2'>
-            <p style='text-indent: 0pt;text-align: left;'>$zip_code</p>
+            <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
     </tr>
     <tr style='height:10pt'>
@@ -442,7 +319,7 @@ p, td {
                 style='padding-top: 2pt;padding-left: 33pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
                 DELEGACION</p>
         </td>
-        <td colspan = '2'
+        <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s2' style='padding-top: 2pt;text-indent: 0pt;line-height: 6pt;text-align: center;'>ESTADO</p>
         </td>
@@ -458,7 +335,7 @@ p, td {
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
-        <td colspan = '2'
+        <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
                 style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
@@ -466,7 +343,7 @@ p, td {
         </td>
     </tr>
     <tr style='height:10pt'>
-        <td colspan = '2'
+        <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s2' style='padding-top: 2pt;text-indent: 0pt;line-height: 6pt;text-align: center;'>TELEFONO
                 PARTICULAR</p>
@@ -479,26 +356,26 @@ p, td {
         </td>
     </tr>
     <tr style='height:10pt'>
-        <td colspan = '2'
+        <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
                 style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $CelPhone</p>
+                123123</p>
         </td>
         <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
             colspan='2'>
             <p style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'><a
-                    href='mailto:$Email' class='s3'>$Email</a></p>
+                    href='mailto:test@test.com' class='s3'>test@test.com</a></p>
         </td>
     </tr>
     <tr style='height:10pt'>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p class='s2' style='padding-top: 2pt;text-indent: 0pt;line-height: 6pt;text-align: center;'>R.F.C./C.U.R.P.</p>
+            <p class='s2' style='padding-top: 2pt;text-indent: 0pt;line-height: 6pt;text-align: center;'>R.F.C</p>
         </td>
         <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
-            colspan='3'>
-            <p style='text-indent: 0pt;text-align: left;'>$RFCCURP</p>
+            colspan='2'>
+            <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
     </tr>
     <tr style='height:10pt'>
@@ -508,8 +385,8 @@ p, td {
                 NACIMIENTO</p>
         </td>
         <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
-            colspan='3'>
-            <p style='text-indent: 0pt;text-align: left;'>$DateOfBirth</p>
+            colspan='2'>
+            <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
     </tr>
     <tr style='height:10pt'>
@@ -519,8 +396,8 @@ p, td {
                 NACIMIENTO</p>
         </td>
         <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
-            colspan='3'>
-            <p style='text-indent: 0pt;text-align: left;'>$CityOfBirth</p>
+            colspan='2'>
+            <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
     </tr>
     <tr style='height:10pt'>
@@ -530,10 +407,10 @@ p, td {
                 CIVIL</p>
         </td>
         <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
-            colspan='3'>
+            colspan='2'>
             <p class='s1'
                 style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $CivilStatus</p>
+                CASADO</p>
         </td>
     </tr>
     <tr style='height:10pt'>
@@ -543,8 +420,8 @@ p, td {
             </p>
         </td>
         <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
-            colspan='3'>
-            <p style='text-indent: 0pt;text-align: left;'>$Occupation</p>
+            colspan='2'>
+            <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
     </tr>
 </table>
@@ -560,7 +437,7 @@ p, td {
         </td>
         <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
             colspan='2'>
-            <p style='text-indent: 0pt;text-align: left;'>$Company</p>
+            <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
     </tr>
     <tr style='height:10pt'>
@@ -574,18 +451,18 @@ p, td {
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
                 style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                TELEFONO: $PhoneCompany</p>
+                TELEFONO:</p>
         </td>
     </tr>
     <tr style='height:10pt'>
         <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
             colspan='2'>
-            <p style='text-indent: 0pt;text-align: left;'>$AddressCompany</p>
+            <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
-                style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>EXT: $ExtPhoneCompany
+                style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>EXT:
             </p>
         </td>
     </tr>
@@ -636,7 +513,7 @@ p, td {
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p style='text-indent: 0pt;text-align: left;'>$Income</p>
+            <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
     </tr>
 </table>
@@ -648,7 +525,7 @@ p, td {
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
                 style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>1)
-                $ReferenceCustomer1</p>
+                test</p>
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
@@ -660,7 +537,7 @@ p, td {
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
                 style='padding-top: 2pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $ReferenceCustomerPhone1</p>
+                (123)-4556666</p>
         </td>
     </tr>
     <tr style='height:10pt'>
@@ -668,7 +545,6 @@ p, td {
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
                 style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>2)
-                $ReferenceCustomer2
             </p>
         </td>
         <td
@@ -679,83 +555,74 @@ p, td {
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p style='text-indent: 0pt;text-align: left;'>$ReferenceCustomerPhone2</p>
+            <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
     </tr>
 </table>
-<h2 style='padding-top: 4pt;padding-bottom: 0pt;text-indent: 0pt;text-align: center;'>BENEFICIARIOS</h2>
+<h2 style='padding-top: 4pt;padding-bottom: 0pt;text-indent: 0pt;text-align: center;'>
+    BENEFICIARIOS</h2>
 <table style='border-collapse:collapse;width:100%;' cellspacing='0'>
     <tr style='height:10pt'>
-        <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt' colspan='2'>
+        <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
+            colspan='2'>
             <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
-        <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt' colspan='3'>
-            <p class='s2' style='padding-top: 2pt;padding-left: 25pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>FECHA NAC.</p>
+        <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
+            colspan='3'>
+            <p class='s2'
+                style='padding-top: 2pt;padding-left: 25pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
+                FECHA NAC.</p>
         </td>
-        <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p class='s2' style='padding-top: 2pt;padding-left: 8pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>PARENTESCO</p>
+        <td
+            style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+            <p class='s2'
+                style='padding-top: 2pt;padding-left: 8pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
+                PARENTESCO</p>
         </td>
-        <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p class='s2' style='padding-top: 2pt;padding-left: 28pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>TELEFONO</p>
+        <td
+            style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+            <p class='s2'
+                style='padding-top: 2pt;padding-left: 28pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
+                TELEFONO</p>
         </td>
     </tr>
     <tr style='height:12pt'>
-        <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+        <td
+            style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+            <p class='s2' style='padding-top: 2pt;text-indent: 0pt;text-align: center;'>NOMBRE(S)</p>
+        </td>
+        <td
+            style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s2' style='padding-top: 2pt;text-indent: 0pt;text-align: center;'>APELLIDOS</p>
         </td>
-        <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p class='s2' style='padding-top: 2pt;text-indent: 0pt;text-align: center;'>NOMBRES(S)</p>
+        <td
+            style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+            <p class='s4'
+                style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 8pt;text-align: left;'>DIA
+            </p>
         </td>
-        <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p class='s4' style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 8pt;text-align: left;'>DIA</p>
+        <td
+            style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+            <p class='s4'
+                style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 8pt;text-align: left;'>MES
+            </p>
         </td>
-        <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p class='s4' style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 8pt;text-align: left;'>MES</p>
+        <td
+            style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+            <p class='s4'
+                style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 8pt;text-align: left;'>AÑO
+            </p>
         </td>
-        <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p class='s4' style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 8pt;text-align: left;'>AÑO</p>
-        </td>
-        <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+        <td
+            style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
-        <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+        <td
+            style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
-    </tr>"; 
-
-if (!empty($beneficiaries)) {
-    // Si hay beneficiarios, recorrerlos y generar filas
-    foreach ($beneficiaries as $beneficiary) {
-        $html .= "
-        <tr style='height:12pt'>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'>{$beneficiary['surnames']}</p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'>{$beneficiary['name']}</p>
-            </td>
-            <td colspan='2' style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'>" . date('d-m-Y', strtotime($beneficiary['birthdate'])) . "</p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'>{$beneficiary['relationship']}</p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'>{$beneficiary['phone']}</p>
-            </td>
-        </tr>";
-    }
-} else {
-    // Si no hay beneficiarios, mostrar una fila vacía
-    $html .= "
-    <tr style='height:12pt'>
-        <td colspan='7' style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p style='text-indent: 0pt;text-align: center;'>Ningún beneficiario registrado</p>
-        </td>
-    </tr>";
-}
-
-$html .= "</table>
+    </tr>
+</table>
 <h2 style='padding-top: 4pt;padding-bottom: 2pt;text-indent: 0pt;text-align: center;'>CONDICIONES
     ECONOMICAS DE LA OPERACION</h2>
 <table style='border-collapse:collapse;width:100%;' cellspacing='0'>
@@ -790,28 +657,28 @@ $html .= "</table>
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
                 style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $paymentPlan</p>
+                Contado</p>
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
                 style='padding-top: 2pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $cryptKey</p>
+                AJ10U01A001-1</p>
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
-                style='padding-top: 2pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>$level</p>
+                style='padding-top: 2pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>9</p>
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
                 style='padding-top: 2pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $area</p>
+                PASILLO ABRAHAM</p>
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p style='text-indent: 0pt;text-align: left;'>$zone</p>
+            <p style='text-indent: 0pt;text-align: left;'><br /></p>
         </td>
     </tr>
     <tr style='height:10pt'>
@@ -835,18 +702,18 @@ $html .= "</table>
             colspan='2'>
             <p class='s1'
                 style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $$totalAmount MXN.</p>
+                $600.00 MXN.</p>
         </td>
         <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
             colspan='2'>
             <p class='s1'
                 style='padding-top: 2pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $$appliedDiscount MXN.</p>
+                $600.00 MXN.</p>
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
-                style='padding-top: 2pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>$$initialPayment
+                style='padding-top: 2pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>$0.00
                 MXN.</p>
         </td>
     </tr>
@@ -885,14 +752,15 @@ $html .= "</table>
 </table>
 <p style='text-indent: 0pt;text-align: left;'><br /></p>
 <div class='container'>
+
+<div class='textbox' style='border:0.5pt solid #000000;display:block;min-height:24.0pt;width:117.8pt;'>
+    <p class='s1' style='padding-top: 2pt;padding-left: 1pt;text-indent: 0pt;text-align: left;'>FORMA DEL PAGO
+        INICIAL</p>
+</div>
+
     
     <table style='border-collapse:collapse;width:100%;' cellspacing='0'>
         <tr style='height:10pt'>
-             <td rowspan='2'
-                style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p class='s1' style='padding-top: 2pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                    FORMA DEL PAGO INICIAL</p>
-            </td>
             <td
                 style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
                 <p style='text-indent: 0pt;text-align: left;'><br /></p>
@@ -972,25 +840,11 @@ $html .= "</table>
     </tr>
 </table>
 
-<!--<p style='padding-top: 3pt;padding-left: 8pt;text-indent: 0pt;text-align: center;'>
+<p style='padding-top: 3pt;padding-left: 8pt;text-indent: 0pt;text-align: center;'>
     Original: Expediente &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     Copia Azul: Adquiriente &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     Copia Rosa: Contabilidad
-</p>-->
+</p>
 </body>
 
 </html>
-";
-// Cargar el HTML en DOMPDF
-$dompdf->loadHtml($html);
-
-// Configurar el tamaño de la página y la orientación
-$dompdf->setPaper('A4', 'portrait');
-
-// Renderizar el PDF
-$dompdf->render();
-
-// Enviar el PDF al navegador
-header('Content-Type: application/pdf');
-header('Content-Disposition: attachment; filename="solicitud.pdf"');
-echo $dompdf->output();
