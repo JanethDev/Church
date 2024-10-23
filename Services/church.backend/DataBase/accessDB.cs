@@ -518,6 +518,7 @@ namespace church.backend.services.DataBase
                       OR cus.[name] like '%{0}%'
                       OR cus.msurname like '%{0}%'
                       OR cus.psurname like '%{0}%'
+                      OR cus.customer_number like '%{0}%'
                       AND cus.cat_status_id = '{1}'";
                     query = string.Format(query, value, (int)user_status.Activo);
                     using (SqlCommand command = new SqlCommand(query, connection))
@@ -541,7 +542,7 @@ namespace church.backend.services.DataBase
                                     address = reader["address"].ToString()!,
                                     catStatesId = _nv.nullInt(reader["cat_states_id"].ToString()!),
                                     state = reader["state"].ToString()!,
-                                    catTownsId = _nv.nullInt(reader["town"].ToString()!),
+                                    catTownsId = _nv.nullInt(reader["cat_towns_id"].ToString()!),
                                     town = reader["town"].ToString()!,
                                     social_reason = reader["social_reason"].ToString()!,
                                     birthdate = _nv.nullDate(reader["birthdate"].ToString()!),
