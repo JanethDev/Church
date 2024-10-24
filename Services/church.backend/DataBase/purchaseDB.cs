@@ -1,5 +1,6 @@
-﻿using church.backend.Models.enums;
+using church.backend.Models.enums;
 using church.backend.Models.purchase;
+using church.backend.Models.register;
 using church.backend.services.Models;
 using church.backend.services.Models.enums;
 using church.backend.Utilities;
@@ -249,8 +250,40 @@ namespace church.backend.DataBase
                                     referencePersonPhone1 = reader["reference_person_1_phone"].ToString()!,
                                     referencePerson2 = reader["reference_person_2"].ToString()!,
                                     referencePersonPhone2 = reader["reference_person_2_phone"].ToString()!,
+                                    otherFee = _nv.nullDouble(reader["other_fee"].ToString()!),
+                                    signature = reader["signature"].ToString()!,
+                                    customerNumber = _nv.nullInt(reader["customer_number"].ToString()!),
+                                    customerName = reader["name"].ToString()!,
+                                    customerPsurname = reader["psurname"].ToString()!,
+                                    customerMsurname = reader["msurname"].ToString()!,
+                                    customerPhone = reader["phone"].ToString()!,
+                                    customerEmail = reader["email"].ToString()!,
+                                    customerRFC = reader["rfc"].ToString()!,
+                                    customerZipCode = reader["cp_code"].ToString()!,
+                                    customerAddress = reader["address"].ToString()!,
+                                    customerStateId = _nv.nullInt(reader["cat_states_id"].ToString()!),
+                                    customerTownId = _nv.nullInt(reader["cat_towns_id"].ToString()!),
+                                    customerSocialReason = reader["social_reason"].ToString()!,
+                                    customerBirthdate = _nv.nullDate(reader["birthdate"].ToString()!),
+                                    customerBirthplace = reader["birth_place"].ToString()!,
+                                    customerCivilStatus = reader["civil_status"].ToString()!,
+                                    customerOccupation = reader["occupation"].ToString()!,
+                                    businessName = reader["business_name"].ToString()!,
+                                    businessAddress = reader["business_address"].ToString()!,
+                                    businessPhone = reader["business_phone"].ToString()!,
+                                    businessExt = reader["business_ext"].ToString()!,
+                                    deputation = reader["deputation"].ToString()!,
+                                    averageIncome = _nv.nullDouble(reader["average_income"].ToString()!),
+                                    businessCity = reader["business_city"].ToString()!,
+                                    businessMunicipality = reader["business_ municipality"].ToString()!,
+                                    businessState = reader["business_state"].ToString()!,
+                                    houseNumber = reader["house_number"].ToString()!,
+                                    aptNumber = reader["apt_number"].ToString()!,
+                                    customerMunicipality = reader["customer_municipality"].ToString()!,
+                                    neighborhood = reader["neighborhood"].ToString()!,
                                 };
                                 temporalPurchar.payments = paymentsByPurchase(temporalPurchar.purchaseId);
+                                temporalPurchar.beneficiaries = consultBeneficiaries(temporalPurchar.purchaseId);
                                 response.data.Add(temporalPurchar);
                             }
                         }
@@ -363,6 +396,44 @@ namespace church.backend.DataBase
             catch
             {
                 return new List<Payment>();
+            }
+        }
+
+        public List<Beneficiarie> consultBeneficiaries(int purchaseId)
+        {
+            try
+            {
+                List<Beneficiarie> response = new List<Beneficiarie>();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:purchase:beneficiariesByPurchase"]!
+                        , purchaseId
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response.Add(new Beneficiarie()
+                                {
+                                    id = _nv.nullInt(reader["id"].ToString()!),
+                                    name = reader["name"].ToString()!,
+                                    lastname = reader["lastname"].ToString()!,
+                                    birthdate = _nv.nullDate(reader["birthdate"].ToString()!),
+                                    phone = reader["phone"].ToString()!,
+                                    relationship = reader["relationship"].ToString()!,
+                                });
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch
+            {
+                return new List<Beneficiarie>();
             }
         }
     }
