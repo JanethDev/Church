@@ -49,21 +49,27 @@ require_once('auth/session.php');
     // Suma los meses de las mensualidades a la fecha actual
     $fechaUltima->modify("+{$mesesRest} months");
 
-    // Formatear la fecha para mostrar el día, mes y año
-    $diaUltimoPago = $fechaUltima->format('d');
-    $mesUltimoPago = $fechaUltima->format('m');
-    $yUltimoPago = $fechaUltima->format('Y');
-
-    // Fecha actual
+    // Fecha actual (inicio)
     $fechaPrimera = new DateTime();
-
-    // Suma los meses de las mensualidades a la fecha actual
     $fechaPrimera->modify("+1 months");
 
-    // Formatear la fecha para mostrar el día, mes y año
+    // Calcular la diferencia entre las dos fechas
+    $diferencia = $fechaPrimera->diff($fechaUltima);
+
+    // Convertir la diferencia en días
+    $diasDiferencia = $diferencia->days;
+
+    // Calcular la cantidad de semanas, usando ceil para redondear hacia arriba
+    $semanasDiferencia = ceil($diasDiferencia / 7);
+
+    // Formatear las fechas si necesitas mostrar la primera y última fecha
     $diaPrimerPago = $fechaPrimera->format('d');
     $mesPrimerPago = $fechaPrimera->format('m');
     $yPrimerPago = $fechaPrimera->format('Y');
+
+    $diaUltimoPago = $fechaUltima->format('d');
+    $mesUltimoPago = $fechaUltima->format('m');
+    $yUltimoPago = $fechaUltima->format('Y');
 
     // Convertir totalFinal y enganche a números
     $totalFinalValue = convertToNumber($totalFinal);
@@ -76,6 +82,8 @@ require_once('auth/session.php');
         $saldo = 0;
     }
     
+    
+    echo "Hay $semanasDiferencia semanas completas entre la primera fecha y la última.";
 
     // Función para formatear el precio
     function formatPrice($price) {
@@ -410,14 +418,27 @@ require_once('auth/session.php');
                             <td><label id="balanceLabel"><?php echo '$' . number_format($saldo, 2) . ' MXN'; ?></label></td>
                         </tr>
                         <tr>
-                            <?php if ($paymentMethods != 1): ?>
-                                <td colspan="3">EL SALDO SERA LIQUIDADO EN <?= $selectedPaymentDescription; ?> EN ABONOS DE: $ <?= number_format($mensualidades,2); ?> MXN. C/U</td>
-                            <?php else: ?>
-                                <td colspan="3"></td>
-                            <?php endif; ?>
-                        </tr>
+                        <?php if ($selectedPaymentValue != 1): ?>
+                            <td colspan="4">
+                                EL SALDO SERÁ LIQUIDADO EN 
+                                <strong><?= $selectedPaymentDescription; ?></strong> 
+                                EN ABONOS: 
+                                <!-- Checkbox para abonos mensuales -->
+                                MENSUALES <input type="checkbox" name="payment_type" value="mensuales">
+
+                                <!-- Checkbox para abonos semanales -->
+                                SEMANALES <input type="checkbox" name="payment_type" value="semanales">
+
+                                <!-- Campo de texto para mostrar el valor calculado -->
+                                POR LA CANTIDAD DE: 
+                                <span id="payment_amount">0.00</span> MXN
+                            </td>
+                        <?php else: ?>
+                            <td colspan="4"></td>
+                        <?php endif; ?>
+                    </tr>
                     </table>
-                    <?php if ($paymentMethods != 1): ?>
+                    <?php if ($selectedPaymentValue != 1): ?>
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
                         <tr>
                             <td style="border: none;"></td>
@@ -446,14 +467,16 @@ require_once('auth/session.php');
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
                         <tr><td colspan="3" style="text-align:center"><strong>ADICIONAL</strong></td></tr>
                         <tr>
-                            <td colspan="" style="width:50%">Cuota de mantenimiento anual</td>
-                            <td style="width:50%">Deposito de cenizas</td>
-                            <td style="width:50%">Otro</td>
+                            <td colspan="" style="width:30%">Cuota de mantenimiento anual</td>
+                            <td style="width:30%">Deposito de cenizas</td>
+                            <td style="">Otro</td>
                         </tr>
                         <tr>
                             <td colspan="" style="">
                                 <input type="checkbox" id="ckMaintenance" class="check-box" style="width: 30px; height: 30px" />
-                                <label style="position:absolute;margin-top:4px;margin-left:15px">$ <span id="maintenance"></span> MXN</label> 
+                                <label style="position:absolute;margin-top:4px;margin-left:15px"> 
+                                    <span id="maintenance">$ </span><span id="maintenanceIsShared"> Incluido</span> 
+                                </label> 
                                 <input type="hidden" name="inMaintenance" id="CheckMaintenanceFee" value="False" />
                             </td>
                             <td style="">
@@ -463,11 +486,10 @@ require_once('auth/session.php');
                             </td>
                             <td style="">
                                 <input type="checkbox" id="ckOtherFee" class="check-box" style="width: 30px; height: 30px;" />
-                                <label style="position: absolute; margin-top: 4px; margin-left: 15px">$ <span id="ashDeposit"></span> MXN</label>
+                                <label style="margin-left: 15px">
+                                    $ <input type="number" id="otherFeeAmount" class="form-control" placeholder="Ingresa la cantidad" style="width:150px; display:none; margin-left: 15px;" step="0.01" min="0" />MXN</label>
                                 <input type="hidden" name="inOtherFee" id="CheckOtherFee" value="False" />
                                 
-                                <!-- Input escondido inicialmente -->
-                                <input type="number" id="otherFeeAmount" class="form-control" placeholder="Ingresa la cantidad" style="display:none; width: 100px; margin-left: 15px;" step="0.01" min="0" />
                             </td>
                         </tr>
                     </table>
@@ -576,14 +598,15 @@ $(document).ready(function() {
         rightAlign: false,
         removeMaskOnSubmit: true // Esto quita la máscara al enviar el formulario si es necesario.
     });
+
     $('#ckOtherFee').change(function() {
         if ($(this).is(':checked')) {
             // Mostrar el input para ingresar el monto
-            $('#otherFeeAmount').show();
+            $('#otherFeeAmount').show().addClass('d-inline-block');;
             $('#CheckOtherFee').val('True'); // Cambiar valor del campo hidden
         } else {
             // Ocultar el input y limpiar el valor
-            $('#otherFeeAmount').hide();
+            $('#otherFeeAmount').hide().removeClass('d-inline-block');
             $('#otherFeeAmount').val(''); // Limpiar el valor del input
             $('#CheckOtherFee').val('False'); // Cambiar valor del campo hidden
         }
@@ -615,7 +638,26 @@ $(document).ready(function() {
         }
     });
 
-    
+    $('input[name="payment_type"]').change(function() {
+        // Obtenemos el tipo de pago seleccionado
+        var paymentType = $(this).val();
+
+        // Obtenemos los valores que se usarán para calcular
+        var totalFinal = parseFloat(<?= $saldo; ?>);  // El saldo total a pagar
+        var semanasDiferencia = <?= $semanasDiferencia; ?>;  // Las semanas totales entre las fechas
+        var mensualidades = <?= $mensualidades; ?>;  // El valor de la mensualidad
+
+        // Realizamos el cálculo según el tipo de pago
+        if (paymentType === 'semanales') {
+            // Si es semanal, dividimos el saldo entre las semanas
+            var totalPorSemana = totalFinal / semanasDiferencia;
+            $('#payment_amount').text(totalPorSemana.toFixed(2));  // Mostramos el valor calculado
+        } else {
+            // Si es mensual, usamos el valor de mensualidades
+            $('#payment_amount').text(mensualidades.toFixed(2));  // Mostramos el valor de mensualidad
+        }
+    });
+        
 
     function formatDateToYMD(dateString) {
         var parts = dateString.split('/');
@@ -707,7 +749,7 @@ $(document).ready(function() {
         $('#Company').val(selectedCustomer.business_name); // Nombre de la empresa
         $('#PhoneCompany').val(selectedCustomer.business_phone); // Teléfono de la empresa
         $('#AddressCompany').val(selectedCustomer.business_address); // Dirección de la empresa
-        $('#CityAddressCompany').val(selectedCustomer.business_city); // Ciudad de la empresa
+        
         $('#MunicipalityAddressCompany').val(selectedCustomer.business_municipality); // Municipio de la empresa
         $('#StateAddressCompany').val(selectedCustomer.business_state); // Estado de la empresa
         $('#ExtPhoneCompany').val(selectedCustomer.business_ext); // Extensión de teléfono
@@ -717,11 +759,82 @@ $(document).ready(function() {
 
         // Disparar los eventos 'change' para que los campos dependientes actualicen su contenido
         $('#CivilStatus').trigger('change');
-        $('#StateAddressCompany').trigger('change');
-        $('#CityAddressCompany').trigger('change');
+        
 
-        $('#catStatesId').val(selectedCustomer.catStatesId).trigger('change');
-        $('#catTownsId').val(selectedCustomer.catTownsId).trigger('change');
+        $('#catStatesId').val(selectedCustomer.catStatesId).trigger('change'); // Cambia el estado
+        $('#StateAddressCompany').val(selectedCustomer.business_state).trigger('change'); // Cambia el estado
+
+        // Guardar el ID de la ciudad del cliente para su posterior uso
+        var customerTownId = selectedCustomer.catTownsId;
+        var customerTownCompanyId = selectedCustomer.business_city; // Ciudad de la empresa
+
+        // Manejar el cambio de estado para cargar las ciudades
+        $('#catStatesId').change(function() {
+            const stateId = $(this).val();
+            $('#catTownsId').empty().append(new Option("Seleccione una ciudad", ""));
+
+            if (stateId) {
+                $.ajax({
+                    url: 'api/general/stateTowns.php',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        if (Array.isArray(data)) {
+                            const towns = data.find(item => item.state.id == stateId)?.towns_list || [];
+                            $.each(towns, function(index, town) {
+                                $('#catTownsId').append(new Option(town.town_name, town.id));
+                            });
+
+                            // Preseleccionar la ciudad si existe
+                            if (customerTownId) {
+                                $('#catTownsId').val(customerTownId).trigger('change');
+                            }
+                        } else {
+                            console.error("Error en la respuesta de la API: ", data.error);
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error("Error en la solicitud: ", textStatus);
+                    }
+                });
+            }
+        });
+        // Manejar el cambio de estado para cargar las ciudades
+        $('#StateAddressCompany').change(function() {
+            const stateCompanyId = $(this).val();
+            $('#CityAddressCompany').empty().append(new Option("Seleccione una ciudad", ""));
+
+            if (stateCompanyId) {
+                $.ajax({
+                    url: 'api/general/stateTowns.php',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        if (Array.isArray(data)) {
+                            const towns = data.find(item => item.state.id == stateCompanyId)?.towns_list || [];
+                            $.each(towns, function(index, town) {
+                                $('#CityAddressCompany').append(new Option(town.town_name, town.id));
+                            });
+
+                            // Preseleccionar la ciudad si existe
+                            if (customerTownId) {
+                                $('#CityAddressCompany').val(customerTownId).trigger('change');
+                            }
+                        } else {
+                            console.error("Error en la respuesta de la API: ", data.error);
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error("Error en la solicitud: ", textStatus);
+                    }
+                });
+            }
+        });
+
+        // Disparar el evento change para asegurar que cargue correctamente
+        $('#catStatesId').trigger('change');
+        $('#StateAddressCompany').trigger('change');
+
 
         // Mostrar los campos de nuevo cliente para permitir editar
         $('.tr-new-customer').show();
@@ -927,7 +1040,7 @@ $(document).ready(function() {
                 if (isShared == 'Familiar') {
                 maintenanceCost = data.cost; 
                 }else {
-                maintenanceCost = data.shared_cost;  
+                maintenanceCost = 0;  
                 }
                 $('#maintenance').text(maintenanceCost); // Mostrar costo en la etiqueta
             }
@@ -937,12 +1050,27 @@ $(document).ready(function() {
             $('#resultado').html("Error en la solicitud: " + textStatus);
         }
     });
+    // Ocultar "Incluido" al inicio y asegurar que el costo esté oculto
+    $('#maintenanceIsShared').hide();
+    $('#maintenance').hide();
 
-    if (isShared == 'Individual') {
-        // Activar el checkbox de mantenimiento
-        var ckMaintenance = document.getElementById('ckMaintenance');
-        ckMaintenance.checked = true;
-        ckMaintenance.disabled = true; // No permitir quitarlo
+    // Manejar la lógica según el tipo de cripta seleccionada
+    if (isShared === 'Individual') {
+        // Si es una cripta individual, bloqueamos el checkbox, lo marcamos y mostramos que está incluido
+        $('#ckMaintenance').prop('checked', true);
+        $('#ckMaintenance').prop('disabled', true);
+        $('#maintenanceIsShared').show();  // Mostrar "Incluido"
+        $('#maintenance').hide();  // Ocultar el precio ya que es costo 0
+        $('#CheckMaintenanceFee').val(0);  // Asignar valor 0 al campo oculto
+    } else {
+        // Si no es individual, permitimos marcar/desmarcar el checkbox
+        maintenanceCost = 1000;  // Asigna aquí el costo real para otras criptas
+        $('#maintenance').text(`$${maintenanceCost} MXN`).show();  // Mostrar el costo
+        $('#maintenanceIsShared').hide();  // Ocultar el texto "Incluido"
+        
+        $('#ckMaintenance').prop('checked', false);
+        $('#ckMaintenance').prop('disabled', false);
+        $('#CheckMaintenanceFee').val('False');  // Restablecer valor oculto
     }
 
     // Actualizar el contenido y el valor del campo oculto cuando el checkbox es seleccionado
@@ -1182,7 +1310,17 @@ $(document).ready(function() {
         // Referencias
         const referenceCustomer1 = $('#ReferenceCustomer1').val();
         const referenceCustomerPhone1 = $('#ReferenceCustomerPhone1').val();
+        if ($('#ckMaintenance').is(':checked') && $('#maintenance').text() === '') {
+        missingFields.push("El monto de la cuota de mantenimiento no puede estar vacío.");
+        }
 
+        if ($('#ckAshDeposit').is(':checked') && $('#ashDeposit').text() === '') {
+            missingFields.push("El monto del depósito de cenizas no puede estar vacío.");
+        }
+
+        if ($('#ckOtherFee').is(':checked') && ($('#otherFeeAmount').val() === '' || parseFloat($('#otherFeeAmount').val()) <= 0)) {
+            missingFields.push("El monto en 'Otro' no puede estar vacío o ser menor o igual a 0.");
+        }
         // Validar campos requeridos
         if (!apellidoPaterno) missingFields.push("Apellido Paterno*");
         if (!apellidoMaterno) missingFields.push("Apellido Materno*");
@@ -1297,6 +1435,17 @@ $(document).ready(function() {
         formData.append('appliedDiscount', appliedDiscount);
         formData.append('initialPayment', initialPayment);
         formData.append('balance', balance);
+
+
+        formData.append('stateName', $('#catStatesId option:selected').text());
+
+        formData.append('townName', $('#catTownsId option:selected').text());
+
+
+        formData.append('stateCompanyName', $('#StateAddressCompany option:selected').text());
+
+        formData.append('cityCompanyName', $('#CityAddressCompany option:selected').text());
+        formData.append('CivilStatusName', $('#CivilStatus option:selected').text());
 
         // Envía la solicitud AJAX
         $.ajax({
@@ -1468,6 +1617,16 @@ $(document).ready(function() {
         formData.append('appliedDiscount', appliedDiscount);
         formData.append('initialPayment', initialPayment);
         formData.append('balance', balance);
+
+        formData.append('stateName', $('#catStatesId option:selected').text());
+
+        formData.append('townName', $('#catTownsId option:selected').text());
+
+
+        formData.append('stateCompanyName', $('#StateAddressCompany option:selected').text());
+
+        formData.append('cityCompanyName', $('#CityAddressCompany option:selected').text());
+        formData.append('CivilStatusName', $('#CivilStatus option:selected').text());
 
         // Envía la solicitud AJAX
         $.ajax({

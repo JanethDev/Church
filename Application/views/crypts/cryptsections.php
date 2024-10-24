@@ -201,21 +201,8 @@ document.querySelectorAll('#tablecryptsection .disponible').forEach(td => {
 
             // Condición basada en is_shared
             if (this.dataset.isShared == 1) {
-                fetch('../../api/purchases/exchangeRate.php')
-                    .then(response => response.json())
-                    .then(data => {
-                        const tipoCambio = data.tipo_cambio;
-                        if (tipoCambio) {
-                            const precioEnPesos = parseFloat(this.dataset.priceShared) * tipoCambio; // Convertir a número
-                            document.getElementById('precio').textContent = formatPrice(precioEnPesos); // Formatear precio
-                        } else {
-                            document.getElementById('precio').textContent = 'No disponible (Error en el tipo de cambio)';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error al obtener el tipo de cambio:', error);
-                        document.getElementById('precio').textContent = 'No disponible (Error al conectar con la API)';
-                    });
+                const precioShared = parseFloat(this.dataset.priceShared); // Convertir a número
+                document.getElementById('precio').textContent = formatPrice(precioShared); // Formatear precio
             } else {
                 const precio = parseFloat(this.dataset.price); // Convertir a número
                 document.getElementById('precio').textContent = formatPrice(precio); // Formatear precio
