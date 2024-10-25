@@ -40,7 +40,7 @@ require_once('auth/session.php');
     $selectedPaymentDescription = isset($paymentMethods[$selectedPaymentValue]) ? $paymentMethods[$selectedPaymentValue] : 'Opción no válida';
     // Función para convertir el formato de precio a número
     function convertToNumber($value) {
-        return floatval(str_replace(['$', 'MXN', ' ', ','], '', $value));
+        return floatval(str_replace(['$', 'M.N.', ' ', ','], '', $value));
     }
 
     // Fecha actual
@@ -81,15 +81,13 @@ require_once('auth/session.php');
     }else{
         $saldo = 0;
     }
-    
-    
-    echo "Hay $semanasDiferencia semanas completas entre la primera fecha y la última.";
+  
 
     // Función para formatear el precio
     function formatPrice($price) {
-        return '$ ' . number_format($price, 2, '.', ',') . ' MXN';
+        return '$ ' . number_format($price, 2, '.', ',') . ' M.N.';
     }
-
+    
     if (!empty($positions)) {
         // Acceder a los valores dentro de positions
         $fullposition = isset($positions[0]['full_position']) ? $positions[0]['full_position'] : '';
@@ -187,6 +185,7 @@ require_once('auth/session.php');
                             </select>
                                 <input type="hidden" name="CustomerID" id="CustomerID" />
                                 <input type="hidden" name="UserID" id="UserID" value="<?php echo($user_id); ?>" />
+                                <input type="hidden" name="UserName" id="UserName" value="<?php echo($name); ?>" />
                             </td>
                         </tr>
                         <tr class="tr-new-customer" style="display:none;">
@@ -357,7 +356,7 @@ require_once('auth/session.php');
                         </tr>
                     </table>
                     <table class="table table-bordered" id="tableBeneficiary" style="background-color: white;margin-bottom: 0px;">
-                        <tr><td colspan="6" style="text-align:center"><strong>BENEFICIARIOS*</strong></td></tr>
+                        <tr><td colspan="6" style="text-align:center"><strong>BENEFICIARIOS</strong></td></tr>
                         <tr>
                             <td>Nombres</td>
                             <td>Apellidos</td>
@@ -367,14 +366,14 @@ require_once('auth/session.php');
                             <td><button class="btn btn-success" id="btnAddBeneficiary" type="button">+</button></td>
                         </tr>
                         
-                            <tr class="tr tr-beneficiary">
-                                <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryName" value="" /></td>
-                                <td><input type="text" class="form-control control-beneficiary" name="BeneficiarySurnames" value="" /></td>
-                                <td><input type="date" class="form-control datepicker control-beneficiary" name="BeneficiaryBirthdate" value="" /></td>
-                                <td><input type="text" class="form-control control-beneficiary phone" name="BeneficiaryCelPhone" value="" /></td>
-                                <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryRelationship" value="" /><input type="hidden" name="BeneficiaryCustomerID" value="0" /></td>
-                                <td><button class="btn btn-danger btn-remove-beneficiary" type="button">-</button></td>
-                            </tr>
+                        <tr class="tr tr-beneficiary">
+                            <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryName" value="" /></td>
+                            <td><input type="text" class="form-control control-beneficiary" name="BeneficiarySurnames" value="" /></td>
+                            <td><input type="date" class="form-control datepicker control-beneficiary" name="BeneficiaryBirthdate" value="" /></td>
+                            <td><input type="text" class="form-control control-beneficiary phone" name="BeneficiaryCelPhone" value="" /></td>
+                            <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryRelationship" value="" /><input type="hidden" name="BeneficiaryCustomerID" value="0" /></td>
+                            <td><button class="btn btn-danger btn-remove-beneficiary" type="button">-</button></td>
+                        </tr>
                         
                     </table>
 
@@ -390,7 +389,7 @@ require_once('auth/session.php');
                             <td>ZONA</td>
                         </tr>
                         <tr>
-                            <td><label id="paymentPlanLabel" style="display: none;"><?php echo $mesesRest; ?></label ><label ><?php echo $selectedPaymentDescription; ?></label></td>
+                            <td><label id="paymentPlanLabel" style="display: none;"><?php echo $mesesRest; ?></label ><label id="paymentPlanLabelDesc"><?php echo $selectedPaymentDescription; ?></label></td>
                             <td><label id="cryptKeyLabel"><?php echo $fullposition; ?></label><label><?php echo $suffix; ?></label></td>
                             <td><label id="levelLabel"><?php echo $positions[0]['level']; ?></label></td>
                             <td><label id="areaLabel"><?php echo $positions[0]['aisle']; ?></label></td>
@@ -410,33 +409,33 @@ require_once('auth/session.php');
                             <td>SALDO</td>
                         </tr>
                         <tr>
-                            <td><label id="totalAmountLabel"><?php echo '$' . number_format($totalFinal, 2) . ' MXN'; ?></label></td>
-                            <td><label id="appliedDiscountLabel"><?php echo '$' . number_format($descuentoAplicado, 2) . ' MXN'; ?></label></td>
+                            <td><label id="totalAmountLabel"><?php echo '$' . number_format($totalFinal, 2) . ' M.N.'; ?></label></td>
+                            <td><label id="appliedDiscountLabel"><?php echo '$' . number_format($descuentoAplicado, 2) . ' M.N.'; ?></label></td>
                             <td>
-                                <label id="initialPaymentLabel"><?php echo ($selectedPaymentValue == 1) ? '$' . number_format($totalFinal, 2) . ' MXN' : '$' . number_format($enganche, 2) . ' MXN'; ?></label>
+                                <label id="initialPaymentLabel"><?php echo ($selectedPaymentValue == 1) ? '$' . number_format($totalFinal, 2) . ' M.N.' : '$' . number_format($enganche, 2) . ' M.N.'; ?></label>
                             </td>
-                            <td><label id="balanceLabel"><?php echo '$' . number_format($saldo, 2) . ' MXN'; ?></label></td>
+                            <td><label id="balanceLabel"><?php echo '$' . number_format($saldo, 2) . ' M.N.'; ?></label></td>
                         </tr>
                         <tr>
                         <?php if ($selectedPaymentValue != 1): ?>
                             <td colspan="4">
-                                EL SALDO SERÁ LIQUIDADO EN 
+                                EL SALDO SERÁ LIQUIDADO EN &nbsp;
                                 <strong><?= $selectedPaymentDescription; ?></strong> 
-                                EN ABONOS: 
-                                <!-- Checkbox para abonos mensuales -->
-                                MENSUALES <input type="checkbox" name="payment_type" value="mensuales">
+                                &nbsp;EN ABONOS: 
+                                <!-- Checkbox para abonos mensuales (seleccionado por defecto) -->
+                                &nbsp;&nbsp;<input type="checkbox" name="payment_type" value="mensuales" id="mensuales_checkbox" checked>&nbsp;MENSUALES 
 
                                 <!-- Checkbox para abonos semanales -->
-                                SEMANALES <input type="checkbox" name="payment_type" value="semanales">
+                                &nbsp;&nbsp;<input type="checkbox" name="payment_type" value="semanales" id="semanales_checkbox">&nbsp;SEMANALES 
 
-                                <!-- Campo de texto para mostrar el valor calculado -->
-                                POR LA CANTIDAD DE: 
-                                <span id="payment_amount">0.00</span> MXN
+                                <!-- Mostrar el valor calculado como texto -->
+                                &nbsp;&nbsp;POR LA CANTIDAD DE: 
+                                &nbsp;$ &nbsp;<span id="payment_amount">0.00</span> M.N.
                             </td>
-                        <?php else: ?>
-                            <td colspan="4"></td>
-                        <?php endif; ?>
-                    </tr>
+                            <?php else: ?>
+                                <td colspan="4"></td>
+                            <?php endif; ?>
+                        </tr>
                     </table>
                     <?php if ($selectedPaymentValue != 1): ?>
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
@@ -475,19 +474,19 @@ require_once('auth/session.php');
                             <td colspan="" style="">
                                 <input type="checkbox" id="ckMaintenance" class="check-box" style="width: 30px; height: 30px" />
                                 <label style="position:absolute;margin-top:4px;margin-left:15px"> 
-                                    <span id="maintenance">$ </span><span id="maintenanceIsShared"> Incluido</span> 
+                                    <span id="maintenance">$ </span> <span id="maintenanceIsShared"> Incluido</span> 
                                 </label> 
                                 <input type="hidden" name="inMaintenance" id="CheckMaintenanceFee" value="False" />
                             </td>
                             <td style="">
                                 <input type="checkbox" id="ckAshDeposit" class="check-box" style="width: 30px; height: 30px;" />
-                                <label style="position: absolute; margin-top: 4px; margin-left: 15px">$ <span id="ashDeposit"></span> MXN</label>
+                                <label style="position: absolute; margin-top: 4px; margin-left: 15px">$ <span id="ashDeposit"></span> M.N.</label>
                                 <input type="hidden" name="inAshDeposit" id="CheckAshDepositFee" value="False" />
                             </td>
                             <td style="">
                                 <input type="checkbox" id="ckOtherFee" class="check-box" style="width: 30px; height: 30px;" />
                                 <label style="margin-left: 15px">
-                                    $ <input type="number" id="otherFeeAmount" class="form-control" placeholder="Ingresa la cantidad" style="width:150px; display:none; margin-left: 15px;" step="0.01" min="0" />MXN</label>
+                                    $ <input type="number" id="otherFeeAmount" class="form-control" placeholder="Ingresa la cantidad" style="width:150px; display:none; margin-left: 15px;" step="0.01" min="0" />M.N.</label>
                                 <input type="hidden" name="inOtherFee" id="CheckOtherFee" value="False" />
                                 
                             </td>
@@ -571,7 +570,9 @@ $(document).ready(function() {
         $('.tr-search-customer').hide(); // Ocultar la búsqueda de cliente
         $('.tr-new-customer').show();    // Mostrar los campos de nuevo cliente
     });
-
+    $('.control-customer-new').on('input', function() {
+        $(this).val($(this).val().toUpperCase());
+    });
     // Mostrar campo de "Buscar Cliente"
     $('#btnExistingCustomer').click(function() {
         $('.tr-new-customer').hide();    // Ocultar los campos de nuevo cliente
@@ -602,13 +603,13 @@ $(document).ready(function() {
     $('#ckOtherFee').change(function() {
         if ($(this).is(':checked')) {
             // Mostrar el input para ingresar el monto
-            $('#otherFeeAmount').show().addClass('d-inline-block');;
-            $('#CheckOtherFee').val('True'); // Cambiar valor del campo hidden
+            $('#otherFeeAmount').show().addClass('d-inline-block');
+            $('#CheckOtherFee').val($('#otherFeeAmount').val()); // Asignar el valor ingresado en el campo oculto
         } else {
             // Ocultar el input y limpiar el valor
             $('#otherFeeAmount').hide().removeClass('d-inline-block');
             $('#otherFeeAmount').val(''); // Limpiar el valor del input
-            $('#CheckOtherFee').val('False'); // Cambiar valor del campo hidden
+            $('#CheckOtherFee').val('False'); // Cambiar el valor del campo hidden a False
         }
     });
 
@@ -624,10 +625,13 @@ $(document).ready(function() {
         rightAlign: false,
         removeMaskOnSubmit: true // Esto quita la máscara al enviar el formulario si es necesario.
     });
+    
 
-    // Validación para que el monto no pueda ser cero o negativo
+   
     $('#otherFeeAmount').on('input', function() {
         var amount = parseFloat($(this).val().replace(/,/g, ''));
+        
+        // Validar si el monto es cero, negativo o NaN
         if (amount <= 0 || isNaN(amount)) {
             Swal.fire({
                 icon: 'error',
@@ -635,29 +639,63 @@ $(document).ready(function() {
                 text: 'El monto no puede ser cero o negativo.',
             });
             $(this).val(''); // Limpiar el valor si es incorrecto
+            $('#CheckOtherFee').val('False'); // Cambiar el valor del campo hidden a False si el monto es inválido
+        } else {
+            // Solo si el checkbox está marcado y el valor es válido, actualizar el campo hidden
+            if ($('#ckOtherFee').is(':checked')) {
+                $('#CheckOtherFee').val(amount); // Asignar el valor al campo hidden
+            }
         }
     });
-
-    $('input[name="payment_type"]').change(function() {
-        // Obtenemos el tipo de pago seleccionado
-        var paymentType = $(this).val();
-
-        // Obtenemos los valores que se usarán para calcular
+    
+    
+    $('#payment_amount').inputmask({
+            alias: 'numeric',
+            groupSeparator: ',',
+            autoGroup: true,
+            digits: 2,
+            digitsOptional: false,
+            placeholder: "0.00",
+            rightAlign: false,
+            removeMaskOnSubmit: true,
+            allowMinus: false, 
+            prefix: '', // 
+            clearMaskOnLostFocus: false 
+        });
+    // Función para calcular el monto según el tipo de pago
+    function calculatePaymentAmount() {
+        var paymentType = $('input[name="payment_type"]:checked').val();  // Verifica cuál checkbox está seleccionado
         var totalFinal = parseFloat(<?= $saldo; ?>);  // El saldo total a pagar
         var semanasDiferencia = <?= $semanasDiferencia; ?>;  // Las semanas totales entre las fechas
         var mensualidades = <?= $mensualidades; ?>;  // El valor de la mensualidad
 
         // Realizamos el cálculo según el tipo de pago
         if (paymentType === 'semanales') {
-            // Si es semanal, dividimos el saldo entre las semanas
-            var totalPorSemana = totalFinal / semanasDiferencia;
-            $('#payment_amount').text(totalPorSemana.toFixed(2));  // Mostramos el valor calculado
+            var totalPorSemana = totalFinal / semanasDiferencia;  // Dividimos el saldo entre las semanas
+            $('#payment_amount').val(totalPorSemana.toFixed(2));  // Mostramos el valor calculado
         } else {
-            // Si es mensual, usamos el valor de mensualidades
-            $('#payment_amount').text(mensualidades.toFixed(2));  // Mostramos el valor de mensualidad
+            $('#payment_amount').val(mensualidades.toFixed(2));  // Mostramos el valor de mensualidad
         }
+
+        // Aplicamos la máscara después de cambiar el valor
+        $('#payment_amount').trigger('input');
+    }
+
+    // Seleccionar "mensuales" por defecto y calcular el monto
+    $('#mensuales_checkbox').prop('checked', true);
+    calculatePaymentAmount();  // Calcular el valor inicial
+
+    // Al cambiar cualquiera de los checkboxes
+    $('input[name="payment_type"]').change(function() {
+        if ($(this).attr('id') === 'mensuales_checkbox') {
+            $('#semanales_checkbox').prop('checked', false);
+        } else {
+            $('#mensuales_checkbox').prop('checked', false);
+        }
+
+        // Calcular el monto de acuerdo a la selección
+        calculatePaymentAmount();
     });
-        
 
     function formatDateToYMD(dateString) {
         var parts = dateString.split('/');
@@ -1027,34 +1065,13 @@ $(document).ready(function() {
     let maintenanceCost = 0;
     const ashDepositCost = 920;
 
-    $.ajax({
-        url: 'api/purchases/maintenance.php', // Cambia esto a la ruta correcta de tu archivo
-        type: 'GET',
-        dataType: 'json', // Espera una respuesta en JSON
-        success: function(data) {
-            // Aquí puedes manejar la respuesta
-            if (data.error) {
-                $('#resultado').html("Error: " + data.error);
-            } else {
-                // Almacena el costo de mantenimiento
-                if (isShared == 'Familiar') {
-                maintenanceCost = data.cost; 
-                }else {
-                maintenanceCost = 0;  
-                }
-                $('#maintenance').text(maintenanceCost); // Mostrar costo en la etiqueta
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            // Manejar errores de la solicitud
-            $('#resultado').html("Error en la solicitud: " + textStatus);
-        }
-    });
+
     // Ocultar "Incluido" al inicio y asegurar que el costo esté oculto
     $('#maintenanceIsShared').hide();
     $('#maintenance').hide();
 
-    // Manejar la lógica según el tipo de cripta seleccionada
+   
+// Manejar la lógica según el tipo de cripta seleccionada
     if (isShared === 'Individual') {
         // Si es una cripta individual, bloqueamos el checkbox, lo marcamos y mostramos que está incluido
         $('#ckMaintenance').prop('checked', true);
@@ -1064,13 +1081,37 @@ $(document).ready(function() {
         $('#CheckMaintenanceFee').val(0);  // Asignar valor 0 al campo oculto
     } else {
         // Si no es individual, permitimos marcar/desmarcar el checkbox
-        maintenanceCost = 1000;  // Asigna aquí el costo real para otras criptas
-        $('#maintenance').text(`$${maintenanceCost} MXN`).show();  // Mostrar el costo
+        $.ajax({
+            url: 'api/purchases/maintenance.php', // Cambia esto a la ruta correcta de tu archivo
+            type: 'GET',
+            dataType: 'json', // Espera una respuesta en JSON
+            success: function(data) {
+                // Aquí puedes manejar la respuesta
+                if (data.error) {
+                    $('#resultado').html("Error: " + data.error);
+                } else {
+                    // Almacena el costo de mantenimiento según el tipo de cripta
+                    if (isShared === 'Familiar') {
+                        maintenanceCost = data.cost; 
+                    } else {
+                        maintenanceCost = 0;  
+                    }
+
+                    // Mostrar el costo de mantenimiento formateado
+                    $('#maintenance').text(formatPrice(maintenanceCost)).show(); // Mostrar el costo con formato
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                // Manejar errores de la solicitud
+                $('#resultado').html("Error en la solicitud: " + textStatus);
+            }
+        });
+
+        // Mostrar el campo para el mantenimiento
         $('#maintenanceIsShared').hide();  // Ocultar el texto "Incluido"
-        
         $('#ckMaintenance').prop('checked', false);
         $('#ckMaintenance').prop('disabled', false);
-        $('#CheckMaintenanceFee').val('False');  // Restablecer valor oculto
+        $('#CheckMaintenanceFee').val(maintenanceCost);  // Asignar el valor del costo al campo oculto
     }
 
     // Actualizar el contenido y el valor del campo oculto cuando el checkbox es seleccionado
@@ -1116,7 +1157,7 @@ $(document).ready(function() {
             var checkedCount = $('.typepay:checked').length;
 
             // Si se seleccionan más de 2, deseleccionar el checkbox actual
-            if (checkedCount > 2) {
+            if (checkedCount > 1) {
                 $(this).prop('checked', false);
                 Swal.fire({
                     icon: 'error',
@@ -1238,8 +1279,11 @@ $(document).ready(function() {
    
     function validatePaymentAmounts(total, enganche) {
         let sum = 0;
-        
+
         // Sumar las cantidades de los inputs seleccionados
+        if ($('#amount_check').is(':enabled')) {
+            sum += parseFloat($('#amount_check').val()) || 0;
+        }
         if ($('#amount_card').is(':enabled')) {
             sum += parseFloat($('#amount_card').val()) || 0;
         }
@@ -1252,6 +1296,13 @@ $(document).ready(function() {
         if ($('#amount_cash').is(':enabled')) {
             sum += parseFloat($('#amount_cash').val()) || 0;
         }
+
+        // Redondear sum y enganche a dos decimales
+        sum = parseFloat(sum.toFixed(2));
+        total = parseFloat(total.toFixed(2));
+        enganche = parseFloat(enganche.toFixed(2));
+
+        const tolerance = 0.01;  // Tolerancia para la diferencia
 
         // Verificar que la suma no exceda el enganche o total final
         if (selectedPaymentValue === 1 && sum > total) {
@@ -1270,14 +1321,15 @@ $(document).ready(function() {
             return false;
         }
 
-        if (selectedPaymentValue === 1 && sum < total) {
+        // Verificar que la suma no sea menor que el enganche o total final
+        if (selectedPaymentValue === 1 && Math.abs(sum - total) > tolerance) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
                 text: 'La suma de los montos no puede ser menor que el total final.',
             });
             return false;
-        } else if (selectedPaymentValue !== 1 && sum < enganche) {
+        } else if (selectedPaymentValue !== 1 && Math.abs(sum - enganche) > tolerance) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -1288,200 +1340,13 @@ $(document).ready(function() {
 
         return true;
     }
+    var diaPrimerPago = "<?php echo $diaPrimerPago; ?>";
+    var mesPrimerPago = "<?php echo $mesPrimerPago; ?>";
+    var yPrimerPago = "<?php echo $yPrimerPago; ?>";
 
-    
-    $('#btnSave').on('click', function() {
-        // Variables para verificar campos
-        const missingFields = []; // Array para almacenar campos faltantes
-        const apellidoPaterno = $('#PSurname').val();
-        const apellidoMaterno = $('#MSurname').val();
-        const nombres = $('#Name').val();
-        const telefonoParticular = $('#CelPhone').val();
-        const correoElectronico = $('#Email').val();
-        const customerId = $('#CustomerID').val();
-        const address = $('#address').val();
-        const house_number = $('#house_number').val();
-        const neighborhood = $('#neighborhood').val();
-        const catStates = $('#catStatesId').val();
-        const catTowns = $('#catTownsId').val();
-        const zip_code = $('#zip_code').val();
-        const dateBirth = $('#DateOfBirth').val();
-        
-        // Referencias
-        const referenceCustomer1 = $('#ReferenceCustomer1').val();
-        const referenceCustomerPhone1 = $('#ReferenceCustomerPhone1').val();
-        if ($('#ckMaintenance').is(':checked') && $('#maintenance').text() === '') {
-        missingFields.push("El monto de la cuota de mantenimiento no puede estar vacío.");
-        }
-
-        if ($('#ckAshDeposit').is(':checked') && $('#ashDeposit').text() === '') {
-            missingFields.push("El monto del depósito de cenizas no puede estar vacío.");
-        }
-
-        if ($('#ckOtherFee').is(':checked') && ($('#otherFeeAmount').val() === '' || parseFloat($('#otherFeeAmount').val()) <= 0)) {
-            missingFields.push("El monto en 'Otro' no puede estar vacío o ser menor o igual a 0.");
-        }
-        // Validar campos requeridos
-        if (!apellidoPaterno) missingFields.push("Apellido Paterno*");
-        if (!apellidoMaterno) missingFields.push("Apellido Materno*");
-        if (!nombres) missingFields.push("Nombres*");
-        if (!telefonoParticular) missingFields.push("Teléfono Particular*");
-        if (!correoElectronico) missingFields.push("Correo Electrónico*");
-        if (!dateBirth) missingFields.push("Fecha de nacimiento*");
-        if (!address) missingFields.push("Dirección*");
-        if (!neighborhood) missingFields.push("Colonia*");
-        if (!catStates) missingFields.push("Estado*");
-        if (!catTowns) missingFields.push("Ciudad*");
-        if (!zip_code) missingFields.push("Código Postal*");
-
-        // Validar referencias
-        if (!referenceCustomer1) missingFields.push("Referencia Nombre*");
-        if (!referenceCustomerPhone1) missingFields.push("Referencia Teléfono*");
-
-        // Validar método de pago inicial
-        const paymentMethods = $('.typepay:checked'); // Obtener métodos de pago seleccionados
-        if (paymentMethods.length === 0) {
-            missingFields.push("Seleccionar al menos un método de pago inicial*");
-        }
-
-        // Obtiene el arreglo de beneficiarios
-        const beneficiarios = getBeneficiarios();
-        
-        // Validar que exista al menos un beneficiario
-        if (beneficiarios.length === 0) {
-            missingFields.push("Debe agregar al menos un beneficiario*");
-        }
-
-        // Si hay campos faltantes, mostrar SweetAlert
-        if (missingFields.length > 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Faltan los siguientes campos: ' + missingFields.join(', '),
-            });
-            return; // Detiene la ejecución si hay campos faltantes
-        }
-
-        // Captura los valores de condiciones económicas
-        const paymentPlan = $('#paymentPlanLabel').text();
-        const cryptKey = $('#cryptKeyLabel').text();
-        const level = $('#levelLabel').text();
-        const area = $('#areaLabel').text();
-        const zone = $('#zoneLabel').text();
-        const totalAmount = parseFloat($('#totalAmountLabel').text().replace(/[^0-9.-]+/g,"")) || 0; 
-        const appliedDiscount =  parseFloat($('#appliedDiscountLabel').text().replace(/[^0-9.-]+/g,"")) || 0;
-        const initialPayment = parseFloat($('#initialPaymentLabel').text().replace(/[^0-9.-]+/g,"")) || 0;
-        const balance = parseFloat($('#balanceLabel').text().replace(/[^0-9.-]+/g,"")) || 0 ;
-
-        const enganche = initialPayment;
-        const totalFinal = totalAmount;
-
-        // Validar montos de los métodos de pago seleccionados
-        if (!validatePaymentAmounts(totalFinal, enganche)) {
-            return; // Detener la ejecución si la validación falla
-        }
-
-        // Serializa los datos del formulario
-        var formData = new FormData($('#PurchaseRequestCreateForm')[0]);
-
-        // Excluir campos específicos de beneficiario
-        formData.delete('BeneficiaryName');
-        formData.delete('BeneficiarySurnames');
-        formData.delete('BeneficiaryBirthdate');
-        formData.delete('BeneficiaryCelPhone');
-        formData.delete('BeneficiaryRelationship');
-        formData.delete('BeneficiaryCustomerID');
-
-        // Agrega el arreglo de beneficiarios al FormData
-        beneficiarios.forEach((beneficiary, index) => {
-            formData.append(`beneficiaries[${index}][name]`, beneficiary.name);
-            formData.append(`beneficiaries[${index}][surnames]`, beneficiary.surnames);
-            formData.append(`beneficiaries[${index}][birthdate]`, beneficiary.birthdate);
-            formData.append(`beneficiaries[${index}][phone]`, beneficiary.phone);
-            formData.append(`beneficiaries[${index}][relationship]`, beneficiary.relationship);
-            formData.append(`beneficiaries[${index}][customerId]`, customerId);
-        });
-
-        const payments = [];
-        paymentMethods.each(function() {
-            const row = $(this).closest('tr');
-            const amount = row.find('input[type="number"]').val();
-            const paymentType = parseInt($(this).val());
-
-            // Solo agrega si se ha ingresado un monto
-            if (amount) {
-                payments.push({
-                    paymentAmount: parseFloat(amount), // Convierte a número
-                    concept: "Pago inicial", // Puedes ajustar esto si es necesario
-                    typePaymentId: paymentType,
-                    currencyId: 1 // Ajusta según tu necesidad
-                });
-            }
-        });
-
-        // Agrega el arreglo de pagos al FormData
-        payments.forEach((payment, index) => {
-            formData.append(`payments[${index}][paymentAmount]`, payment.paymentAmount);
-            formData.append(`payments[${index}][concept]`, payment.concept);
-            formData.append(`payments[${index}][typePaymentId]`, payment.typePaymentId);
-            formData.append(`payments[${index}][currencyId]`, payment.currencyId);
-        });
-        formData.append('paymentPlan', paymentPlan);
-        formData.append('cryptKey', cryptKey);
-        formData.append('level', level);
-        formData.append('area', area);
-        formData.append('zone', zone);
-        formData.append('totalAmount', totalAmount);
-        formData.append('appliedDiscount', appliedDiscount);
-        formData.append('initialPayment', initialPayment);
-        formData.append('balance', balance);
-
-
-        formData.append('stateName', $('#catStatesId option:selected').text());
-
-        formData.append('townName', $('#catTownsId option:selected').text());
-
-
-        formData.append('stateCompanyName', $('#StateAddressCompany option:selected').text());
-
-        formData.append('cityCompanyName', $('#CityAddressCompany option:selected').text());
-        formData.append('CivilStatusName', $('#CivilStatus option:selected').text());
-
-        // Envía la solicitud AJAX
-        $.ajax({
-            url: 'api/purchases/createPurchase.php', // Cambia esto por la ruta a tu archivo PHP
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                // Maneja la respuesta del servidor aquí
-                Swal.fire({
-                    title: 'Cotización guardada con éxito',
-                    text: 'Esta cotización sólo es temporal y no registra un apartado del nicho. ' + response,
-                    icon: 'success',
-                    confirmButtonText: 'Ver ahora'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        //window.location.href = 'purchases'; 
-                    }
-                });
-
-
-                alert('Solicitud enviada con éxito: ' + response);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: response,
-                });
-            }
-        });
-
-        
-        
-    });
+    var diaUltimoPago = "<?php echo $diaUltimoPago; ?>";
+    var mesUltimoPago = "<?php echo $mesUltimoPago; ?>";
+    var yUltimoPago = "<?php echo $yUltimoPago; ?>";
     
     $('#btnQuotation').on('click', function() {
         // Variables para verificar campos
@@ -1557,6 +1422,7 @@ $(document).ready(function() {
 
         const enganche = initialPayment;
         const totalFinal = totalAmount;
+        
 
         // Validar montos de los métodos de pago seleccionados
         if (!validatePaymentAmounts(totalFinal, enganche)) {
@@ -1618,9 +1484,25 @@ $(document).ready(function() {
         formData.append('initialPayment', initialPayment);
         formData.append('balance', balance);
 
+
+        var paymentType = $('input[name="payment_type"]:checked').val();
+        formData.append('payment_type', paymentType || '');
+        var paymentAmountMes = $('#payment_amount').text().trim(); 
+        formData.append('payment_amount', paymentAmountMes || '0.00');
+
+        formData.append('diaPrimerPago', diaPrimerPago || '');
+        formData.append('mesPrimerPago', mesPrimerPago || '');
+        formData.append('yPrimerPago', yPrimerPago || '');
+
+        formData.append('diaUltimoPago', diaUltimoPago || '');
+        formData.append('mesUltimoPago', mesUltimoPago || '');
+        formData.append('yUltimoPago', yUltimoPago || '');
+
+
         formData.append('stateName', $('#catStatesId option:selected').text());
 
         formData.append('townName', $('#catTownsId option:selected').text());
+        formData.append('planVenta', $('#paymentPlanLabelDesc').text());
 
 
         formData.append('stateCompanyName', $('#StateAddressCompany option:selected').text());
@@ -1628,34 +1510,81 @@ $(document).ready(function() {
         formData.append('cityCompanyName', $('#CityAddressCompany option:selected').text());
         formData.append('CivilStatusName', $('#CivilStatus option:selected').text());
 
-        // Envía la solicitud AJAX
         $.ajax({
-            url: '/views/purchases/purchaseTemplate.php',
+            url: 'api/purchases/reservePurchase.php',
             type: 'POST',
             data: formData,  
             contentType: false,
             processData: false,
-            xhrFields: {
-                responseType: 'blob'  // Importante para manejar el PDF
+            beforeSend: function(){
+                Swal.fire({
+                    title: 'Procesando solicitud...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading(); // Mostrar un spinner de carga mientras se genera el PDF
+                    }
+                });
             },
-            success: function(pdfBlob) {
-                // Crear un enlace temporal para la descarga
-                const link = document.createElement('a');
-                link.href = window.URL.createObjectURL(pdfBlob);
-                link.download = 'Cotizacion.pdf';  // Nombre del archivo PDF
-                document.body.appendChild(link);
-                link.click();  // Desencadenar la descarga
-                document.body.removeChild(link);  // Remover el enlace temporal
+            success: function(response) {
+
+
+                // Segunda solicitud AJAX (genera el PDF)
+                $.ajax({
+                    url: '/views/purchases/purchaseTemplate.php',
+                    type: 'POST',
+                    data: formData,  
+                    contentType: false,
+                    processData: false,
+                    xhrFields: {
+                        responseType: 'blob'  // Importante para manejar el PDF
+                    },
+                    success: function(pdfBlob) {
+                        // Cierra el SweetAlert de carga
+                        Swal.close();
+
+                        // Mostrar SweetAlert de éxito
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Documento Generado',
+                            text: 'El PDF ha sido generado y está listo para descargar.',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Redirigir a otra pantalla cuando el usuario hace clic en "OK"
+                                //window.location.href = 'solicitudes';  
+                            }
+                        });
+
+                        // Crear un enlace temporal para la descarga del PDF
+                        const link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(pdfBlob);
+                        link.download = 'Cotizacion.pdf';  // Nombre del archivo PDF
+                        document.body.appendChild(link);
+                        link.click();  // Desencadenar la descarga
+                        document.body.removeChild(link);  // Remover el enlace temporal
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        // Cierra el SweetAlert de carga
+                        Swal.close();
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Error al generar el PDF: ' + textStatus
+                        });
+                    }
+                });
             },
             error: function(jqXHR, textStatus, errorThrown) {
+                // Mostrar un mensaje de error si la reserva falla
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error',
-                    text: 'Error al generar el PDF: ' + textStatus
+                    title: 'Error en la Reserva',
+                    text: 'Error al realizar la reserva: ' + textStatus,
                 });
             }
-        });
-
+});
+        
         
     });
 
