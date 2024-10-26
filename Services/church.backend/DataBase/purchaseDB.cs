@@ -424,6 +424,8 @@ namespace church.backend.DataBase
                                     birthdate = _nv.nullDate(reader["birthdate"].ToString()!),
                                     phone = reader["phone"].ToString()!,
                                     relationship = reader["relationship"].ToString()!,
+                                    type = _nv.nullInt(reader["type"].ToString()!),
+                                    typeDescription = reader["type_desciption"].ToString()!,
                                 });
                             }
                         }
