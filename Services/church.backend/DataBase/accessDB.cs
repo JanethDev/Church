@@ -346,6 +346,7 @@ namespace church.backend.services.DataBase
                         , data.phone
                         , data.relationship
                         , data.user_id
+                        , data.type
                     );
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -482,6 +483,8 @@ namespace church.backend.services.DataBase
                                     birthdate = _nv.nullDate(reader["birthdate"].ToString()!),
                                     phone = reader["phone"].ToString()!,
                                     relationship = reader["relationship"].ToString()!,
+                                    type = _nv.nullInt(reader["type"].ToString()!),
+                                    typeDescription = reader["type_desciption"].ToString()!,
                                 });                             
                             }
                         }
