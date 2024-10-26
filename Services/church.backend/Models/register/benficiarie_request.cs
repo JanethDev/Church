@@ -20,5 +20,8 @@ namespace church.backend.Models.register
         [JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
         public int user_id { get; set; } = new int();
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        public int type { get; set; } = new int();
     }
 }
