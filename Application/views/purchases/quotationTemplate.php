@@ -70,26 +70,32 @@ if (isset($_POST['beneficiaries'])) {
 }
 
 $TypePay = $_POST['TypePay'] ?? null;  // Tipo de pago
-if ($TypePay == 1) {
-    $monto = $_POST['amount_check'];
+$monto = 0;
+$paymentTypeDescription = '';
+$check_number = $account_number = $bank = ''; // Inicializamos en vacío
+
+if ($TypePay == 1) { // CHEQUE
+    $monto = $_POST['amount_check'] ?? 0;
     $paymentTypeDescription = 'CHEQUE';
-} elseif ($TypePay == 2) {
-    $monto = $_POST['amount_card'];
+    $check_number = $_POST['check_number'] ?? '';
+    $account_number = $_POST['account_number'] ?? '';
+    $bank = $_POST['bank'] ?? '';
+} elseif ($TypePay == 2) { // TARJETA DE CREDITO/DEBITO
+    $monto = $_POST['amount_card'] ?? 0;
     $paymentTypeDescription = 'TARJETA DE CREDITO/DEBITO';
-} elseif ($TypePay == 3) {
-    $monto = $_POST['amount_transfer'];
+    $check_number = $_POST['card_number'] ?? '';
+    $account_number = $_POST['account_card'] ?? '';
+    $bank = $_POST['bank_card'] ?? '';
+} elseif ($TypePay == 3) { // TRANSFERENCIA
+    $monto = $_POST['amount_transfer'] ?? 0;
     $paymentTypeDescription = 'TRANSFERENCIA';
-} elseif ($TypePay == 4) {
-    $monto = $_POST['amount_cash'];
+} elseif ($TypePay == 4) { // EFECTIVO
+    $monto = $_POST['amount_cash'] ?? 0;
     $paymentTypeDescription = 'EFECTIVO';
-} elseif ($TypePay == 5) {
-    $monto = $_POST['amount_cash_deposit'];
+} elseif ($TypePay == 5) { // DEPOSITO EN EFECTIVO
+    $monto = $_POST['amount_cash_deposit'] ?? 0;
     $paymentTypeDescription = 'DEPOSITO EN EFECTIVO';
 }
-
-$check_number = $_POST['check_number'] ?? null;
-$account_number= $_POST['account_number'] ?? null;
-$bank = $_POST['bank'] ?? null;
 // Otros datos de la operación
 $paymentPlan = $_POST['paymentPlan'];
 $cryptKey = $_POST['cryptKey'];
@@ -128,7 +134,7 @@ use Dompdf\Dompdf;
 
 // Crear instancia de DOMPDF
 $dompdf = new Dompdf();
-//$logoBase64 = base64_encode(file_get_contents("C:/xampp/htdocs/Church/Application/assets/img/LOGO_CATEDRAL_TIJUANA.png"));
+$logoBase64 = base64_encode(file_get_contents('C:/xampp/htdocs/Church/Application/assets/img/LOGO_CATEDRAL_TIJUANA.png'));
 
 $html = "
 
@@ -167,7 +173,7 @@ p, td {
         font-style: normal;
         font-weight: bold;
         text-decoration: none;
-        font-size: 6pt;
+        font-size: 8pt;
     }
 
     .s1 {
@@ -177,6 +183,14 @@ p, td {
         font-weight: normal;
         text-decoration: none;
         font-size: 6pt;
+    }
+    .s3 {
+        color: black;
+        font-family: Arial, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: none;
+        font-size: 5pt;
     }
 
     p {
@@ -268,8 +282,8 @@ p, td {
 <table class='table' cellspacing='0' cellpadding='0' style='border: none !important; width: 100%;'>
     <tbody>
         <tr>
-            <td rowspan='4' style='border: none !important; vertical-align: top; width: 40%; text-align: center;'>
-                <img width='100px' height='100px' src='C:/xampp/htdocs/Church/Application/assets/img/LOGO_CATEDRAL_TIJUANA.png' alt='Logo'/>
+             <td rowspan='4' style='border: none !important; vertical-align: top; width: 40%; text-align: center; position: relative;'>
+                <img width='140px' height='140px' src='data:image/png;base64,<?= $logoBase64 ?>' alt='Logo' style='position: absolute; top: -50px;' />
             </td>
         </tr>
         <tr>
@@ -282,7 +296,7 @@ p, td {
         </tr>
     </tbody>
 </table>
-<table style='width:100%; border-collapse: collapse;margin-bottom: 15px;'>
+<table style='width:100%; border-collapse: collapse;margin-bottom: 15px;margin-top: 45px;'>
     <tr>
         <td style='vertical-align: top; width: auto;'>
             <!-- Primera tabla aquí -->
@@ -333,7 +347,7 @@ p, td {
                         <p class='s1' style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>CLIENTE No.</p>
                     </td>
                     <td style='width:100pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                        <p class='s1' style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'></p>
+                        <p class='s1' style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>N/A</p>
                     </td>
                 </tr>
                 <tr style='height:10pt'>
@@ -744,41 +758,42 @@ p, td {
             <p style='text-indent: 0pt;text-align: left;'>TELEFONO</p>
         </td>
     </tr>"; 
+    // Contar el número de beneficiarios existentes
+    $beneficiaryCount = count($beneficiaries);
 
-    if (!empty($beneficiaries)) {
-        // Si hay beneficiarios, recorrerlos y generar filas
-        foreach ($beneficiaries as $beneficiary) {
-            // Convertir la fecha de nacimiento en formato día, mes, año
-            $birthdate = date('d-m-Y', strtotime($beneficiary['birthdate']));
-            list($day, $month, $year) = explode('-', $birthdate);
-    
-            $html .= "
-            <tr style='height:12pt'>
-                <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                    <p style='text-indent: 0pt;text-align: center;'>{$beneficiary['surnames']}</p>
-                </td>
-                <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                    <p style='text-indent: 0pt;text-align: center;'>{$beneficiary['name']}</p>
-                </td>
-                <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                    <p style='text-indent: 0pt;text-align: center;'>$day</p>
-                </td>
-                <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                    <p style='text-indent: 0pt;text-align: center;'>$month</p>
-                </td>
-                <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                    <p style='text-indent: 0pt;text-align: center;'>$year</p>
-                </td>
-                <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                    <p style='text-indent: 0pt;text-align: center;'>{$beneficiary['relationship']}</p>
-                </td>
-                <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                    <p style='text-indent: 0pt;text-align: center;'>{$beneficiary['phone']}</p>
-                </td>
-            </tr>";
-        }
-    } else {
-        // Si no hay beneficiarios, mostrar una fila vacía
+    // Generar filas para los beneficiarios existentes
+    foreach ($beneficiaries as $beneficiary) {
+        $birthdate = date('d-m-Y', strtotime($beneficiary['birthdate']));
+        list($day, $month, $year) = explode('-', $birthdate);
+
+        $html .= "
+        <tr style='height:12pt'>
+            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+                <p style='text-indent: 0pt;text-align: center;'>{$beneficiary['surnames']}</p>
+            </td>
+            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+                <p style='text-indent: 0pt;text-align: center;'>{$beneficiary['name']}</p>
+            </td>
+            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+                <p style='text-indent: 0pt;text-align: center;'>$day</p>
+            </td>
+            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+                <p style='text-indent: 0pt;text-align: center;'>$month</p>
+            </td>
+            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+                <p style='text-indent: 0pt;text-align: center;'>$year</p>
+            </td>
+            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+                <p style='text-indent: 0pt;text-align: center;'>{$beneficiary['relationship']}</p>
+            </td>
+            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+                <p style='text-indent: 0pt;text-align: center;'>{$beneficiary['phone']}</p>
+            </td>
+        </tr>";
+    }
+
+    // Si hay menos de 3 beneficiarios, agregar filas vacías
+    for ($i = $beneficiaryCount; $i < 3; $i++) {
         $html .= "
         <tr style='height:12pt'>
             <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
@@ -792,52 +807,6 @@ p, td {
             </td>
             <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
                 <p style='text-indent: 0pt;text-align: center;'><br/></p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'><br/></p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'><br/></p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'><br/></p>
-            </td>
-        </tr>
-        <tr style='height:12pt'>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'><br/></p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'><br/></p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'><br/></p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'><br/></p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'><br/></p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'><br/></p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'><br/></p>
-            </td>
-        </tr>
-        <tr style='height:12pt'>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'><br/></p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'><br/></p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'><br/></p>
-            </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: center;'></br></p>
             </td>
             <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
                 <p style='text-indent: 0pt;text-align: center;'><br/></p>
@@ -948,22 +917,22 @@ $html .= "</table>
 
 
 if (($TypePay)!= 1) {
-     $html .= "
+    $html .= "
     <tr style='height:10pt'>
         <td colspan='6'
-            style=' border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
+            style=' border-top-width:4pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt;border-top:none!important;'>
             <p class='s2'
                 style='padding-top: 1pt;text-indent: 0pt;line-height: 6pt;text-align: center;'>
                 EL SALDO SERÁ LIQUIDADO EN &nbsp;
-                <strong>{$selectedPaymentDescription}</strong> 
+                <strong>{$planVenta}</strong> 
                 &nbsp;EN ABONOS:
                 
                 <!-- Checkbox para abonos mensuales (seleccionado por defecto si $paymentType es 'mensuales') -->
-                &nbsp;&nbsp;<input style='vertical-align: middle;' type='checkbox' name='payment_type' value='mensuales' id='mensuales_checkbox' " . 
+                &nbsp;&nbsp;<input style='vertical-align: middle; transform: scale(0.8);' type='checkbox' name='payment_type' value='mensuales' id='mensuales_checkbox' " . 
                 ($paymentType === 'mensuales' ? 'checked' : '') . ">&nbsp;MENSUALES
                 
                 <!-- Checkbox para abonos semanales -->
-                &nbsp;&nbsp;<input style='vertical-align: middle;' type='checkbox' name='payment_type' value='semanales' id='semanales_checkbox' " . 
+                &nbsp;&nbsp;<input style='vertical-align: middle; transform: scale(0.8);' type='checkbox' name='payment_type' value='semanales' id='semanales_checkbox' " . 
                 ($paymentType === 'semanales' ? 'checked' : '') . ">&nbsp;SEMANALES
                 
                 <!-- Mostrar el valor calculado como texto -->
@@ -1097,7 +1066,7 @@ if (($TypePay)!= 1) {
     $html .= "</tr><tr style='height:10pt'>";
 
 // Condición para inMaintenance
-if ($inMaintenance !== 'False' && is_numeric($inMaintenance)) {
+if ($inMaintenance !== 'False' && is_numeric($inMaintenance) && $inMaintenance > 0) {
     $html .= "
     <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
         <p class='s1' style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
@@ -1114,7 +1083,7 @@ if ($inMaintenance !== 'False' && is_numeric($inMaintenance)) {
 }
 
 // Condición para inAshDeposit
-if ($inAshDeposit !== 'False' && is_numeric($inAshDeposit)) {
+if ($inAshDeposit !== 'False' && is_numeric($inAshDeposit) && $inAshDeposit > 0) {
     $html .= "
     <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
         <p class='s1' style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
@@ -1131,7 +1100,7 @@ if ($inAshDeposit !== 'False' && is_numeric($inAshDeposit)) {
 }
 
 // Condición para inOtherFee
-if ($inOtherFee !== 'False' && is_numeric($inOtherFee)) {
+if ($inOtherFee !== 'False' && is_numeric($inOtherFee) && $inOtherFee > 0) {
     $html .= "
     <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
         <p class='s1' style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
@@ -1147,69 +1116,42 @@ $html .= "</table>
     
     <table style='border-collapse:collapse;width:100%;' cellspacing='0'>
         <tr style='height:10pt'>
-             <td rowspan='2'
-                style='background-color:#9fc5e8; border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p class='s1' style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
+            <td rowspan='2' style='background-color:#9fc5e8; border:solid 1pt;'>
+                <p class='s1' style='padding-top: 1pt; padding-left: 2pt; text-indent: 0pt; line-height: 6pt; text-align: left;'>
                     FORMA DEL PAGO INICIAL</p>
             </td>
-            <td
-                style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p style='text-indent: 0pt;text-align: left;'><br /></p>
+            <td style='border:solid 1pt;'>
+                <p style='text-indent: 0pt; text-align: left;'><br /></p>
             </td>
-            <td
-                style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p class='s1'
-                    style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                    CANTIDAD</p>
+            <td style='border:solid 1pt;'>
+                <p class='s1' style='padding-top: 1pt; padding-left: 2pt; text-indent: 0pt; line-height: 6pt; text-align: left;'>CANTIDAD</p>
             </td>
-            <td
-                style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p class='s1'
-                    style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>No. CHEQUE</p>
+            <td style='border:solid 1pt;'>
+                <p class='s1' style='padding-top: 1pt; padding-left: 2pt; text-indent: 0pt; line-height: 6pt; text-align: left;'>No. CHEQUE</p>
             </td>
-            <td
-                style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p class='s1'
-                    style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>No.
-                    DE CUENTA</p>
+            <td style='border:solid 1pt;'>
+                <p class='s1' style='padding-top: 1pt; padding-left: 2pt; text-indent: 0pt; line-height: 6pt; text-align: left;'>No. DE CUENTA</p>
             </td>
-            <td
-                style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p class='s1'
-                    style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>BANCO
-                </p>
+            <td style='border:solid 1pt;'>
+                <p class='s1' style='padding-top: 1pt; padding-left: 2pt; text-indent: 0pt; line-height: 6pt; text-align: left;'>BANCO</p>
             </td>
         </tr>
         <tr style='height:10pt'>
-            <td
-                style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p class='s1'
-                    style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
+            <td style='border:solid 1pt;'>
+                <p class='s1' style='padding-top: 1pt; padding-left: 2pt; text-indent: 0pt; line-height: 6pt; text-align: left;'>
                     $paymentTypeDescription</p>
             </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
-                colspan='1'>
-                <p class='s1'
-                    style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                    $" . number_format($monto, 2) . " M.N.</p></p>
+            <td style='border:solid 1pt;'>
+                <p class='s1' style='padding-top: 1pt; padding-left: 2pt; text-indent: 0pt; line-height: 6pt; text-align: left;'>$" . number_format($monto, 2) . " M.N.</p>
             </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
-                colspan='1'>
-                <p class='s1'
-                    style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                    $check_number</p></p>
+            <td style='border:solid 1pt;'>
+                <p class='s1' style='padding-top: 1pt; padding-left: 2pt; text-indent: 0pt; line-height: 6pt; text-align: left;'>$check_number</p>
             </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
-                colspan='1'>
-                <p class='s1'
-                    style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                    $account_number</p></p>
+            <td style='border:solid 1pt;'>
+                <p class='s1' style='padding-top: 1pt; padding-left: 2pt; text-indent: 0pt; line-height: 6pt; text-align: left;'>$account_number</p>
             </td>
-            <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
-                colspan='1'>
-                <p class='s1'
-                    style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                    $bank</p></p>
+            <td style='border:solid 1pt;'>
+                <p class='s1' style='padding-top: 1pt; padding-left: 2pt; text-indent: 0pt; line-height: 6pt; text-align: left;'>$bank</p>
             </td>
         </tr>
     </table>
@@ -1218,7 +1160,6 @@ $html .= "</table>
 <div class='textbox' style='border:0.5pt solid #000000;display:block;min-height:34.0pt;top:0.2pt;'>
     <h2 style='text-indent: 0pt;text-align: center;'>FIRMAS DEL REPRESENTANTE Y VENDEDOR</h2>
     <p style='padding-top: 1pt;text-indent: 0pt;text-align: center;'>Manifiesto que he recibido el pago inicial correspondiente a la presente operación de acuerdo a la forma que se especifica en la presente solicitud.</p>
-    <p style='text-indent: 0pt;text-align: left;'><br /></p>
     <p style='text-indent: 0pt;text-align: left;'><br /></p>
     <table style='border-collapse: separate; border-spacing: 10px; width: 60%; margin: 0 auto; margin-top: 15px;'>
         <tr>
@@ -1233,7 +1174,7 @@ $html .= "</table>
 </div>
 
 <div class='textbox' style='border-top: none; border-bottom: 0.5pt solid #000; border-left: 0.5pt solid #000; border-right: 0.5pt solid #000; display: block; padding: 5px;'>
-    <p class='s1' style='padding-top: 1pt;text-indent: 0pt;line-height: 87%;text-align: left;'>
+    <p class='s3' style='padding-top: 1pt;text-indent: 0pt;line-height: 87%;text-align: left;'>
         Con la aceptación de la presente solicitud me comprometo a firmar el contrato correspondiente una vez transcurrido el plazo de 15 días hábiles contados a partir de la 
         firma de esta solicitud y no habiendo hecho el uso del derecho de revocar mi consentimiento por la firma del contrato de cesión de derechos de uso mortuorio a 
         perpetuidad que ampara la presente operación, cuyos principales términos y condiciones son los establecidos en esta solicitud. Lo anterior sin responsabilidad 
@@ -1244,7 +1185,7 @@ $html .= "</table>
     </p>
 </div>
 
-<table style='border-collapse: separate; border-spacing: 10px; width: 40%; margin: 0 auto; margin-top: 30px;'>
+<table style='position:absolute; border-collapse: separate; border-spacing: 10px; width: 40%; margin: 0 auto; margin-top: 30px;'>
     <tr>
         <td style='border-top: 1px solid black; text-align: center; padding: 5px;'>
         <h1 style='padding-top: 1pt;text-indent: 0pt;text-align: center;'>NOMBRE Y FIRMA DEL ADQUIRIENTE</h1>

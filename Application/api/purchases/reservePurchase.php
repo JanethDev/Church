@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $idUser = $_POST['UserID'];
     $clientId = !empty($_POST['CustomerID']) ? (int)$_POST['CustomerID'] : 0;
     $referencePersonPhone1 = $_POST['ReferenceCustomerPhone1'] ?? null;
     $referencePersonPhone2 = $_POST['ReferenceCustomerPhone2'] ?? null;
@@ -16,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = preg_replace('/\D/', '', $customerPhone);
 
     $dataPurchase = [
-        'tuition' => '001215',
+        'tuition' => '',
         'cryptId' => isset($_POST['cryptId']) ? (int)$_POST['cryptId'] : null,
         'cryptSpaces' => isset($_POST['cryptSpaces']) ? (int)$_POST['cryptSpaces'] : null,
         'maintenanceFee' => isset($_POST['inMaintenance']) ? (float)$_POST['inMaintenance'] : null,
@@ -174,101 +175,114 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
-    $beneficiary =[];
     try {
-        // Paso 1: Realizar la solicitud GET para obtener los beneficiarios existentes
+        // Consultar beneficiarios y referencias existentes
         $response = $client->request('GET', 'customer/consult/beneficiaries', [
-            'query' => [
-                'customerId' => $clientId, // Aquí va el parámetro de búsqueda
-            ],
+            'query' => ['customerId' => $clientId]
         ]);
-    
-        // Obtener el contenido de la respuesta
         $existingBeneficiaries = json_decode($response->getBody()->getContents(), true);
-
-        //echo '<script> console.log(JSON.stringify(' . $existingBeneficiaries . ', null, 2)); </script>';
-
     
-        // Paso 2: Eliminar beneficiarios existentes uno por uno
-        if (!empty($existingBeneficiaries)) {
-            foreach ($existingBeneficiaries as $beneficiary) {
-                $beneficiaryId = $beneficiary['id']; // Asegúrate de que 'id' es el campo correcto
+        // Crear arrays para IDs válidos de beneficiarios y referencias recibidos
+        $receivedBeneficiaryIds = array_filter(array_column($_POST['beneficiaries'] ?? [], 'idBeneficiary'), fn($id) => !empty($id) && $id !== 'undefined');
+        $receivedReferenceIds = array_filter([$_POST['idReference1'] ?? null, $_POST['idReference2'] ?? null], fn($id) => !empty($id) && $id !== 'undefined');
     
+        // Eliminar beneficiarios y referencias que ya existen en la base de datos pero no están en los datos recibidos
+        foreach ($existingBeneficiaries as $beneficiary) {
+            if (!in_array($beneficiary['id'], $receivedBeneficiaryIds) && !in_array($beneficiary['id'], $receivedReferenceIds)) {
                 try {
-                    // Realiza la solicitud DELETE para cada beneficiario existente
-                    $deleteResponse = $client->request('GET', 'customer/delete/beneficiarie', [
-                        'query' => ['beneficiarieId' => $beneficiaryId],
+                    $client->request('GET', 'customer/delete/beneficiarie', [
+                        'query' => ['beneficiarieId' => $beneficiary['id']]
                     ]);
-                    // Puedes manejar la respuesta del DELETE si lo deseas
-                    $deleteBody = $deleteResponse->getBody()->getContents();
-                    // echo "Beneficiario eliminado: " . $deleteBody;
-    
                 } catch (RequestException $e) {
-                    if ($e->hasResponse()) {
-                        $errorBody = $e->getResponse()->getBody()->getContents();
-                        echo json_encode(["error" => "Error al eliminar beneficiario: " . $errorBody]);
-                        exit;
-                    } else {
-                        echo json_encode(["error" => "Error al eliminar beneficiario: " . $e->getMessage()]);
-                        exit;
-                    }
+                    handleException($e, "Error al eliminar beneficiario/referencia");
                 }
             }
         }
     
-        // Paso 3: Insertar nuevos beneficiarios después de eliminar los existentes
-        if (isset($_POST['beneficiaries']) && is_array($_POST['beneficiaries'])) {
-            foreach ($_POST['beneficiaries'] as $beneficiary) {
-            
-                // Limpiar el número de teléfono
-                $phoneBeneficiary = isset($beneficiary['phone']) ? preg_replace('/\D/', '', $beneficiary['phone']) : null;
-            
-                // Construir el array del beneficiario
+        // Procesar beneficiarios recibidos para actualizar o crear
+        foreach ($_POST['beneficiaries'] as $beneficiary) {
+            if (empty($beneficiary['idBeneficiary']) || $beneficiary['idBeneficiary'] === 'undefined') {
+                // Insertar si no tiene un id válido
+                $url = 'customer/create/beneficiarie';
                 $singleBeneficiary = [
                     'customerId' => $beneficiary['customerId'] ?? null,
                     'name' => $beneficiary['name'] ?? null,
                     'lastname' => $beneficiary['surnames'] ?? null,
-                    'phone' => $phoneBeneficiary,
+                    'phone' => preg_replace('/\D/', '', $beneficiary['phone'] ?? ''),
+                    'birthdate' => $beneficiary['birthdate'] ?? null,
+                    'relationship' => $beneficiary['relationship'] ?? null,
+                    'user_id' => $idUser ?? null,
+                    'type' => 1,
+                ];
+            } else {
+                // Actualizar si tiene un id válido
+                $url = 'customer/update/beneficiarie';
+                $singleBeneficiary = [
+                    'id' => $beneficiary['idBeneficiary'],
+                    'name' => $beneficiary['name'] ?? null,
+                    'lastname' => $beneficiary['surnames'] ?? null,
+                    'phone' => preg_replace('/\D/', '', $beneficiary['phone'] ?? ''),
                     'birthdate' => $beneficiary['birthdate'] ?? null,
                     'relationship' => $beneficiary['relationship'] ?? null,
                 ];
-    
-                // Convertir a JSON
-                $jsonBeneficiaryData = json_encode($singleBeneficiary, JSON_PRETTY_PRINT);
-    
-                try {
-                    // Realiza la solicitud POST para cada nuevo beneficiario
-                    $response = $client->request('POST', 'customer/create/beneficiarie', [
-                        'headers' => $headers,
-                        'body' => $jsonBeneficiaryData,
-                    ]);
-    
-                    // Obtener la respuesta del servidor
-                    $body = $response->getBody()->getContents();
-                    // echo json_encode(["message" => "Beneficiario creado: " . $body]);
-    
-                } catch (RequestException $e) {
-                    if ($e->hasResponse()) {
-                        $errorBody = $e->getResponse()->getBody()->getContents();
-                        echo json_encode(["error" => "Error al crear beneficiario: " . $errorBody]);
-                        exit;
-                    } else {
-                        echo json_encode(["error" => "Error al crear beneficiario: " . $e->getMessage()]);
-                        exit;
-                    }
-                }
+            }
+            
+            try {
+                $client->request('POST', $url, [
+                    'headers' => $headers,
+                    'body' => json_encode($singleBeneficiary)
+                ]);
+            } catch (RequestException $e) {
+                handleException($e, "Error al procesar beneficiario");
             }
         }
     
-    } catch (RequestException $e) {
-        if ($e->hasResponse()) {
-            $errorBody = $e->getResponse()->getBody()->getContents();
-            //echo json_encode(["error" => "Error en la solicitud: " . $errorBody]);
-        } else {
-           // echo json_encode(["error" => "Error en la solicitud: " . $e->getMessage()]);
+        // Procesar referencias recibidas para actualizar, crear o eliminar
+        for ($i = 1; $i <= 2; $i++) {
+            $referenceId = $_POST["idReference$i"] ?? null;
+            $name = $_POST["ReferenceCustomer$i"] ?? null;
+            $phone = preg_replace('/\D/', '', $_POST["ReferenceCustomerPhone$i"] ?? '');
+    
+            if (!empty($name) && !empty($phone)) {
+                $referenceData = [
+                    'id' => $referenceId,
+                    'customerId' => $clientId,
+                    'name' => $name,
+                    'lastname' => "",
+                    'phone' => $phone,
+                    'relationship' => "N/A"
+                ];
+                try {
+                    $url = $referenceId ? 'customer/update/beneficiarie' : 'customer/create/references';
+                    $client->request('POST', $url, [
+                        'headers' => $headers,
+                        'body' => json_encode($referenceData)
+                    ]);
+                } catch (RequestException $e) {
+                    handleException($e, "Error al procesar referencia");
+                }
+            } elseif ($referenceId) {
+                // Eliminar referencia si tiene un id pero los datos están vacíos
+                try {
+                    $client->request('GET', 'customer/delete/beneficiarie', [
+                        'query' => ['beneficiarieId' => $referenceId]
+                    ]);
+                } catch (RequestException $e) {
+                    handleException($e, "Error al eliminar referencia");
+                }
+            }
         }
+    } catch (RequestException $e) {
+        handleException($e, "Error en la solicitud");
     }
-
+    
+    // Función para manejo de excepciones
+    function handleException($e, $message) {
+        $errorBody = $e->hasResponse() ? $e->getResponse()->getBody()->getContents() : $e->getMessage();
+        echo json_encode(["error" => "$message: " . $errorBody]);
+        exit;
+    }
+    
     // Ahora realiza la solicitud POST para la compra
     $jsonData = json_encode($dataPurchase, JSON_PRETTY_PRINT);
     try {

@@ -516,13 +516,13 @@ namespace church.backend.services.DataBase
                       FROM [cat_customers] cus
                       LEFT JOIN cat_states st ON st.id = cus.cat_states_id
                       LEFT JOIN cat_towns tw ON tw.id = cus.cat_towns_id
-                      WHERE email like '%{0}%'
+                      WHERE (email like '%{0}%'
                       OR cus.phone like '%{0}%'
                       OR cus.[name] like '%{0}%'
                       OR cus.msurname like '%{0}%'
                       OR cus.psurname like '%{0}%'
-                      OR cus.customer_number like '%{0}%'
-                      AND cus.cat_status_id = '{1}'";
+                      OR cus.customer_number like '%{0}%')
+                      --AND cus.cat_status_id = '{1}'";
                     query = string.Format(query, value, (int)user_status.Activo);
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {

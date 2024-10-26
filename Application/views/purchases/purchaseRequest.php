@@ -344,9 +344,11 @@ require_once('auth/session.php');
                         <tr><td colspan="4" style="text-align:center"><strong>REFERENCIAS</strong></td></tr>
                         <tr>
                             <td>1*</td>
-                            <td><input type="text" class="form-control control-reference" id="ReferenceCustomer1" name="ReferenceCustomer1" value="" /></td>
+                            <td><input type="text" class="form-control control-reference" id="ReferenceCustomer1" name="ReferenceCustomer1" value="" />
+                            <input type="hidden" class="form-control control-beneficiary" id="idReference1" name="idReference1" value="" /></td>
                             <td>TEL.*</td>
-                            <td><input type="text" class="form-control control-reference phone" id="ReferenceCustomerPhone1" name="ReferenceCustomerPhone1" value="" /></td>
+                            <td><input type="text" class="form-control control-reference phone" id="ReferenceCustomerPhone1" name="ReferenceCustomerPhone1" value="" />
+                            <input type="hidden" class="form-control control-beneficiary" id="idReference2" name="idReference2" value="" /></td>
                         </tr>
                         <tr>
                             <td>2</td>
@@ -583,9 +585,12 @@ $(document).ready(function() {
         window.location.href = 'solicitud'; // Redirige sin parámetros
     });
 
-    $(document).on('focus', '.phone', function() {
-        $(this).inputmask("(999) 999-9999");
-    });
+    function applyPhoneMask() {
+        $('.phone').inputmask("(999) 999-9999"); // Aplica la máscara de teléfono
+    }
+
+    // Llama a la función para aplicar la máscara de teléfono en todos los campos de teléfono al cargar la página
+    applyPhoneMask();
 
     // Aplicar máscara para números con separación de miles y decimales
     $('#Income').inputmask({
@@ -877,7 +882,7 @@ $(document).ready(function() {
         // Mostrar los campos de nuevo cliente para permitir editar
         $('.tr-new-customer').show();
 
-        // Llamar a la API para obtener beneficiarios
+        // Llamar a la API para obtener beneficiarios y referencias
         $.ajax({
             url: "api/customers/consultBeneficiaries.php",
             type: "POST",
@@ -891,24 +896,45 @@ $(document).ready(function() {
                     // Limpiar las filas de beneficiarios antes de agregar nuevos
                     $('#tableBeneficiary tr.tr-beneficiary').remove(); // Elimina todas las filas de beneficiarios
 
+                    // Variables para controlar las referencias de tipo 2
+                    let referenceCount = 0;
+
                     // Verificar si hay beneficiarios
                     if (response.length > 0) {
-                        // Recorremos los beneficiarios y los agregamos a la tabla
                         response.forEach(function(beneficiary) {
-                            const newRow = `
+                            if (beneficiary.type === 1) { // Si el tipo es 1, agrega a la tabla de beneficiarios
+                                const newRow = `
+                                    <tr class="tr tr-beneficiary">
+                                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryName" value="${beneficiary.name || ''}" />
+                                        <input type="hidden" class="form-control control-beneficiary" name="idBeneficiary" value="${beneficiary.id || ''}" /></td>
+                                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiarySurnames" value="${beneficiary.lastname || ''}" /></td>
+                                        <td><input type="date" class="form-control datepicker control-beneficiary" name="BeneficiaryBirthdate" value="${beneficiary.birthdate ? beneficiary.birthdate.split('T')[0] : ''}" /></td>
+                                        <td><input type="text" class="form-control control-beneficiary phone" name="BeneficiaryCelPhone" value="${beneficiary.phone || ''}" /></td>
+                                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryRelationship" value="${beneficiary.relationship || ''}" /><input type="hidden" name="BeneficiaryCustomerID" value="${beneficiary.customerId || 0}" /></td>
+                                        <td><button class="btn btn-danger btn-remove-beneficiary" type="button">-</button></td>
+                                    </tr>
+                                `;
+                                $('#tableBeneficiary').append(newRow);
+                            } else if (beneficiary.type === 2 && referenceCount < 2) {
+                                // Asignar las referencias de tipo 2 a los campos fijos en la tabla de referencias
+                                referenceCount++;
+                                $(`#ReferenceCustomer${referenceCount}`).val(beneficiary.name || '');
+                                $(`#ReferenceCustomerPhone${referenceCount}`).val(beneficiary.phone || '');
+                                $(`#idReference${referenceCount}`).val(beneficiary.id || '');
+                            }
+                        });
+
+                        // Si no hay beneficiarios de tipo 1, mostrar mensaje por defecto
+                        if (!response.some(beneficiary => beneficiary.type === 1)) {
+                            const defaultRow = `
                                 <tr class="tr tr-beneficiary">
-                                    <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryName" value="${beneficiary.name || ''}" /></td>
-                                    <td><input type="text" class="form-control control-beneficiary" name="BeneficiarySurnames" value="${beneficiary.lastname || ''}" /></td>
-                                    <td><input type="date" class="form-control datepicker control-beneficiary" name="BeneficiaryBirthdate" value="${beneficiary.birthdate ? beneficiary.birthdate.split('T')[0] : ''}" /></td>
-                                    <td><input type="text" class="form-control control-beneficiary phone" name="BeneficiaryCelPhone" value="${beneficiary.phone || ''}" /></td>
-                                    <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryRelationship" value="${beneficiary.relationship || ''}" /><input type="hidden" name="BeneficiaryCustomerID" value="${beneficiary.customerId || 0}" /></td>
-                                    <td><button class="btn btn-danger btn-remove-beneficiary" type="button">-</button></td>
+                                    <td colspan="6" class="text-center">No hay beneficiarios asignados a este cliente.</td>
                                 </tr>
                             `;
-                            $('#tableBeneficiary').append(newRow);
-                        });
+                            $('#tableBeneficiary').append(defaultRow);
+                        }
                     } else {
-                        // Si no hay beneficiarios, puedes agregar una fila por defecto o mostrar un mensaje.
+                        // Si no hay beneficiarios en absoluto, agregar mensaje por defecto
                         const defaultRow = `
                             <tr class="tr tr-beneficiary">
                                 <td colspan="6" class="text-center">No hay beneficiarios asignados a este cliente.</td>
@@ -925,6 +951,12 @@ $(document).ready(function() {
                 alert("Hubo un problema al obtener los beneficiarios.");
             }
         });
+
+        applyPhoneMask();
+
+
+
+
     });
 
     $.ajax({
@@ -1041,6 +1073,7 @@ $(document).ready(function() {
         const beneficiarios = [];
         
         $('#tableBeneficiary .tr-beneficiary').each(function() {
+            const idBeneficiary = $(this).find('input[name="idBeneficiary"]').val();
             const name = $(this).find('input[name="BeneficiaryName"]').val();
             const surnames = $(this).find('input[name="BeneficiarySurnames"]').val();
             const birthdate = $(this).find('input[name="BeneficiaryBirthdate"]').val();
@@ -1050,6 +1083,7 @@ $(document).ready(function() {
             // Solo agrega beneficiarios que tengan un nombre
             if (name) {
                 beneficiarios.push({
+                    idBeneficiary,
                     name,
                     surnames,
                     birthdate,
@@ -1162,7 +1196,7 @@ $(document).ready(function() {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: "Solo puedes seleccionar un máximo de 2 opciones."
+                    text: "Solo puedes seleccionar un máximo de 1 opción."
                 });
             } else {
                 // Habilitar los inputs de la fila actual
@@ -1226,6 +1260,8 @@ $(document).ready(function() {
     $('#btnAddBeneficiary').on('click', function() {
         // Contar el número de filas en la tabla, excluyendo la cabecera
         var rowCount = $('#tableBeneficiary tr.tr-beneficiary').length;
+
+        applyPhoneMask(); 
 
         // Verificar si el número de filas es menor a 4
         if (rowCount < 4) {
@@ -1390,6 +1426,9 @@ $(document).ready(function() {
         if (paymentMethods.length === 0) {
             missingFields.push("Seleccionar al menos un método de pago inicial*");
         }
+        if ($('#ckOtherFee').is(':checked') && (!$('#otherFeeAmount').val() || parseFloat($('#otherFeeAmount').val()) <= 0)) {
+            missingFields.push("Cantidad para la opción 'OTRO'");
+        }
 
         // Obtiene el arreglo de beneficiarios
         const beneficiarios = getBeneficiarios();
@@ -1408,6 +1447,8 @@ $(document).ready(function() {
             });
             return; // Detiene la ejecución si hay campos faltantes
         }
+
+
 
         // Captura los valores de condiciones económicas
         const paymentPlan = $('#paymentPlanLabel').text();
@@ -1442,6 +1483,7 @@ $(document).ready(function() {
 
         // Agrega el arreglo de beneficiarios al FormData
         beneficiarios.forEach((beneficiary, index) => {
+            formData.append(`beneficiaries[${index}][idBeneficiary]`, beneficiary.idBeneficiary);
             formData.append(`beneficiaries[${index}][name]`, beneficiary.name);
             formData.append(`beneficiaries[${index}][surnames]`, beneficiary.surnames);
             formData.append(`beneficiaries[${index}][birthdate]`, beneficiary.birthdate);
@@ -1531,7 +1573,7 @@ $(document).ready(function() {
 
                 // Segunda solicitud AJAX (genera el PDF)
                 $.ajax({
-                    url: '/views/purchases/purchaseTemplate.php',
+                    url: '/views/purchases/quotationTemplate.php',
                     type: 'POST',
                     data: formData,  
                     contentType: false,
@@ -1551,7 +1593,7 @@ $(document).ready(function() {
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 // Redirigir a otra pantalla cuando el usuario hace clic en "OK"
-                                //window.location.href = 'solicitudes';  
+                                window.location.href = 'solicitudes';  
                             }
                         });
 
