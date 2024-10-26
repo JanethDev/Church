@@ -11,5 +11,7 @@ namespace church.backend.Models.register
         public string phone { get; set; } = string.Empty;
         public DateTime birthdate { get; set; } = new DateTime();
         public string relationship { get; set; } = string.Empty;
+        public int type { get; set; } = new int();
+        public string typeDescription { get; set; } = string.Empty;
     }
 }
