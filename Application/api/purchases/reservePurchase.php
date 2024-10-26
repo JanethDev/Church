@@ -182,9 +182,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
         $existingBeneficiaries = json_decode($response->getBody()->getContents(), true);
     
-        // Crear arrays para IDs válidos de beneficiarios y referencias recibidos
-        $receivedBeneficiaryIds = array_filter(array_column($_POST['beneficiaries'] ?? [], 'idBeneficiary'), fn($id) => !empty($id) && $id !== 'undefined');
-        $receivedReferenceIds = array_filter([$_POST['idReference1'] ?? null, $_POST['idReference2'] ?? null], fn($id) => !empty($id) && $id !== 'undefined');
+        // Verifica si hay beneficiarios en la solicitud antes de procesarlos
+        $receivedBeneficiaryIds = [];
+        if (!empty($_POST['beneficiaries']) && is_array($_POST['beneficiaries'])) {
+            $receivedBeneficiaryIds = array_filter(
+                array_column($_POST['beneficiaries'], 'idBeneficiary'),
+                fn($id) => !empty($id) && $id !== 'undefined'
+            );
+        }
+    
+        $receivedReferenceIds = array_filter(
+            [$_POST['idReference1'] ?? null, $_POST['idReference2'] ?? null],
+            fn($id) => !empty($id) && $id !== 'undefined'
+        );
     
         // Eliminar beneficiarios y referencias que ya existen en la base de datos pero no están en los datos recibidos
         foreach ($existingBeneficiaries as $beneficiary) {
@@ -199,41 +209,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     
-        // Procesar beneficiarios recibidos para actualizar o crear
-        foreach ($_POST['beneficiaries'] as $beneficiary) {
-            if (empty($beneficiary['idBeneficiary']) || $beneficiary['idBeneficiary'] === 'undefined') {
-                // Insertar si no tiene un id válido
-                $url = 'customer/create/beneficiarie';
-                $singleBeneficiary = [
-                    'customerId' => $beneficiary['customerId'] ?? null,
-                    'name' => $beneficiary['name'] ?? null,
-                    'lastname' => $beneficiary['surnames'] ?? null,
-                    'phone' => preg_replace('/\D/', '', $beneficiary['phone'] ?? ''),
-                    'birthdate' => $beneficiary['birthdate'] ?? null,
-                    'relationship' => $beneficiary['relationship'] ?? null,
-                    'user_id' => $idUser ?? null,
-                    'type' => 1,
-                ];
-            } else {
-                // Actualizar si tiene un id válido
-                $url = 'customer/update/beneficiarie';
-                $singleBeneficiary = [
-                    'id' => $beneficiary['idBeneficiary'],
-                    'name' => $beneficiary['name'] ?? null,
-                    'lastname' => $beneficiary['surnames'] ?? null,
-                    'phone' => preg_replace('/\D/', '', $beneficiary['phone'] ?? ''),
-                    'birthdate' => $beneficiary['birthdate'] ?? null,
-                    'relationship' => $beneficiary['relationship'] ?? null,
-                ];
-            }
-            
-            try {
-                $client->request('POST', $url, [
-                    'headers' => $headers,
-                    'body' => json_encode($singleBeneficiary)
-                ]);
-            } catch (RequestException $e) {
-                handleException($e, "Error al procesar beneficiario");
+        // Procesar beneficiarios recibidos para actualizar o crear solo si existen
+        if (!empty($_POST['beneficiaries']) && is_array($_POST['beneficiaries'])) {
+            foreach ($_POST['beneficiaries'] as $beneficiary) {
+                if (empty($beneficiary['idBeneficiary']) || $beneficiary['idBeneficiary'] === 'undefined') {
+                    // Insertar si no tiene un id válido
+                    $url = 'customer/create/beneficiarie';
+                    $singleBeneficiary = [
+                        'customerId' => $beneficiary['customerId'] ?? null,
+                        'name' => $beneficiary['name'] ?? null,
+                        'lastname' => $beneficiary['surnames'] ?? null,
+                        'phone' => preg_replace('/\D/', '', $beneficiary['phone'] ?? ''),
+                        'birthdate' => $beneficiary['birthdate'] ?? null,
+                        'relationship' => $beneficiary['relationship'] ?? null,
+                        'user_id' => $idUser ?? null,
+                        'type' => 1,
+                    ];
+                } else {
+                    // Actualizar si tiene un id válido
+                    $url = 'customer/update/beneficiarie';
+                    $singleBeneficiary = [
+                        'id' => $beneficiary['idBeneficiary'],
+                        'name' => $beneficiary['name'] ?? null,
+                        'lastname' => $beneficiary['surnames'] ?? null,
+                        'phone' => preg_replace('/\D/', '', $beneficiary['phone'] ?? ''),
+                        'birthdate' => $beneficiary['birthdate'] ?? null,
+                        'relationship' => $beneficiary['relationship'] ?? null,
+                    ];
+                }
+    
+                try {
+                    $client->request('POST', $url, [
+                        'headers' => $headers,
+                        'body' => json_encode($singleBeneficiary)
+                    ]);
+                } catch (RequestException $e) {
+                    handleException($e, "Error al procesar beneficiario");
+                }
             }
         }
     

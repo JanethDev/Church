@@ -345,7 +345,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: "POST",
-            url: "views/purchases/purchaseRequest.php",
+            url: "views/purchases/quotationRequest.php",
             data: data,
             success: function(response) {
                 $('#page-content').html(response);
