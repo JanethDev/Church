@@ -157,7 +157,44 @@ namespace church.backend.Controllers
         {
             var claims = HttpContext.Items["Claims"] as IDictionary<string, string>;
             int user_id = int.Parse(claims?["user_id"] ?? "0");
+            data.type = 1;
             GeneralResponse customer = _AccessServices.createBeneficiaries(data,user_id);
+            if (customer.code != 1)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, customer.message);
+            }
+            return Ok(customer.message);
+        }
+
+        /// <summary>
+        /// Creación de beneficiarios de clientes, requiere token
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>crea un nuevo beneficiario</returns>
+        /// <remarks>
+        /// Ejemplo de llenado:
+        ///
+        ///     {
+        ///        "customerId": 1,
+        ///        "name": "Juanito",
+        ///        "lastname": "Perez",
+        ///        "phone" : "6631234567",
+        ///        "birthdate" : "1990-10-25",
+        ///        "relationship" : "hermano"
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="200">Significa que agregó al beneficiario correctamente</response>
+        /// <response code="400">Retorna algun error del beneficiario</response>
+        [HttpPost]
+        [JwtAuthentication]
+        [Route("customer/create/references")]
+        public IActionResult createReferences([FromBody] BeneficiarieRequest data)
+        {
+            var claims = HttpContext.Items["Claims"] as IDictionary<string, string>;
+            int user_id = int.Parse(claims?["user_id"] ?? "0");
+            data.type = 2;
+            GeneralResponse customer = _AccessServices.createBeneficiaries(data, user_id);
             if (customer.code != 1)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, customer.message);
