@@ -11,7 +11,10 @@ namespace church.backend.Models.purchase
         public DateTime datePurchase { get; set; } = new DateTime();
         public int statusId {  get; set; } = new int();
         public string status { get; set; } = string.Empty;
-        public int cryptId {  get; set; } = new int(); 
+        public int cryptId {  get; set; } = new int();
+        public string fullPosition { get; set; } = string.Empty;
+        public string zone { get; set; } = string.Empty;
+        public string aisle { get; set; } = string.Empty;
         public double cryptPrice {  get; set; } = new double();
         public int cryptSpaces {  get; set; } = new int();
         public double maintenanceFee {  get; set; } = new double();
