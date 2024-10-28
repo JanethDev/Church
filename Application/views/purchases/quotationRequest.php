@@ -40,7 +40,10 @@ require_once('auth/session.php');
     $selectedPaymentDescription = isset($paymentMethods[$selectedPaymentValue]) ? $paymentMethods[$selectedPaymentValue] : 'Opción no válida';
     // Función para convertir el formato de precio a número
     function convertToNumber($value) {
-        return floatval(str_replace(['$', 'M.N.', ' ', ','], '', $value));
+        // Elimina los caracteres de formato y convierte a número flotante
+        $number = floatval(str_replace(['$', 'M.N.', ' ', ','], '', $value));
+        // Redondea el número a dos decimales
+        return round($number, 2);
     }
 
     // Fecha actual
@@ -132,6 +135,8 @@ require_once('auth/session.php');
     
     $zone = substr($fullposition, 0, 1);
 
+
+
 ?>
 <div class="card">
     <div class="card-header card-header-green">
@@ -154,16 +159,21 @@ require_once('auth/session.php');
                     <table class="table table-bordered" style="background-color: white">
                         <tr>
                             
-                            <td style="">VENDEDOR</td>
+                            <td>VENDEDOR</td>
+                            <td>
+                                <?php echo($name); ?>
+                            </td>
                             
                         </tr>
                         <tr>
                             
-                            
+                            <td>SERVIDOR</td>
                             <td>
                                 <?php echo($name); ?>
                             </td>
+                            
                         </tr>
+                       
                     </table>
                 </div>
             </div>
@@ -404,21 +414,26 @@ require_once('auth/session.php');
                     </table>
 
                     <table class="table table-bordered" id="financialConditions" style="background-color: white;margin-bottom: 0px;">
-                        <tr>
-                            <td>IMPORTE TOTAL</td>
-                            <td>DESC. APLICADO</td>
-                            <td>PAGO INICIAL</td>
-                            <td>SALDO</td>
-                        </tr>
-                        <tr>
-                            <td><label id="totalAmountLabel"><?php echo '$' . number_format($totalFinal, 2) . ' M.N.'; ?></label></td>
-                            <td><label id="appliedDiscountLabel"><?php echo '$' . number_format($descuentoAplicado, 2) . ' M.N.'; ?></label></td>
-                            <td>
-                                <label id="initialPaymentLabel"><?php echo ($selectedPaymentValue == 1) ? '$' . number_format($totalFinal, 2) . ' M.N.' : '$' . number_format($enganche, 2) . ' M.N.'; ?></label>
-                            </td>
-                            <td><label id="balanceLabel"><?php echo '$' . number_format($saldo, 2) . ' M.N.'; ?></label></td>
-                        </tr>
-                        <tr>
+                    <tr>
+                        <td>IMPORTE TOTAL</td>
+                        <td>DESC. APLICADO</td>
+                        <td>PAGO INICIAL</td>
+                        <td>SALDO</td>
+                    </tr>
+                    <tr>
+                        <td><label id="totalAmountLabel"><?php echo '$' . number_format(round($totalFinal), 2, '.', ',') . ' M.N.'; ?></label></td>
+                        <td><label id="appliedDiscountLabel"><?php echo '$' . number_format(round($descuentoAplicado), 2, '.', ',') . ' M.N.'; ?></label></td>
+                        <td>
+                            <label id="initialPaymentLabel">
+                                <?php
+                                    $initialPaymentValue = ($selectedPaymentValue == 1) ? $totalFinal : $enganche;
+                                    echo '$' . number_format(round($initialPaymentValue), 2, '.', ',') . ' M.N.';
+                                ?>
+                            </label>
+                        </td>
+                        <td><label id="balanceLabel"><?php echo '$' . number_format(round($saldo), 2, '.', ',') . ' M.N.'; ?></label></td>
+                    </tr>
+                    <tr>
                         <?php if ($selectedPaymentValue != 1): ?>
                             <td colspan="4">
                                 EL SALDO SERÁ LIQUIDADO EN &nbsp;
@@ -434,11 +449,11 @@ require_once('auth/session.php');
                                 &nbsp;&nbsp;POR LA CANTIDAD DE: 
                                 &nbsp;$ &nbsp;<span id="payment_amount">0.00</span> M.N.
                             </td>
-                            <?php else: ?>
-                                <td colspan="4"></td>
-                            <?php endif; ?>
-                        </tr>
-                    </table>
+                        <?php else: ?>
+                            <td colspan="4"></td>
+                        <?php endif; ?>
+                    </tr>
+                </table>
                     <?php if ($selectedPaymentValue != 1): ?>
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
                         <tr>
@@ -470,22 +485,22 @@ require_once('auth/session.php');
                         <tr>
                             <td colspan="" style="width:30%">Cuota de mantenimiento anual</td>
                             <td style="width:30%">Deposito de cenizas</td>
-                            <td style="">Otro</td>
+                            <td>Otro</td>
                         </tr>
                         <tr>
-                            <td colspan="" style="">
+                            <td colspan="">
                                 <input type="checkbox" id="ckMaintenance" class="check-box" style="width: 30px; height: 30px" />
                                 <label style="position:absolute;margin-top:4px;margin-left:15px"> 
                                     <span id="maintenance">$ </span> <span id="maintenanceIsShared"> Incluido</span> 
                                 </label> 
                                 <input type="hidden" name="inMaintenance" id="CheckMaintenanceFee" value="False" />
                             </td>
-                            <td style="">
+                            <td>
                                 <input type="checkbox" id="ckAshDeposit" class="check-box" style="width: 30px; height: 30px;" />
                                 <label style="position: absolute; margin-top: 4px; margin-left: 15px">$ <span id="ashDeposit"></span> M.N.</label>
                                 <input type="hidden" name="inAshDeposit" id="CheckAshDepositFee" value="False" />
                             </td>
-                            <td style="">
+                            <td>
                                 <input type="checkbox" id="ckOtherFee" class="check-box" style="width: 30px; height: 30px;" />
                                 <label style="margin-left: 15px">
                                     $ <input type="number" id="otherFeeAmount" class="form-control" placeholder="Ingresa la cantidad" style="width:150px; display:none; margin-left: 15px;" step="0.01" min="0" />M.N.</label>
@@ -607,6 +622,7 @@ $(document).ready(function() {
 
     $('#ckOtherFee').change(function() {
         if ($(this).is(':checked')) {
+            
             // Mostrar el input para ingresar el monto
             $('#otherFeeAmount').show().addClass('d-inline-block');
             $('#CheckOtherFee').val($('#otherFeeAmount').val()); // Asignar el valor ingresado en el campo oculto
@@ -631,11 +647,12 @@ $(document).ready(function() {
         removeMaskOnSubmit: true // Esto quita la máscara al enviar el formulario si es necesario.
     });
     
-
    
-    $('#otherFeeAmount').on('input', function() {
-        var amount = parseFloat($(this).val().replace(/,/g, ''));
+    $('#otherFeeAmount').on('input', function() { 
         
+        var amount = parseFloat($(this).val().replace(/,/g, ''));
+        $('.typepay').prop('checked', false).closest('tr').find('input[type="number"], input[type="text"]').prop('disabled', true).val('');
+
         // Validar si el monto es cero, negativo o NaN
         if (amount <= 0 || isNaN(amount)) {
             Swal.fire({
@@ -652,38 +669,35 @@ $(document).ready(function() {
             }
         }
     });
-    
-    
-    $('#payment_amount').inputmask({
-            alias: 'numeric',
-            groupSeparator: ',',
-            autoGroup: true,
-            digits: 2,
-            digitsOptional: false,
-            placeholder: "0.00",
-            rightAlign: false,
-            removeMaskOnSubmit: true,
-            allowMinus: false, 
-            prefix: '', // 
-            clearMaskOnLostFocus: false 
+    $('#mensuales_checkbox').prop('checked', true);
+        calculatePaymentAmount();  // Llama a la función para calcular y mostrar el monto inicial
+
+        // El resto de tu código, incluyendo el listener de cambio en los checkboxes
+        $('input[name="payment_type"]').change(function() {
+            // Cambia el chequeo de otros checkboxes según el tipo de pago seleccionado
+            if ($(this).attr('id') === 'mensuales_checkbox') {
+                $('#semanales_checkbox').prop('checked', false);
+            } else {
+                $('#mensuales_checkbox').prop('checked', false);
+            }
+
+            // Recalcula el monto según la opción seleccionada
+            calculatePaymentAmount();
         });
-    // Función para calcular el monto según el tipo de pago
+    
+
     function calculatePaymentAmount() {
-        var paymentType = $('input[name="payment_type"]:checked').val();  // Verifica cuál checkbox está seleccionado
-        var totalFinal = parseFloat(<?= $saldo; ?>);  // El saldo total a pagar
-        var semanasDiferencia = <?= $semanasDiferencia; ?>;  // Las semanas totales entre las fechas
-        var mensualidades = <?= $mensualidades; ?>;  // El valor de la mensualidad
+        var paymentType = $('input[name="payment_type"]:checked').val();
+        var totalFinal = parseFloat(<?= round($saldo, 2); ?>); // Redondear saldo a dos decimales en PHP
+        var semanasDiferencia = <?= $semanasDiferencia; ?>;
+        var mensualidades = parseFloat(<?= round($mensualidades, 2); ?>); // Redondear mensualidad a dos decimales en PHP
 
-        // Realizamos el cálculo según el tipo de pago
         if (paymentType === 'semanales') {
-            var totalPorSemana = totalFinal / semanasDiferencia;  // Dividimos el saldo entre las semanas
-            $('#payment_amount').val(totalPorSemana.toFixed(2));  // Mostramos el valor calculado
+            var totalPorSemana = Math.round(totalFinal / semanasDiferencia);
+            $('#payment_amount').text(totalPorSemana.toFixed(2)); // Redondear a entero y mostrar como XXXX.00
         } else {
-            $('#payment_amount').val(mensualidades.toFixed(2));  // Mostramos el valor de mensualidad
+            $('#payment_amount').text(Math.round(mensualidades).toFixed(2)); // Redondear a entero y mostrar como XXXX.00
         }
-
-        // Aplicamos la máscara después de cambiar el valor
-        $('#payment_amount').trigger('input');
     }
 
     // Seleccionar "mensuales" por defecto y calcular el monto
@@ -1096,8 +1110,35 @@ $(document).ready(function() {
         return beneficiarios;
     }
 
-    let maintenanceCost = 0;
-    const ashDepositCost = 920;
+    const totalFinal = parseFloat(<?php echo json_encode($totalFinal); ?>);
+    const enganche = parseFloat(<?php echo json_encode($enganche); ?>);
+    let maintenanceCost = 0; // Ajusta según tus necesidades
+    const ashDepositCost = 920; // Usa tu constante ya definida
+    let otherFeeAmount = 0;
+    const selectedPaymentValue = parseInt(<?php echo json_encode($selectedPaymentValue); ?>);
+
+    // Función para actualizar el total del pago inicial
+    function updateInitialPayment() {
+        let initialPayment = selectedPaymentValue === 1 ? Math.round(totalFinal) : Math.round(enganche);
+
+        if ($('#ckMaintenance').is(':checked')) {
+            initialPayment += Math.round(maintenanceCost);
+        }
+        if ($('#ckAshDeposit').is(':checked')) {
+            initialPayment += Math.round(ashDepositCost);
+        }
+        if ($('#ckOtherFee').is(':checked')) {
+            const otherFeeValue = parseFloat($('#otherFeeAmount').val()) || 0;
+            initialPayment += Math.round(otherFeeValue);
+        }
+
+        $('#initialPaymentLabel').text(`$${initialPayment.toFixed(2)} M.N.`);
+        
+    }
+
+    // Listeners para checkboxes y campo de monto "Otro"
+    $('#ckMaintenance, #ckAshDeposit, #ckOtherFee').change(updateInitialPayment);
+    $('#otherFeeAmount').on('input', updateInitialPayment);
 
 
     // Ocultar "Incluido" al inicio y asegurar que el costo esté oculto
@@ -1171,85 +1212,83 @@ $(document).ready(function() {
             $('#CheckAshDepositFee').val('False'); // Restablecer campo oculto
         }
     });
-    const enganche = parseFloat(<?php echo json_encode($enganche); ?>);
-    const totalFinal = parseFloat(<?php echo json_encode($totalFinal); ?>);
-    const selectedPaymentValue = parseInt(<?php echo json_encode($selectedPaymentValue); ?>); // Agrega esta línea
+    
 
     $('.typepay').change(function() {
-        var row = $(this).closest('tr'); // Obtiene la fila actual
+    var row = $(this).closest('tr'); // Obtiene la fila actual
 
-        // Variables de referencia para total final y enganche
-        const totalFinal = Math.round(parseFloat($('#totalAmountLabel').text().replace(/[^0-9.-]+/g, "")) * 100) || 0;
-        const enganche = Math.round(parseFloat($('#initialPaymentLabel').text().replace(/[^0-9.-]+/g, "")) * 100) || 0;
+    // Variables de referencia para total final y enganche actualizados
+    const totalFinal = Math.round(parseFloat($('#totalAmountLabel').text().replace(/[^0-9.-]+/g, "")) * 100) || 0;
+    const enganche = Math.round(parseFloat($('#initialPaymentLabel').text().replace(/[^0-9.-]+/g, "")) * 100) || 0; // Enganche actualizado
 
-        // Obtener el valor seleccionado para el plan de pago
-        var selectedPaymentValue = parseInt($('#paymentPlanLabel').val());
+    // Obtener el valor seleccionado para el plan de pago
+    var selectedPaymentValue = parseInt($('#paymentPlanLabel').val());
 
-        // Habilitar o deshabilitar los inputs según el estado del checkbox
-        if ($(this).is(':checked')) {
-            // Contar los checkboxes seleccionados
-            var checkedCount = $('.typepay:checked').length;
+    // Habilitar o deshabilitar los inputs según el estado del checkbox
+    if ($(this).is(':checked')) {
+        // Contar los checkboxes seleccionados
+        var checkedCount = $('.typepay:checked').length;
 
-            // Si se seleccionan más de 2, deseleccionar el checkbox actual
-            if (checkedCount > 1) {
-                $(this).prop('checked', false);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: "Solo puedes seleccionar un máximo de 1 opción."
-                });
-            } else {
-                // Habilitar los inputs de la fila actual
-                row.find('input[type="number"], input[type="text"]').prop('disabled', false);
-
-                // Dividir la cantidad si hay 2 seleccionados
-                if (checkedCount === 2) {
-                    var totalAmount = selectedPaymentValue === 1 ? totalFinal : enganche;
-                    var dividedAmount = (totalAmount / 2); // Divide la cantidad sin redondear
-
-                    // Asigna el valor dividido a los inputs de los checkboxes seleccionados
-                    $('.typepay:checked').each(function() {
-                        $(this).closest('tr').find('input[type="number"]').val((dividedAmount / 100).toFixed(2));
-                    });
-                } else {
-                    // Si hay solo un checkbox seleccionado, asigna el total
-                    var totalAmount = selectedPaymentValue === 1 ? totalFinal : enganche;
-                    row.find('input[type="number"]').val((totalAmount / 100).toFixed(2));
-                }
-
-                // Habilitar el input de archivo si es Transferencia o Depósito en Efectivo
-                if ($(this).val() === "3" || $(this).val() === "5") {
-                    row.find('input[type="file"]').prop('disabled', false);
-                }
-            }
+        // Si se seleccionan más de 2, deseleccionar el checkbox actual
+        if (checkedCount > 2) {
+            $(this).prop('checked', false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "Solo puedes seleccionar un máximo de 2 opciones."
+            });
         } else {
-            // Deshabilitar los inputs de la fila actual
-            row.find('input[type="number"], input[type="text"]').prop('disabled', true).val(''); // Limpiar valores
+            // Habilitar los inputs de la fila actual
+            row.find('input[type="number"], input[type="text"]').prop('disabled', false);
 
-            // Deshabilitar el input de archivo si no es Transferencia o Depósito en Efectivo
-            if ($(this).val() === "3" || $(this).val() === "5") {
-                row.find('input[type="file"]').prop('disabled', true);
-            }
-        }
-
-        // Actualizar montos si se edita uno de los campos para mantener la suma correcta
-        $('input[type="number"]').on('input', function() {
-            var checkedCount = $('.typepay:checked').length;
-
-            // Si hay dos métodos seleccionados, recalcular el monto restante
+            // Dividir la cantidad si hay 2 seleccionados
             if (checkedCount === 2) {
                 var totalAmount = selectedPaymentValue === 1 ? totalFinal : enganche;
+                var dividedAmount = (totalAmount / 2); // Divide la cantidad actualizada
 
-                // Obtener el otro campo seleccionado para actualizar
-                var otherInput = $('.typepay:checked').not($(this).closest('tr').find('input[type="checkbox"]')).closest('tr').find('input[type="number"]');
-
-                // Calcular el monto restante y actualizar el otro input
-                var currentAmount = Math.round(parseFloat($(this).val()) * 100) || 0;
-                var remainingAmount = (totalAmount - currentAmount) / 100;
-                otherInput.val(remainingAmount.toFixed(2));
+                // Asigna el valor dividido a los inputs de los checkboxes seleccionados
+                $('.typepay:checked').each(function() {
+                    $(this).closest('tr').find('input[type="number"]').val((dividedAmount / 100).toFixed(2));
+                });
+            } else {
+                // Si hay solo un checkbox seleccionado, asigna el total
+                var totalAmount = selectedPaymentValue === 1 ? totalFinal : enganche;
+                row.find('input[type="number"]').val((totalAmount / 100).toFixed(2));
             }
-        });
+
+            // Habilitar el input de archivo si es Transferencia o Depósito en Efectivo
+            if ($(this).val() === "3" || $(this).val() === "5") {
+                row.find('input[type="file"]').prop('disabled', false);
+            }
+        }
+    } else {
+        // Deshabilitar los inputs de la fila actual
+        row.find('input[type="number"], input[type="text"]').prop('disabled', true).val(''); // Limpiar valores
+
+        // Deshabilitar el input de archivo si no es Transferencia o Depósito en Efectivo
+        if ($(this).val() === "3" || $(this).val() === "5") {
+            row.find('input[type="file"]').prop('disabled', true);
+        }
+    }
+
+    // Actualizar montos si se edita uno de los campos para mantener la suma correcta
+    $('input[type="number"]').on('input', function() {
+        var checkedCount = $('.typepay:checked').length;
+
+        // Si hay dos métodos seleccionados, recalcular el monto restante
+        if (checkedCount === 2) {
+            var totalAmount = selectedPaymentValue === 1 ? totalFinal : enganche;
+
+            // Obtener el otro campo seleccionado para actualizar
+            var otherInput = $('.typepay:checked').not($(this).closest('tr').find('input[type="checkbox"]')).closest('tr').find('input[type="number"]');
+
+            // Calcular el monto restante y actualizar el otro input
+            var currentAmount = Math.round(parseFloat($(this).val()) * 100) || 0;
+            var remainingAmount = (totalAmount - currentAmount) / 100;
+            otherInput.val(remainingAmount.toFixed(2));
+        }
     });
+});
 
 
     
@@ -1316,31 +1355,27 @@ $(document).ready(function() {
     function validatePaymentAmounts(total, enganche) {
         let sum = 0;
 
-        // Sumar las cantidades de los inputs seleccionados
+        console.log('enganche a validar '+enganche);
         if ($('#amount_check').is(':enabled')) {
-            sum += parseFloat($('#amount_check').val()) || 0;
+            sum += Math.round(parseFloat($('#amount_check').val()) || 0);
         }
         if ($('#amount_card').is(':enabled')) {
-            sum += parseFloat($('#amount_card').val()) || 0;
+            sum += Math.round(parseFloat($('#amount_card').val()) || 0);
         }
         if ($('#amount_transfer').is(':enabled')) {
-            sum += parseFloat($('#amount_transfer').val()) || 0;
+            sum += Math.round(parseFloat($('#amount_transfer').val()) || 0);
         }
         if ($('#amount_cash_deposit').is(':enabled')) {
-            sum += parseFloat($('#amount_cash_deposit').val()) || 0;
+            sum += Math.round(parseFloat($('#amount_cash_deposit').val()) || 0);
         }
         if ($('#amount_cash').is(':enabled')) {
-            sum += parseFloat($('#amount_cash').val()) || 0;
+            sum += Math.round(parseFloat($('#amount_cash').val()) || 0);
         }
 
-        // Redondear sum y enganche a dos decimales
         sum = parseFloat(sum.toFixed(2));
         total = parseFloat(total.toFixed(2));
         enganche = parseFloat(enganche.toFixed(2));
 
-        const tolerance = 0.01;  // Tolerancia para la diferencia
-
-        // Verificar que la suma no exceda el enganche o total final
         if (selectedPaymentValue === 1 && sum > total) {
             Swal.fire({
                 icon: 'error',
@@ -1353,23 +1388,6 @@ $(document).ready(function() {
                 icon: 'error',
                 title: 'Error',
                 text: 'La suma de los montos no puede exceder el enganche.',
-            });
-            return false;
-        }
-
-        // Verificar que la suma no sea menor que el enganche o total final
-        if (selectedPaymentValue === 1 && Math.abs(sum - total) > tolerance) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'La suma de los montos no puede ser menor que el total final.',
-            });
-            return false;
-        } else if (selectedPaymentValue !== 1 && Math.abs(sum - enganche) > tolerance) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'La suma de los montos no puede ser menor que el enganche.',
             });
             return false;
         }
@@ -1460,6 +1478,10 @@ $(document).ready(function() {
         const appliedDiscount =  parseFloat($('#appliedDiscountLabel').text().replace(/[^0-9.-]+/g,"")) || 0;
         const initialPayment = parseFloat($('#initialPaymentLabel').text().replace(/[^0-9.-]+/g,"")) || 0;
         const balance = parseFloat($('#balanceLabel').text().replace(/[^0-9.-]+/g,"")) || 0 ;
+        $('#balanceLabel').text(`$${balance.toFixed(2)} M.N.`);
+
+
+        //console.log(initialPayment);
 
         const enganche = initialPayment;
         const totalFinal = totalAmount;
@@ -1625,7 +1647,7 @@ $(document).ready(function() {
                     text: 'Error al realizar la reserva: ' + textStatus,
                 });
             }
-});
+        });
         
         
     });

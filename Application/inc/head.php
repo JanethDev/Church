@@ -1,41 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    
-	<meta charset="utf-8">
-	<title><?= $_title ?? 'Catedral Tijuana' ?></title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title><?= $_title ?? 'Catedral Tijuana' ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="assets/images/fav.ico">
 
-	<!-- App favicon -->
-	<link rel="shortcut icon" href="assets/images/fav.ico">
+    <!-- Bootstrap y CSS Principal -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/Site.css" rel="stylesheet">
 
-	<!-- Bootstrap Css -->
-	<link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css">
-	<link href="assets/css/bootstrap-grid.css" id="bootstrap-style" rel="stylesheet" type="text/css">
-	<link href="assets/css/Site.css" id="bootstrap-style" rel="stylesheet" type="text/css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<link href="assets/css/cryptnichos.css" id="bootstrap-style" rel="stylesheet" type="text/css">
-	<!-- jQuery -->
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jQuery y DataTables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 
-	<!-- Bootstrap JS (Popper.js y Bootstrap JS) -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <!-- Otros scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 	<!-- Select2 -->
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-
-	
-
-	
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>

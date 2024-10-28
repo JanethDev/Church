@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12"><br>
-            <h5>Seleccionar sección</h5>
+            <h5>Solicitudes de prospectos</h5>
         </div>
     </div>
 
@@ -21,4 +21,4 @@
         </thead>
     </table>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+

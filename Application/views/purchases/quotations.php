@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12"><br>
-            <h5>Seleccionar sección</h5>
+            <h5>Solicitudes</h5>
         </div>
     </div>
 

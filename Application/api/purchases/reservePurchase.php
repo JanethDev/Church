@@ -304,12 +304,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         $body = $response->getBody()->getContents();
+        $newPurchase= json_decode($body, true);
+        
+        $purchaseId = $newPurchase;  
 
         //var_dump($body);
 
         header('Content-Type: application/json');
-        echo json_encode($body);
-
+        echo json_encode(["purchaseId" => $purchaseId]);
     } catch (RequestException $e) {
         if ($e->hasResponse()) {
             $errorBody = $e->getResponse()->getBody()->getContents();
