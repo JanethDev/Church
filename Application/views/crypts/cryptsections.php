@@ -1,7 +1,7 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
     $response = $_POST['response'];
-   
+
     // Decodifica el JSON recibido
     $data = json_decode($response, true);
 
@@ -9,16 +9,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
     if ($data !== null && isset($data['crypts'])) { 
         $positions = $data['crypts']; // Accede a 'crypts'
 
- ?>
+        // Obtener el número máximo de columnas desde la posición completa
+        $maxColumns = 0;
+        foreach ($positions as $pos) {
+            if (isset($pos['position'])) {
+                // Extraer el número completo de la posición y actualizar $maxColumns si es mayor
+                $number = (int) filter_var($pos['position'], FILTER_SANITIZE_NUMBER_INT);
+                if ($number > $maxColumns) {
+                    $maxColumns = $number;
+                }
+            }
+        }
+?>
 <div class="table-container">
     <div class="row">
         <div class="col-md-12"><br>
-            <h5>Nicho seleccionado: <a id="aisle"></a>, <a id="posicion"></a> </h5>
+            <h5>Nicho seleccionado: <a id="aisle"></a>, <a id="posicion"></a></h5>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12"><br>
-            <h5>Detalles de la urna </h5>
+            <h5>Detalles de la urna</h5>
         </div>
     </div>
     <div class="row">
@@ -26,10 +37,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
             <h5>Urna: <a id="urna"></a></h5>
         </div>
         <div class="col-md-3"><br>
-            <h5>Tipo: <a id="tipo"></a> </h5>
+            <h5>Tipo: <a id="tipo"></a></h5>
         </div>
         <div class="col-md-3"><br>
-            <h5>Precio: <a id="precio"></a> </h5>
+            <h5>Precio: <a id="precio"></a></h5>
         </div>
         <div class="col-md-3"><br>
             <button type="button" class="btn btn-success" id="btnPaymentMethod" style="width: 100%;">Forma de pago</button>
@@ -38,36 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
     <table id="tablecryptsection">
         <thead>
             <tr>
-                <th></th>
-                <?php 
-                // Obtener el número máximo de columnas a partir de las posiciones disponibles
-                $maxColumns = 0;
-                foreach ($positions as $pos) {
-                    // Asegúrate de que $pos es un arreglo y que contiene 'full_position' o 'position'
-                    if (is_array($pos) && isset($pos['position'])) {
-                        // Obtener el número de la posición, asumiendo que el formato es como "AJ10U01A1"
-                        $number = intval(substr($pos['position'], -1)); // Cambiado a 'full_position'
-                        if ($number > $maxColumns) {
-                            $maxColumns = $number;
-                        }
-                    } else {
-                        echo '<p>Error: posición no válida.</p>'; // Manejo de error
-                    }
-                }
-                
-
-                // Función para obtener el nombre de posición
-                function getPositionName($pos) {
-                    return $pos['position'];
-                }
-
-                // Función para formatear el precio
-                function formatPrice($price) {
-                    return '$' . number_format($price, 2, '.', ',');
-                }
-                ?>
-
-                <!-- Crear las columnas en el encabezado -->
+                <th>Letra</th>
                 <?php for ($j = 1; $j <= $maxColumns; $j++): ?>
                     <th><?= $j ?></th>
                 <?php endfor; ?>
@@ -91,7 +73,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                         <?php 
                         $positionFound = false;
                         foreach ($positions as $pos) {
-                            if ($pos['position'] == $letter . $k) {
+                            $positionNumber = (int) filter_var($pos['position'], FILTER_SANITIZE_NUMBER_INT);
+                            if ($pos['position'][0] == $letter && $positionNumber == $k) {
                                 $positionFound = true;
                                 break;
                             }
@@ -102,14 +85,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                                 data-id="<?= $pos['id'] ?>"
                                 data-full-position="<?= htmlspecialchars($pos['full_position']) ?>"
                                 data-zone="<?= htmlspecialchars($pos['zone']) ?>"
-                                data-position-name="<?= htmlspecialchars(getPositionName($pos)) ?>"
-                                data-is-shared="<?= $pos['is_shared']?>"
+                                data-position-name="<?= htmlspecialchars($pos['position']) ?>"
+                                data-is-shared="<?= $pos['is_shared'] ?>"
                                 data-places-shared="<?= $pos['places_shared'] ?>"
-                                data-price="<?= $pos['price'] ?> " 
-                                data-price-shared="<?= $pos['price_shared']?>"
+                                data-price="<?= $pos['price'] ?>" 
+                                data-price-shared="<?= $pos['price_shared'] ?>"
                                 data-status-id="<?= $pos['status_id'] ?>"
                                 data-level="<?= $pos['levelNumber'] ?>"
-                                data-aisle="<?=  htmlspecialchars($pos['aisle']); ?>"
+                                data-aisle="<?= htmlspecialchars($pos['aisle']); ?>"
                                 data-status="<?= htmlspecialchars($pos['status']) ?>">
                                 <div class="td-inner">
                                     <?php
@@ -135,8 +118,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                                         }
                                     }
                                     ?>
-                                    <img src="<?= $imgSrc ?>" alt="<?= $pos['status'] ?>" ></img>
-                                    <span class="position-name"><?= getPositionName($pos) ?></span>
+                                    <img src="<?= $imgSrc ?>" alt="<?= $pos['status'] ?>"></img>
+                                    <span class="position-name"><?= $pos['position'] ?></span>
                                 </div>
                             </td>
                         <?php else: ?>
@@ -163,8 +146,7 @@ document.querySelectorAll('#tablecryptsection .disponible').forEach(td => {
         } else {
             document.querySelectorAll('#tablecryptsection .disponible').forEach(el => {
                 el.classList.remove('selected');
-                
-                // Restaurar la imagen original según el estado del elemento
+
                 if (el.dataset.isShared == 1 && el.dataset.status === 'disponible') {
                     el.querySelector('.td-inner img').src = '../../assets/img/cuadro-compartida.png';
                 } else {
@@ -188,30 +170,26 @@ document.querySelectorAll('#tablecryptsection .disponible').forEach(td => {
                 }
             });
 
-            // Cambiar imagen de la celda seleccionada a 'cuadro-selected.png'
             this.classList.add('selected');
             this.querySelector('.td-inner img').src = '../../assets/img/cuadro-selected.png';
 
-            // Actualizar los detalles de la posición seleccionada
             document.getElementById('posicion').textContent = this.dataset.fullPosition;
             document.getElementById('aisle').textContent = this.dataset.aisle;
             document.getElementById('urna').textContent = this.dataset.positionName;
             const tipo = this.dataset.isShared == 1 ? 'Individual' : 'Familiar';
             document.getElementById('tipo').textContent = tipo;
 
-            // Condición basada en is_shared
             if (this.dataset.isShared == 1) {
-                const precioShared = parseFloat(this.dataset.priceShared); // Convertir a número
-                document.getElementById('precio').textContent = formatPrice(precioShared); // Formatear precio
+                const precioShared = parseFloat(this.dataset.priceShared); 
+                document.getElementById('precio').textContent = formatPrice(precioShared); 
             } else {
-                const precio = parseFloat(this.dataset.price); // Convertir a número
-                document.getElementById('precio').textContent = formatPrice(precio); // Formatear precio
+                const precio = parseFloat(this.dataset.price); 
+                document.getElementById('precio').textContent = formatPrice(precio); 
             }
         }
     });
 });
 </script>
-
 <?php
     } else {
         echo '<p>Error: Datos JSON inválidos.</p>';
