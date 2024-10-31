@@ -24,7 +24,7 @@
                     <ul class="navbar-nav mr-auto">
                         <?php if($role == 'Administrador' || !$role == 'Facturacion' || !$role == 'Ventas' || !$role == 'Encargado'  ) {?>
 
-                            <li style="margin-right:15px; color:white"><a <?php if ($current_page == 'solicitud') echo 'class="active"' ?> href="solicitud">Solicitud</a></li>
+                            <li style="margin-right:15px; color:white"><a href="javascript:void(0);" onclick="loadPage('solicitud')">Solicitud</a></li>
                             <li style="margin-right:15px; color:white"><a <?php if ($current_page == 'cotizaciones') echo 'class="active"'; ?> href="cotizaciones">Cotizaciones</a></li>
                             <li style="margin-right:15px; color:white"><a <?php if ($current_page == 'solicitudes') echo 'class="active"' ?> href="solicitudes">Solicitudes()</a></li>
                             <!--<li style="margin-right:15px; color:white"><a <?php //if ($current_page == 'pagos') echo 'class="active"' ?> href="pagos">Pagos</a></li>-->
