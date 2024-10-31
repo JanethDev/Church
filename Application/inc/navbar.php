@@ -136,8 +136,8 @@
     </nav>
 </div>
 <script>
+
 function downloadDocument(doc) {
-    // Crear un elemento de anclaje
     const link = document.createElement('a');
     
     switch (doc) {
@@ -148,18 +148,34 @@ function downloadDocument(doc) {
             link.href = '../views/reglamento_columbario.php';
             break;
         default:
-            die('Documento no válido.');
-        }
-    // Establecer el atributo de descarga
-    link.download = doc + '.pdf'; // Opcional: establece un nombre de archivo
-    
-    // Agregar el enlace al DOM
+            console.error('Documento no válido.');
+            return;
+    }
+    link.download = doc + '.pdf';
     document.body.appendChild(link);
-    
-    // Hacer clic en el enlace para iniciar la descarga
     link.click();
-    
-    // Remover el enlace del DOM
     document.body.removeChild(link);
 }
+
+// Asigna el evento a todos los enlaces
+document.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', function(event) {
+        event.preventDefault(); // Evita el comportamiento predeterminado
+
+        const href = link.getAttribute('href');
+        if (href === 'index') {
+            window.location.href = 'index';
+        } else if (href === 'cotizaciones') {
+            window.location.href = 'cotizaciones';
+        } else if (href === 'solicitudes') {
+            window.location.href = 'solicitudes';
+        } else if (href === '#') {
+            console.log('Dropdown o enlace sin acción');
+        } else if (href === 'javascript:void(0);') {
+            loadPage('solicitud');
+        } else {
+            window.location.href = href;
+        }
+    });
+});
 </script>
