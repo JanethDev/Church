@@ -136,17 +136,17 @@ namespace church.backend.DataBase
 
                     if(response.code > 0)
                     {
-                        double amountPayed = 0;
+                        //double amountPayed = 0;
                         foreach(var item in data.payments)
                         {
-                            item.number = 0;
+                            /*item.number = 0;
                             item.date = DateTime.Now;
                             item.statusId = (int)payment_status.pagado;
-                            amountPayed = amountPayed + item.paymentAmount;
+                            amountPayed = amountPayed + item.paymentAmount;*/
                             CreatePayment(item, response.code);
                         }
 
-                        double amount  = (data.cryptPrice+data.ashDeposit- amountPayed) /data.monthlyPayments;
+                        /*double amount  = (data.cryptPrice+data.ashDeposit- amountPayed) /data.monthlyPayments;
 
                         for(int item = 1; item <= data.monthlyPayments; item++)
                         {
@@ -159,7 +159,7 @@ namespace church.backend.DataBase
                                 statusId = (int)payment_status.pendiente
                             };
                             CreatePayment(payment, response.code);
-                        }
+                        }*/
                         response.code = 1;
                     }
                 }
@@ -284,6 +284,10 @@ namespace church.backend.DataBase
                                     aptNumber = reader["apt_number"].ToString()!,
                                     customerMunicipality = reader["customer_municipality"].ToString()!,
                                     neighborhood = reader["neighborhood"].ToString()!,
+                                    cryptTransferId = _nv.nullInt(reader["cat_crypts_id_transfer"].ToString()!),
+                                    fullPositionTransfer = reader["crypt_transfer_position"].ToString()!,
+                                    zoneTransfer = reader["zone_transfer"].ToString()!,
+                                    aisleTransfer = reader["aisle_transfer"].ToString()!,
                                 };
                                 temporalPurchar.payments = paymentsByPurchase(temporalPurchar.purchaseId);
                                 temporalPurchar.beneficiaries = consultBeneficiaries(temporalPurchar.purchaseId);
@@ -345,6 +349,41 @@ namespace church.backend.DataBase
                                     referencePersonPhone1 = reader["reference_person_1_phone"].ToString()!,
                                     referencePerson2 = reader["reference_person_2"].ToString()!,
                                     referencePersonPhone2 = reader["reference_person_2_phone"].ToString()!,
+                                    otherFee = _nv.nullDouble(reader["other_fee"].ToString()!),
+                                    signature = reader["signature"].ToString()!,
+                                    customerNumber = _nv.nullInt(reader["customer_number"].ToString()!),
+                                    customerName = reader["name"].ToString()!,
+                                    customerPsurname = reader["psurname"].ToString()!,
+                                    customerMsurname = reader["msurname"].ToString()!,
+                                    customerPhone = reader["phone"].ToString()!,
+                                    customerEmail = reader["email"].ToString()!,
+                                    customerRFC = reader["rfc"].ToString()!,
+                                    customerZipCode = reader["cp_code"].ToString()!,
+                                    customerAddress = reader["address"].ToString()!,
+                                    customerStateId = _nv.nullInt(reader["cat_states_id"].ToString()!),
+                                    customerTownId = _nv.nullInt(reader["cat_towns_id"].ToString()!),
+                                    customerSocialReason = reader["social_reason"].ToString()!,
+                                    customerBirthdate = _nv.nullDate(reader["birthdate"].ToString()!),
+                                    customerBirthplace = reader["birth_place"].ToString()!,
+                                    customerCivilStatus = reader["civil_status"].ToString()!,
+                                    customerOccupation = reader["occupation"].ToString()!,
+                                    businessName = reader["business_name"].ToString()!,
+                                    businessAddress = reader["business_address"].ToString()!,
+                                    businessPhone = reader["business_phone"].ToString()!,
+                                    businessExt = reader["business_ext"].ToString()!,
+                                    deputation = reader["deputation"].ToString()!,
+                                    averageIncome = _nv.nullDouble(reader["average_income"].ToString()!),
+                                    businessCity = reader["business_city"].ToString()!,
+                                    businessMunicipality = reader["business_ municipality"].ToString()!,
+                                    businessState = reader["business_state"].ToString()!,
+                                    houseNumber = reader["house_number"].ToString()!,
+                                    aptNumber = reader["apt_number"].ToString()!,
+                                    customerMunicipality = reader["customer_municipality"].ToString()!,
+                                    neighborhood = reader["neighborhood"].ToString()!,
+                                    cryptTransferId = _nv.nullInt(reader["cat_crypts_id_transfer"].ToString()!),
+                                    fullPositionTransfer = reader["crypt_transfer_position"].ToString()!,
+                                    zoneTransfer = reader["zone_transfer"].ToString()!,
+                                    aisleTransfer = reader["aisle_transfer"].ToString()!,
                                 };
                                 temporalPurchar.payments = paymentsByPurchase(temporalPurchar.purchaseId);
                                 response.data.Add(temporalPurchar);
@@ -405,6 +444,41 @@ namespace church.backend.DataBase
                                     referencePersonPhone1 = reader["reference_person_1_phone"].ToString()!,
                                     referencePerson2 = reader["reference_person_2"].ToString()!,
                                     referencePersonPhone2 = reader["reference_person_2_phone"].ToString()!,
+                                    otherFee = _nv.nullDouble(reader["other_fee"].ToString()!),
+                                    signature = reader["signature"].ToString()!,
+                                    customerNumber = _nv.nullInt(reader["customer_number"].ToString()!),
+                                    customerName = reader["name"].ToString()!,
+                                    customerPsurname = reader["psurname"].ToString()!,
+                                    customerMsurname = reader["msurname"].ToString()!,
+                                    customerPhone = reader["phone"].ToString()!,
+                                    customerEmail = reader["email"].ToString()!,
+                                    customerRFC = reader["rfc"].ToString()!,
+                                    customerZipCode = reader["cp_code"].ToString()!,
+                                    customerAddress = reader["address"].ToString()!,
+                                    customerStateId = _nv.nullInt(reader["cat_states_id"].ToString()!),
+                                    customerTownId = _nv.nullInt(reader["cat_towns_id"].ToString()!),
+                                    customerSocialReason = reader["social_reason"].ToString()!,
+                                    customerBirthdate = _nv.nullDate(reader["birthdate"].ToString()!),
+                                    customerBirthplace = reader["birth_place"].ToString()!,
+                                    customerCivilStatus = reader["civil_status"].ToString()!,
+                                    customerOccupation = reader["occupation"].ToString()!,
+                                    businessName = reader["business_name"].ToString()!,
+                                    businessAddress = reader["business_address"].ToString()!,
+                                    businessPhone = reader["business_phone"].ToString()!,
+                                    businessExt = reader["business_ext"].ToString()!,
+                                    deputation = reader["deputation"].ToString()!,
+                                    averageIncome = _nv.nullDouble(reader["average_income"].ToString()!),
+                                    businessCity = reader["business_city"].ToString()!,
+                                    businessMunicipality = reader["business_ municipality"].ToString()!,
+                                    businessState = reader["business_state"].ToString()!,
+                                    houseNumber = reader["house_number"].ToString()!,
+                                    aptNumber = reader["apt_number"].ToString()!,
+                                    customerMunicipality = reader["customer_municipality"].ToString()!,
+                                    neighborhood = reader["neighborhood"].ToString()!,
+                                    cryptTransferId = _nv.nullInt(reader["cat_crypts_id_transfer"].ToString()!),
+                                    fullPositionTransfer = reader["crypt_transfer_position"].ToString()!,
+                                    zoneTransfer = reader["zone_transfer"].ToString()!,
+                                    aisleTransfer = reader["aisle_transfer"].ToString()!,
                                 };
                                 temporalPurchar.payments = paymentsByPurchase(temporalPurchar.purchaseId);
                                 response.data.Add(temporalPurchar);
@@ -502,6 +576,83 @@ namespace church.backend.DataBase
             catch
             {
                 return new List<Beneficiarie>();
+            }
+        }
+
+        public GeneralResponse updateStatusPurchase(int purchaseId, int statusId)
+        {
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:purchase:updateStatusPurchase"]!
+                                                , purchaseId
+                                                , statusId
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = ex.Message
+                };
+            }
+        }
+
+        public GeneralResponse updateTuitionPurchase(int purchaseId)
+        {
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:purchase:updateTuitionPurchase"]!
+                                                , purchaseId
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = ex.Message
+                };
             }
         }
     }
