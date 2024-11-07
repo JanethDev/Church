@@ -198,6 +198,44 @@ namespace church.backend.services.DataBase
             }
         }
 
+        public GeneralResponse updateCustomerNumber(int customerId) 
+        {
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:access:updateCustomerNumber"]!
+                        , customerId
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = ex.Message
+                };
+            }
+        }
+
         public GeneralResponse createCustomer(create_customer_request data)
         {
             try
@@ -516,8 +554,7 @@ namespace church.backend.services.DataBase
                       FROM [cat_customers] cus
                       LEFT JOIN cat_states st ON st.id = cus.cat_states_id
                       LEFT JOIN cat_towns tw ON tw.id = cus.cat_towns_id
-                      WHERE (email like '%{0}%'
-                      OR cus.phone like '%{0}%'
+                      WHERE (cus.phone like '%{0}%'
                       OR cus.[name] like '%{0}%'
                       OR cus.msurname like '%{0}%'
                       OR cus.psurname like '%{0}%'

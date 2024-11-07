@@ -37,5 +37,9 @@ namespace church.backend.Models.purchase
         public string referencePerson2 { get; set; } = string.Empty;
         public string referencePersonPhone2 { get; set; } = string.Empty;
         public List<payment_request> payments { get; set; } = new List<payment_request>();
+
+        public double otherFee {  get; set; } = new double();
+        public int cryptTransferId {  get; set; } = new int();
+        public int userPromotorId {  get; set; } = new int();
     }
 }
