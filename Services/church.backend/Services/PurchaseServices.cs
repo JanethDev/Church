@@ -1,4 +1,4 @@
-﻿using church.backend.DataBase;
+using church.backend.DataBase;
 using church.backend.Models.catalogue.crypts;
 using church.backend.Models.catalogue.discounts;
 using church.backend.Models.enums;
@@ -6,7 +6,9 @@ using church.backend.Models.purchase;
 using church.backend.services.DataBase;
 using church.backend.services.JsonWebToken;
 using church.backend.services.Models;
+using church.backend.services.Models.access;
 using church.backend.services.Models.enums;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace church.backend.Services
 {
@@ -121,7 +123,16 @@ namespace church.backend.Services
             }
             data.userId = userId;
             data.datePurchase = DateTime.Now;
-            return _purchaseDB.CreatePurchase(data);
+
+            GeneralResponse response = _purchaseDB.CreatePurchase(data);
+            
+            //Guarda id de contrato
+            if(response.code!=-1 && data.statusId == (int)purchase_status.proceso)
+            {
+                _purchaseDB.updateTuitionPurchase(response.code);
+            }
+
+            return response;
         }
     
         public PurchaseResponse ConsultPurchaceByClient(int customerId)
@@ -144,6 +155,91 @@ namespace church.backend.Services
                 };
             }
             return _purchaseDB.ConsultPurchaceByStatus(statusId);
+        }
+
+        public PurchaseResponse ConsultPurchaceById(int purchaseId)
+        {
+            if (purchaseId <= 0)
+            {
+                return new PurchaseResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar el id de la compra"
+                };
+            }
+            return _purchaseDB.ConsultPurchaceById(purchaseId);
+        }
+
+        public GeneralResponse updateStatusPurchase(int purchaseId, int statusId, int userId)
+        {
+            if (purchaseId <= 0)
+            {
+                return new PurchaseResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar el id de la compra"
+                };
+            }
+            if (statusId <= 0)
+            {
+                return new PurchaseResponse()
+                {
+                    code = -1,
+                    message = "Es necesario enviar el id de estatus"
+                };
+            }
+
+            if(statusId == (int)purchase_status.cancelado)
+            {
+                PurchaseResponse purchaseData = _purchaseDB.ConsultPurchaceById(purchaseId);
+                
+                if (purchaseData.code != 1)
+                {
+                    return new GeneralResponse()
+                    {
+                        code = purchaseData.code,
+                        message = purchaseData.message
+                    };
+                }
+
+                crypt_response crypt1 = _cryptDB.consultById(purchaseData.data[0].cryptId);
+                update_crypt_request updateRequest1 = new update_crypt_request()
+                {
+                    id = crypt1.data[0].id,
+                    status_id = (int)crypt_status.disponible,
+                    is_shared = crypt1.data[0].is_shared,
+                    price = crypt1.data[0].price,
+                    price_shared = crypt1.data[0].price_shared,
+                    places_shared = crypt1.data[0].places_shared,
+                };
+                _cryptDB.updateCrypt(updateRequest1, userId);
+
+                if (purchaseData.data[0].cryptTransferId != 0)
+                {
+                    crypt_response crypt2 = _cryptDB.consultById(purchaseData.data[0].cryptTransferId);
+                    update_crypt_request updateRequest2 = new update_crypt_request()
+                    {
+                        id = crypt2.data[0].id,
+                        status_id = (int)crypt_status.disponible,
+                        is_shared = crypt2.data[0].is_shared,
+                        price = crypt2.data[0].price,
+                        price_shared = crypt2.data[0].price_shared,
+                        places_shared = crypt2.data[0].places_shared,
+                    };
+                    _cryptDB.updateCrypt(updateRequest2, userId);
+                }
+            }
+
+            if (statusId == (int)purchase_status.proceso)
+            {
+                _purchaseDB.updateStatusPurchase(purchaseId, statusId);
+                return _purchaseDB.updateTuitionPurchase(purchaseId);
+            }
+            else
+            {
+
+                return _purchaseDB.updateStatusPurchase(purchaseId, statusId);
+            }
         }
     }
 }
