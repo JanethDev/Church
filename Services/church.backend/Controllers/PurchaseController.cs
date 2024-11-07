@@ -80,7 +80,10 @@ namespace church.backend.Controllers
         ///                         "paymentAmount" : 10000.30,
         ///                         "concept" : "pago inicial",
         ///                         "typePaymentId" : 1,
-        ///                         "currencyId" : 1
+        ///                         "currencyId" : 1,
+        ///                         "number" : 1, //numero de pago
+        ///                         "date" : "2024-01-01", //fecha de pago
+        ///                         "statusId" : 2012 // pendiente - 2012, pagado - 2013
         ///                     }
         ///         ]
         ///     }
@@ -191,6 +194,68 @@ namespace church.backend.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest, response.message);
             }
             return Ok(response.data);
+        }
+
+
+        /// <summary>
+        /// Devuelve la lista las compras por id
+        /// </summary>
+        /// <returns>Devuelve la lista las compras por id</returns>
+        /// <response code="200">lista las compras por id</response>
+        /// <response code="400">Retorna algun error</response>
+        [HttpGet]
+        [JwtAuthentication]
+        [Route("purchase/by/id")]
+        public IActionResult ConsultPurchaceById([FromQuery] int puschaseId)
+        {
+            PurchaseResponse response = _PurchaseServices.ConsultPurchaceById(puschaseId);
+            if (response.code != 1)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, response.message);
+            }
+            return Ok(response.data);
+        }
+
+        /// <summary>
+        /// Devuelve si se actualizó o no
+        /// </summary>
+        /// <returns>Devuelve si se actualizo</returns>
+        /// <response code="200">menaje de exito</response>
+        /// <response code="400">Retorna algun error</response>
+        [HttpGet]
+        [JwtAuthentication]
+        [Route("cancel/purchase")]
+        public IActionResult CancelPurchase([FromQuery] int puschaseId)
+        {
+            var claims = HttpContext.Items["Claims"] as IDictionary<string, string>;
+            int user_id = int.Parse(claims?["user_id"] ?? "0");
+            GeneralResponse response = _PurchaseServices.updateStatusPurchase(puschaseId, (int)purchase_status.cancelado, user_id);
+            if (response.code != 1)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, response.message);
+            }
+            return Ok(response.message);
+        }
+
+        /// <summary>
+        /// Devuelve si se actualizó o no
+        /// </summary>
+        /// <returns>Devuelve si se actualizo</returns>
+        /// <response code="200">menaje de exito</response>
+        /// <response code="400">Retorna algun error</response>
+        [HttpGet]
+        [JwtAuthentication]
+        [Route("confirm/purchase")]
+        public IActionResult ConfirmPurchase([FromQuery] int puschaseId)
+        {
+            var claims = HttpContext.Items["Claims"] as IDictionary<string, string>;
+            int user_id = int.Parse(claims?["user_id"] ?? "0");
+            GeneralResponse response = _PurchaseServices.updateStatusPurchase(puschaseId, (int)purchase_status.proceso, user_id);
+            if (response.code != 1)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, response.message);
+            }
+            return Ok(response.message);
         }
     }
 }
