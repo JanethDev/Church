@@ -1,4 +1,5 @@
-﻿using church.backend.services.JsonWebToken;
+﻿using church.backend.Models.enums;
+using church.backend.services.JsonWebToken;
 using church.backend.services.Models;
 using church.backend.services.Models.register;
 using church.backend.services.Services;

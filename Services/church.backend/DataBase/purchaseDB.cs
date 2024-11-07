@@ -236,6 +236,9 @@ namespace church.backend.DataBase
                                     statusId = _nv.nullInt(reader["cat_status_id"].ToString()!),
                                     status = reader["status"].ToString()!,
                                     cryptId = _nv.nullInt(reader["cat_crypts_id"].ToString()!),
+                                    fullPosition = reader["full_position"].ToString()!,
+                                    zone = reader["zone"].ToString()!,
+                                    aisle = reader["aisle"].ToString()!,
                                     cryptPrice = _nv.nullDouble(reader["crypt_price"].ToString()!),
                                     cryptSpaces = _nv.nullInt(reader["crypt_spaces"].ToString()!),
                                     maintenanceFee = _nv.nullDouble(reader["maintenance_fee"].ToString()!),
@@ -310,6 +313,66 @@ namespace church.backend.DataBase
                 {
                     string query = string.Format(_configuration["queries:purchase:purchaseByStatus"]!
                                                 , statusId
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Purchase temporalPurchar = new Purchase(){
+                                    purchaseId = _nv.nullInt(reader["id"].ToString()!),
+                                    tuition = reader["tuition"].ToString()!,
+                                    datePurchase = _nv.nullDate(reader["date_purchase"].ToString()!),
+                                    statusId = _nv.nullInt(reader["cat_status_id"].ToString()!),
+                                    status = reader["status"].ToString()!,
+                                    cryptId = _nv.nullInt(reader["cat_crypts_id"].ToString()!),
+                                    fullPosition = reader["full_position"].ToString()!,
+                                    zone = reader["zone"].ToString()!,
+                                    aisle = reader["aisle"].ToString()!,
+                                    cryptPrice = _nv.nullDouble(reader["crypt_price"].ToString()!),
+                                    cryptSpaces = _nv.nullInt(reader["crypt_spaces"].ToString()!),
+                                    maintenanceFee = _nv.nullDouble(reader["maintenance_fee"].ToString()!),
+                                    federalTax = _nv.nullDouble(reader["federal_tax"].ToString()!),
+                                    discountId = _nv.nullInt(reader["cat_discounts_id"].ToString()!),
+                                    discountAmount = _nv.nullDouble(reader["discount"].ToString()!),
+                                    ashDeposit = _nv.nullDouble(reader["ash_deposits"].ToString()!),
+                                    customerId = _nv.nullInt(reader["cat_customers_id"].ToString()!),
+                                    userId = _nv.nullInt(reader["cat_customers_id"].ToString()!),
+                                    monthlyPayments = _nv.nullInt(reader["monthly_payments"].ToString()!),
+                                    referencePerson1 = reader["reference_person_1"].ToString()!,
+                                    referencePersonPhone1 = reader["reference_person_1_phone"].ToString()!,
+                                    referencePerson2 = reader["reference_person_2"].ToString()!,
+                                    referencePersonPhone2 = reader["reference_person_2_phone"].ToString()!,
+                                };
+                                temporalPurchar.payments = paymentsByPurchase(temporalPurchar.purchaseId);
+                                response.data.Add(temporalPurchar);
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new PurchaseResponse()
+                {
+                    code = -1,
+                    message = ex.Message
+                };
+            }
+        }
+
+        public PurchaseResponse ConsultPurchaceById(int purchaseId)
+        {
+            try
+            {
+                PurchaseResponse response = new PurchaseResponse() { code = 1};
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:purchase:purchaseById"]!
+                                                , purchaseId
                     );
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {

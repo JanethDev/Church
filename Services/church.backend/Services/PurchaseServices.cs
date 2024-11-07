@@ -1,6 +1,7 @@
 ﻿using church.backend.DataBase;
 using church.backend.Models.catalogue.crypts;
 using church.backend.Models.catalogue.discounts;
+using church.backend.Models.enums;
 using church.backend.Models.purchase;
 using church.backend.services.DataBase;
 using church.backend.services.JsonWebToken;
@@ -34,6 +35,11 @@ namespace church.backend.Services
 
         public GeneralResponse CreatePurchase(purchase_request data, int userId)
         {
+            //valida si el vendedor tambien es el promotor
+            if(data.userPromotorId<=0){
+                data.userPromotorId = data.userId;
+            }
+
             if (data.customerId <= 0)
             {
                 return new GeneralResponse()
@@ -52,7 +58,11 @@ namespace church.backend.Services
                 };
             }
 
-            crypt_response crypt = _cryptDB.consultById(data.cryptId);
+            int tempCryptId = data.cryptTransferId<=0
+                              ? data.cryptId
+                              : data.cryptTransferId;
+                              
+            crypt_response crypt = _cryptDB.consultById(tempCryptId);
             if(crypt.data.Count == 0)
             {
                 return new GeneralResponse()
@@ -62,7 +72,20 @@ namespace church.backend.Services
                 };
             }
             crypt tempCrypt = crypt.data[0];
-            tempCrypt.status_id = data.statusId==(int)purchase_status.proceso? 1001 : 1009; //si la transaccion es de compra se pone como vendido si no se pone como apartado
+
+            if(tempCrypt.status_id != (int)crypt_status.disponible)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = "La cripta seleccionada no se encuentra disponible"
+                };
+            }
+
+            tempCrypt.status_id = data.statusId==(int)purchase_status.proceso
+                                ? (int)crypt_status.vendido 
+                                : (int)crypt_status.apartado;
+                                
             update_crypt_request updateReques = new update_crypt_request(){
                 id = tempCrypt.id,
                 status_id = tempCrypt.status_id,
@@ -73,6 +96,22 @@ namespace church.backend.Services
             };
             _cryptDB.updateCrypt(updateReques, userId);
             data.cryptPrice = tempCrypt.price;
+
+            //actualiza cripta temporal como apartada
+            if(data.cryptTransferId>0){
+                crypt_response cryptTemp = _cryptDB.consultById(data.cryptId);
+                if(cryptTemp.data.Count > 0){
+                    update_crypt_request updateRequest = new update_crypt_request(){
+                        id = cryptTemp.data[0].id,
+                        status_id = (int)crypt_status.apartado,
+                        is_shared = cryptTemp.data[0].is_shared,
+                        price = cryptTemp.data[0].price,
+                        price_shared = cryptTemp.data[0].price_shared,
+                        places_shared = cryptTemp.data[0].places_shared - data.cryptSpaces,
+                    };
+                    _cryptDB.updateCrypt(updateRequest, userId);
+                }
+            }
 
             if (data.discountId > 0)
             {

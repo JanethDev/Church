@@ -30,7 +30,6 @@ namespace church.backend.Models.purchase
         public string referencePersonPhone2 { get; set; } = string.Empty;
         public double otherFee { get; set; } = new double();
         public string signature { get; set; } = string.Empty;
-
         public int customerNumber {  get; set; } = new int();
         public string customerName { get; set; } = string.Empty;
         public string customerPsurname { get; set; } = string.Empty;
@@ -60,6 +59,10 @@ namespace church.backend.Models.purchase
         public string aptNumber { get; set; } = string.Empty;
         public string customerMunicipality { get; set; } = string.Empty;
         public string neighborhood { get; set; } = string.Empty;
+        public int cryptTransferId {  get; set; } = new int();
+        public string fullPositionTransfer { get; set; } = string.Empty;
+        public string zoneTransfer { get; set; } = string.Empty;
+        public string aisleTransfer { get; set; } = string.Empty;
         public List<Beneficiarie> beneficiaries { get; set; } = new List<Beneficiarie>();
         public List<Payment> payments { get; set; } = new List<Payment>();
     }
