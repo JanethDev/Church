@@ -134,7 +134,10 @@ namespace church.backend.Controllers
         ///                         "paymentAmount" : 10000.30,
         ///                         "concept" : "pago inicial",
         ///                         "typePaymentId" : 1,
-        ///                         "currencyId" : 1
+        ///                         "currencyId" : 1,
+        ///                         "number" : 1, //numero de pago
+        ///                         "date" : "2024-01-01", //fecha de pago
+        ///                         "statusId" : 2012 // pendiente - 2012, pag
         ///                     }
         ///         ]
         ///     }
