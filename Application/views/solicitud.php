@@ -27,4 +27,4 @@ $_title = 'Solicitud | Catedral Tijuana';
         </div>
     </div>
 </form>
-<script src="../assets/js/solicitud.js"></script>
+<script src="assets/js/solicitud.js"></script>

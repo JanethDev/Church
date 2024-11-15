@@ -46,6 +46,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
             <button type="button" class="btn btn-success" id="btnPaymentMethod" style="width: 100%;">Forma de pago</button>
         </div>
     </div>
+    <div class="row">
+        
+        <div class="col-md-3" id="espaciosDisponiblesContainer" style="display: none;"><br>
+            <h5>Espacios Disponibles: <a id="espaciosDisponibles">0/4</a></h5>
+        </div>
+       
+    </div>
     <table id="tablecryptsection">
         <thead>
             <tr>
@@ -81,7 +88,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                         }
                         ?>
                         <?php if ($positionFound): ?>
-                            <td class="<?= $pos['status'] == 'disponible' ? 'disponible' : 'no-disponible' ?>" 
+                            <td class="<?php 
+                                    // Si el estado es 'disponible' o es 'apartado' y places_shared < 4, se marca como disponible
+                                    echo ($pos['status'] == 'disponible' || ($pos['status'] == 'apartado' && $pos['places_shared'] < 4)) 
+                                        ? 'disponible' 
+                                        : 'no-disponible'; 
+                                ?>"
                                 data-id="<?= $pos['id'] ?>"
                                 data-full-position="<?= htmlspecialchars($pos['full_position']) ?>"
                                 data-zone="<?= htmlspecialchars($pos['zone']) ?>"
@@ -97,23 +109,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                                 <div class="td-inner">
                                     <?php
                                     if ($pos['is_shared'] && $pos['status'] == 'disponible') {
-                                        $imgSrc = '../../assets/img/cuadro-compartida.png';
+                                        $imgSrc = 'assets/img/cuadro-compartida.png';
                                     } else {
                                         switch ($pos['status']) {
                                             case 'disponible':
-                                                $imgSrc = '../../assets/img/cuadro.png';
+                                                $imgSrc = 'assets/img/cuadro.png';
                                                 break;
                                             case 'apartado':
-                                                $imgSrc = '../../assets/img/cuadro-temporal.png';
+                                                $imgSrc = 'assets/img/cuadro-temporal.png';
                                                 break;
                                             case 'temporal':
-                                                $imgSrc = '../../assets/img/cuadro-apartado.png';
+                                                $imgSrc = 'assets/img/cuadro-apartado.png';
                                                 break;
                                             case 'vendido':
-                                                $imgSrc = '../../assets/img/cuadro-disabled.png';
+                                                $imgSrc = 'assets/img/cuadro-disabled.png';
                                                 break;
                                             default:
-                                                $imgSrc = '../../assets/img/cuadro.png';
+                                                $imgSrc = 'assets/img/cuadro.png';
                                                 break;
                                         }
                                     }
@@ -135,57 +147,87 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
 function formatPrice(price) {
     return '$' + price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
-document.querySelectorAll('#tablecryptsection .disponible').forEach(td => {
+document.querySelectorAll('#tablecryptsection td').forEach(td => {
     td.addEventListener('click', function() {
-        if (this.dataset.status === 'no-disponible') {
+        const isShared = this.dataset.isShared == '1';
+        const status = this.dataset.status;
+        const placesShared = parseInt(this.dataset.placesShared);
+
+        // Deshabilitar la selección si no cumple las condiciones
+        if (!isShared && status === 'apartado') {
             Swal.fire({
                 icon: 'warning',
-                title: 'Notificación',
-                text: 'La cripta seleccionada no está disponible.',
+                title: 'Apartado',
+                text: 'Este nicho se encuentra apartado para su selección.',
             });
-        } else {
-            document.querySelectorAll('#tablecryptsection .disponible').forEach(el => {
-                el.classList.remove('selected');
+            return;
+        }
 
-                if (el.dataset.isShared == 1 && el.dataset.status === 'disponible') {
-                    el.querySelector('.td-inner img').src = '../../assets/img/cuadro-compartida.png';
-                } else {
-                    switch (el.dataset.status) {
-                        case 'disponible':
-                            el.querySelector('.td-inner img').src = '../../assets/img/cuadro.png';
-                            break;
-                        case 'apartado':
-                            el.querySelector('.td-inner img').src = '../../assets/img/cuadro-temporal.png';
-                            break;
-                        case 'temporal':
-                            el.querySelector('.td-inner img').src = '../../assets/img/cuadro-apartado.png';
-                            break;
-                        case 'vendido':
-                            el.querySelector('.td-inner img').src = '../../assets/img/cuadro-disabled.png';
-                            break;
-                        default:
-                            el.querySelector('.td-inner img').src = '../../assets/img/cuadro.png';
-                            break;
-                    }
-                }
+        if (isShared && status === 'apartado' && placesShared >= 4) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No disponible',
+                text: 'Este nicho compartido ya está completo.',
             });
+            return;
+        }
 
-            this.classList.add('selected');
-            this.querySelector('.td-inner img').src = '../../assets/img/cuadro-selected.png';
+        // Deselecciona todos los cuadros antes de seleccionar uno nuevo
+        document.querySelectorAll('#tablecryptsection td').forEach(el => {
+        el.classList.remove('selected');
+        const imgElement = el.querySelector('.td-inner img');
+        const isShared = el.dataset.isShared == '1';
+        const status = el.dataset.status;
 
-            document.getElementById('posicion').textContent = this.dataset.fullPosition;
-            document.getElementById('aisle').textContent = this.dataset.aisle;
-            document.getElementById('urna').textContent = this.dataset.positionName;
-            const tipo = this.dataset.isShared == 1 ? 'Individual' : 'Familiar';
-            document.getElementById('tipo').textContent = tipo;
-
-            if (this.dataset.isShared == 1) {
-                const precioShared = parseFloat(this.dataset.priceShared); 
-                document.getElementById('precio').textContent = formatPrice(precioShared); 
+        // Asegúrate de que imgElement existe antes de cambiar el src
+        if (imgElement) {
+            if (isShared && status === 'disponible') {
+                imgElement.src = 'assets/img/cuadro-compartida.png';
             } else {
-                const precio = parseFloat(this.dataset.price); 
-                document.getElementById('precio').textContent = formatPrice(precio); 
+                switch (status) {
+                    case 'disponible':
+                        imgElement.src = 'assets/img/cuadro.png';
+                        break;
+                    case 'apartado':
+                        imgElement.src = 'assets/img/cuadro-temporal.png';
+                        break;
+                    case 'temporal':
+                        imgElement.src = 'assets/img/cuadro-apartado.png';
+                        break;
+                    case 'vendido':
+                        imgElement.src = 'assets/img/cuadro-disabled.png';
+                        break;
+                    default:
+                        imgElement.src = 'assets/img/cuadro.png';
+                        break;
+                }
             }
+        }
+    });
+
+        // Selecciona el cuadro actual
+        this.classList.add('selected');
+        this.querySelector('.td-inner img').src = 'assets/img/cuadro-selected.png';
+
+        // Actualiza los detalles de la selección
+        document.getElementById('posicion').textContent = this.dataset.fullPosition;
+        document.getElementById('aisle').textContent = this.dataset.aisle;
+        document.getElementById('urna').textContent = this.dataset.positionName;
+        const tipo = isShared ? 'Individual' : 'Familiar';
+        document.getElementById('tipo').textContent = tipo;
+
+        // Mostrar precio según el tipo de nicho
+        const precio = isShared ? parseFloat(this.dataset.priceShared) : parseFloat(this.dataset.price);
+        document.getElementById('precio').textContent = formatPrice(precio);
+
+        // Mostrar la cantidad de espacios compartidos disponibles solo para nichos individuales
+        const espaciosDisponiblesElem = document.getElementById('espaciosDisponibles');
+        const espaciosDisponiblesContainer = document.getElementById('espaciosDisponiblesContainer');
+        if (isShared) {
+            espaciosDisponiblesElem.textContent = `${placesShared}/4`;
+            espaciosDisponiblesContainer.style.display = 'block';
+        } else {
+            espaciosDisponiblesContainer.style.display = 'none';
         }
     });
 });

@@ -19,4 +19,4 @@ $_title = 'Cotizaciones | Catedral Tijuana';
 </form>
 
 <!-- Cargar quotations.js solo una vez aquí -->
-<script src="../assets/js/quotations.js"></script>
+<script src="assets/js/quotations.js"></script>

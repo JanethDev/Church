@@ -38,7 +38,7 @@ function initializeDataTables() {
         "serverSide": false,
         "responsive": true,
         "ajax": {
-            "url": "../../api/purchases/purchaseReserved.php",
+            "url": "api/purchases/purchaseReserved.php",
             "type": "GET",
             "dataSrc": function(json) {
                 return json.data.filter(record => record.customerNumber !== 0);
@@ -66,7 +66,7 @@ function initializeDataTables() {
         "serverSide": false,
         "responsive": true,
         "ajax": {
-            "url": "../../api/purchases/purchaseReserved.php",
+            "url": "api/purchases/purchaseReserved.php",
             "type": "GET",
             "dataSrc": function(json) {
                 return json.data.filter(record => record.customerNumber == 0);

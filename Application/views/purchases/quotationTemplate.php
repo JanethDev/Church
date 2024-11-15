@@ -1206,16 +1206,13 @@ $html .= "</table>
 
 </html>
 ";
-// Cargar el HTML en DOMPDF
+// Generar el PDF sin guardarlo en el servidor
 $dompdf->loadHtml($html);
-
-// Configurar el tamaño de la página y la orientación
 $dompdf->setPaper('A4', 'portrait');
-
-// Renderizar el PDF
 $dompdf->render();
 
-// Enviar el PDF al navegador
+// Enviar el PDF directamente al navegador para descarga
 header('Content-Type: application/pdf');
 header('Content-Disposition: attachment; filename="solicitud.pdf"');
 echo $dompdf->output();
+exit();

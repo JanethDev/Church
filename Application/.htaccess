@@ -1,5 +1,9 @@
+Options -Indexes
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteBase /Church/Application/
+    RewriteCond %{REQUEST_URI} !^/Church/Application/views/crypts/ [NC]
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^([^\.]+)$ $1.php [NC,L]
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
 </IfModule>

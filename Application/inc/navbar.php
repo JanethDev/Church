@@ -4,8 +4,8 @@
         <div class="col-1">
             <div style="margin-right:15px; color:#fff">
 
-                <a  href="index" style="margin-right:15px; color:white">
-                    <img src="../assets/img/LogoParroquia.png" height="70" width="auto" />
+                <a  href="inicio" style="margin-right:15px; color:white">
+                    <img src="assets/img/LogoParroquia.png" height="70" width="auto" />
                 </a>
 
             </div>
@@ -24,7 +24,7 @@
                     <ul class="navbar-nav mr-auto">
                         <?php if($role == 'Administrador' || !$role == 'Facturacion' || !$role == 'Ventas' || !$role == 'Encargado'  ) {?>
 
-                            <li style="margin-right:15px; color:white"><a href="javascript:void(0);" onclick="loadPage('solicitud')">Solicitud</a></li>
+                            <li style="margin-right:15px; color:white"><a <?php if ($current_page == 'solicitud') echo 'class="active"'; ?> href="solicitud">Solicitud</a></li>
                             <li style="margin-right:15px; color:white"><a <?php if ($current_page == 'cotizaciones') echo 'class="active"'; ?> href="cotizaciones">Cotizaciones</a></li>
                             <li style="margin-right:15px; color:white"><a <?php if ($current_page == 'solicitudes') echo 'class="active"' ?> href="solicitudes">Solicitudes()</a></li>
                             <!--<li style="margin-right:15px; color:white"><a <?php //if ($current_page == 'pagos') echo 'class="active"' ?> href="pagos">Pagos</a></li>-->
@@ -73,11 +73,11 @@
                                     <!--<li style="margin-right:15px; margin-left:10px; color:white"><a href="descuentos">Descuentos</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="descuento_contado">Descuento contado</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="estado_Civil">Estado Civil</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="estados">Estados</a></li>-->
-                                    <!--<li style="margin-right:15px; margin-left:10px; color:white"><a href="horarios_misa">Horarios misa</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="impuesto_Federal">Impuesto Federal</a></li>
+                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="estados">Estados</a></li>
+                                   <li style="margin-right:15px; margin-left:10px; color:white"><a href="horarios_misa">Horarios misa</a></li>
+                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="impuesto_Federal">Impuesto Federal</a></li>-->
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="intenciones">Intenciones</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="notificaciones">Notificaciones</a></li>
+                                     <!--<li style="margin-right:15px; margin-left:10px; color:white"><a href="notificaciones">Notificaciones</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="tipo_de_cambio">Tipo de cambio</a></li>-->
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="usuarios">Usuarios</a></li>
 
@@ -142,10 +142,10 @@ function downloadDocument(doc) {
     
     switch (doc) {
         case 'aviso_de_privacidad':
-            link.href = '../views/aviso_de_privacidad.php';
+            link.href = 'views/aviso_de_privacidad.php';
             break;
         case 'reglamento_columbario':
-            link.href = '../views/reglamento_columbario.php';
+            link.href = 'views/reglamento_columbario.php';
             break;
         default:
             console.error('Documento no válido.');

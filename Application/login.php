@@ -118,7 +118,7 @@ function autenticar(){
 			
             switch(validateJS.caso) {
                 case 1:
-                    window.location.href = "index.php";
+                    window.location.href = "inicio";
                     break;
                 case 2:
                     $(".upload-msg").html("<div class='alert alert-danger alert-dismissible' role='alert'>"+validateJS.mensaje+"</div> ");

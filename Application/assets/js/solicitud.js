@@ -1,94 +1,41 @@
 $(document).ready(function() {
-    // Manejar el clic en los botones de carga de secciones
-    $('a[data-section]').on('click', function(e) {
+    // Escucha el clic en cualquier enlace con el atributo data-section en el documento
+    $(document).on('click', 'a[data-section]', function(e) {
         e.preventDefault();
-        var section = $(this).data('section');
+        const section = $(this).data('section');
+        
+        // Construimos la ruta relativa a la carpeta `views`
+        let url = '';
         if (section === 'A') {
-            loadSectionA();
+            url = 'views/crypts/cryptnichosA.php'; // Desde index.php
         } else if (section === 'B') {
-            loadSectionB();
+            url = 'views/crypts/cryptnichosB.php';
         } else if (section === 'C') {
-            loadSectionC();
+            url = 'views/crypts/cryptnichosC.php';
         }
+
+        // Cargar contenido en #areaContent
+        loadSectionContent(url, '#areaContent');
     });
 
-    // Funciones para cargar secciones en la pestaña de Áreas
-    function loadSectionA() {
-        fetch('/views/crypts/cryptnichosA.php')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Contenido no disponible');
-                }
-                return response.text();
-            })
-            .then(html => {
-                $('#areaContent').html(html);
-                $('#nav-area-tab').tab('show');
-                history.pushState(null, '', ''); 
-            })
-            .catch(error => {
-                console.error('Error al cargar la sección A:', error);
-                $('#areaContent').html('<p>Error al cargar la sección A.</p>');
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Contenido no disponible',
-                    text: 'El contenido que intentas acceder no está disponible en este momento.',
-                    }).then((result) => {
-                    // Al hacer clic en "OK", recargar la página
-                    if (result.isConfirmed) {
-                        location.reload(); // Recargar la página
-                    }
-                });
-               
-            });
-    }
-
-    function loadSectionB() {
-        fetch('/views/crypts/cryptnichosB.php')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Contenido no disponible');
-                }
-                return response.text();
-            })
-            .then(html => {
-                $('#areaContent').html(html);
-                $('#nav-area-tab').tab('show');
-                history.pushState(null, '', ''); 
-            })
-            .catch(error => {
-                console.error('Error al cargar la sección B:', error);
-                $('#areaContent').html('<p>Error al cargar la sección B.</p>');
+    function loadSectionContent(url, targetSelector) {
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                $(targetSelector).html(response);
+                $('#nav-area-tab').tab('show'); // Cambia automáticamente al tab "Areas"
+            },
+            error: function(xhr, status, error) {
+                console.error('Error al cargar el contenido:', error);
+                $(targetSelector).html('<p>Error al cargar el contenido solicitado.</p>');
                 Swal.fire({
                     icon: 'error',
                     title: 'Contenido no disponible',
                     text: 'El contenido que intentas acceder no está disponible en este momento.',
                 });
-            });
-    }
-
-    function loadSectionC() {
-        fetch('/views/crypts/cryptnichosC.php')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Contenido no disponible');
-                }
-                return response.text();
-            })
-            .then(html => {
-                $('#areaContent').html(html);
-                $('#nav-area-tab').tab('show');
-                history.pushState(null, '', ''); 
-            })
-            .catch(error => {
-                console.error('Error al cargar la sección C:', error);
-                $('#areaContent').html('<p>Error al cargar la sección C.</p>');
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Contenido no disponible',
-                    text: 'El contenido que intentas acceder no está disponible en este momento.',
-                });
-            });
+            }
+        });
     }
 
     // Manejar clic en las áreas del mapa para cargar el contenido en criptasContent
@@ -100,7 +47,7 @@ $(document).ready(function() {
 
     function loadCriptaContent(href) {
         $.ajax({
-            url: '../../api/crypts/byzone.php',
+            url: 'api/crypts/byzone.php',
             type: 'POST',
             data: { href: href },
             dataType: 'json',
@@ -114,7 +61,7 @@ $(document).ready(function() {
                 } else {
                     // Envía los datos recibidos a cryptsections.php
                     $.ajax({
-                        url: '/views/crypts/cryptsections.php',
+                        url: 'views/crypts/cryptsections.php',
                         type: 'POST',
                         data: { response: JSON.stringify(data) },
                         success: function(sectionData) {
@@ -197,7 +144,7 @@ $(document).ready(function() {
         if (datos.length > 0) {
             // Enviar datos al tab de forma de pago vía AJAX
             $.ajax({
-                url: '/views/crypts/cryptrequest.php',
+                url: 'views/crypts/cryptrequest.php',
                 type: 'POST',
                 data: { positions: JSON.stringify(datos) }, // Enviar datos como JSON
                 success: function(response) {
@@ -223,9 +170,10 @@ $(document).ready(function() {
 
     
     $('#nav-tab a').on('click', function(e) {
-        e.preventDefault();
+        e.preventDefault(); // Evita el comportamiento predeterminado
         $(this).tab('show');
     });
+    
 
     
 

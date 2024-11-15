@@ -6,7 +6,7 @@
 </div>
 <div style="position: relative;" id="imgNichosA">
 
-    <img src="../assets/img/mapa criptas 2024_page-0001.jpg" alt="Imagen" usemap="#puntos">
+    <img src="assets/img/mapa criptas 2024_page-0001.jpg" alt="Imagen" usemap="#puntos">
     <!-- Puntos superpuestos -->
     <div class="punto1" style="left: 90px; top: 90px;" data-coord="1"></div>
     <div class="punto2" style="left: 75px; top: 110px;" data-coord="2"></div>

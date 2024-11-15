@@ -1110,30 +1110,39 @@ $(document).ready(function() {
         return beneficiarios;
     }
 
-    const totalFinal = parseFloat(<?php echo json_encode($totalFinal); ?>);
-    const enganche = parseFloat(<?php echo json_encode($enganche); ?>);
+    let totalFinal = parseFloat(<?php echo json_encode($totalFinal); ?>);
+    let enganche = parseFloat(<?php echo json_encode($enganche); ?>);
     let maintenanceCost = 0; // Ajusta según tus necesidades
-    const ashDepositCost = 920; // Usa tu constante ya definida
+    const ashDepositCost = 1100; // Usa tu constante ya definida
     let otherFeeAmount = 0;
     const selectedPaymentValue = parseInt(<?php echo json_encode($selectedPaymentValue); ?>);
 
     // Función para actualizar el total del pago inicial
     function updateInitialPayment() {
-        let initialPayment = selectedPaymentValue === 1 ? Math.round(totalFinal) : Math.round(enganche);
+        let initialPayment = selectedPaymentValue === 1 ? totalFinal : enganche;
 
         if ($('#ckMaintenance').is(':checked')) {
-            initialPayment += Math.round(maintenanceCost);
+            initialPayment += maintenanceCost;
         }
         if ($('#ckAshDeposit').is(':checked')) {
-            initialPayment += Math.round(ashDepositCost);
+            initialPayment += ashDepositCost;
         }
         if ($('#ckOtherFee').is(':checked')) {
             const otherFeeValue = parseFloat($('#otherFeeAmount').val()) || 0;
-            initialPayment += Math.round(otherFeeValue);
+            initialPayment += otherFeeValue;
         }
 
+        // Actualizar totalFinal en tiempo real si es de contado
+        if (selectedPaymentValue === 1) {
+            totalFinal = initialPayment;
+            $('#totalAmountLabel').text(`$${totalFinal.toFixed(2)} M.N.`);
+        }
+
+        // Actualizar enganche y el valor mostrado
+        enganche = initialPayment;
         $('#initialPaymentLabel').text(`$${initialPayment.toFixed(2)} M.N.`);
-        
+
+        validatePaymentAmounts(); // Llama a la validación con el nuevo valor
     }
 
     // Listeners para checkboxes y campo de monto "Otro"
@@ -1273,6 +1282,8 @@ $(document).ready(function() {
 
     // Actualizar montos si se edita uno de los campos para mantener la suma correcta
     $('input[type="number"]').on('input', function() {
+
+        validatePaymentAmounts();
         var checkedCount = $('.typepay:checked').length;
 
         // Si hay dos métodos seleccionados, recalcular el monto restante
@@ -1352,42 +1363,43 @@ $(document).ready(function() {
         const selectedCivilStatusId = $(this).val();
     });
    
-    function validatePaymentAmounts(total, enganche) {
+    function validatePaymentAmounts() {
         let sum = 0;
 
-        console.log('enganche a validar '+enganche);
+        console.log('Validando montos de pago...');
+
+        // Obtener los montos de cada método de pago habilitado
         if ($('#amount_check').is(':enabled')) {
-            sum += Math.round(parseFloat($('#amount_check').val()) || 0);
+            sum += parseFloat($('#amount_check').val()) || 0;
         }
         if ($('#amount_card').is(':enabled')) {
-            sum += Math.round(parseFloat($('#amount_card').val()) || 0);
+            sum += parseFloat($('#amount_card').val()) || 0;
         }
         if ($('#amount_transfer').is(':enabled')) {
-            sum += Math.round(parseFloat($('#amount_transfer').val()) || 0);
+            sum += parseFloat($('#amount_transfer').val()) || 0;
         }
         if ($('#amount_cash_deposit').is(':enabled')) {
-            sum += Math.round(parseFloat($('#amount_cash_deposit').val()) || 0);
+            sum += parseFloat($('#amount_cash_deposit').val()) || 0;
         }
         if ($('#amount_cash').is(':enabled')) {
-            sum += Math.round(parseFloat($('#amount_cash').val()) || 0);
+            sum += parseFloat($('#amount_cash').val()) || 0;
         }
 
         sum = parseFloat(sum.toFixed(2));
-        total = parseFloat(total.toFixed(2));
-        enganche = parseFloat(enganche.toFixed(2));
 
-        if (selectedPaymentValue === 1 && sum > total) {
+        // Verificar que la suma no exceda el monto requerido
+        if (selectedPaymentValue === 1 && sum !== totalFinal) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'La suma de los montos no puede exceder el total final.',
+                text: 'La suma de los montos debe ser igual al total final.',
             });
             return false;
-        } else if (selectedPaymentValue !== 1 && sum > enganche) {
+        } else if (selectedPaymentValue !== 1 && sum !== enganche) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'La suma de los montos no puede exceder el enganche.',
+                text: 'La suma de los montos debe ser igual al enganche.',
             });
             return false;
         }
@@ -1481,8 +1493,8 @@ $(document).ready(function() {
         $('#balanceLabel').text(`$${balance.toFixed(2)} M.N.`);
 
 
-        //console.log(initialPayment);
-
+        console.log(initialPayment);
+        
         const enganche = initialPayment;
         const totalFinal = totalAmount;
         
@@ -1580,57 +1592,47 @@ $(document).ready(function() {
             data: formData,  
             contentType: false,
             processData: false,
-            beforeSend: function(){
+            beforeSend: function() {
                 Swal.fire({
                     title: 'Procesando solicitud...',
                     allowOutsideClick: false,
                     showConfirmButton: false,
                     didOpen: () => {
-                        Swal.showLoading(); // Mostrar un spinner de carga mientras se genera el PDF
+                        Swal.showLoading();
                     }
                 });
             },
             success: function(response) {
+                const purchaseId = response.purchaseId; // Obtén `purchaseId` de la respuesta
+                formData.append('purchaseId', purchaseId); // Añade `purchaseId` a formData
 
-
-                // Segunda solicitud AJAX (genera el PDF)
+                // Segunda solicitud AJAX para generar y descargar el PDF
                 $.ajax({
-                    url: '/views/purchases/quotationTemplate.php',
+                    url: 'views/purchases/quotationTemplate.php',
                     type: 'POST',
                     data: formData,  
                     contentType: false,
                     processData: false,
                     xhrFields: {
-                        responseType: 'blob'  // Importante para manejar el PDF
+                        responseType: 'blob'  // Recibir el archivo como blob
                     },
-                    success: function(pdfBlob) {
-                        // Cierra el SweetAlert de carga
-                        Swal.close();
+                    success: function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = 'Cotizacion.pdf';
+                        link.click();
 
-                        // Mostrar SweetAlert de éxito
+                        // Liberar el objeto URL después de la descarga
+                        URL.revokeObjectURL(url);
+                        
                         Swal.fire({
                             icon: 'success',
                             title: 'Documento Generado',
-                            text: 'El PDF ha sido generado y está listo para descargar.',
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // Redirigir a otra pantalla cuando el usuario hace clic en "OK"
-                                window.location.href = 'cotizaciones';  
-                            }
+                            text: 'El PDF se ha descargado correctamente.'
                         });
-
-                        // Crear un enlace temporal para la descarga del PDF
-                        const link = document.createElement('a');
-                        link.href = window.URL.createObjectURL(pdfBlob);
-                        link.download = 'Cotizacion.pdf';  // Nombre del archivo PDF
-                        document.body.appendChild(link);
-                        link.click();  // Desencadenar la descarga
-                        document.body.removeChild(link);  // Remover el enlace temporal
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
-                        // Cierra el SweetAlert de carga
-                        Swal.close();
-
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
@@ -1640,10 +1642,9 @@ $(document).ready(function() {
                 });
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                // Mostrar un mensaje de error si la reserva falla
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error en la Reserva',
+                    title: 'Error al apartar',
                     text: 'Error al realizar la reserva: ' + textStatus,
                 });
             }

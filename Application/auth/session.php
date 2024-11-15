@@ -43,7 +43,7 @@ try {
 } catch (Exception $e) {
     // En caso de error, eliminar el token de la sesión y redirigir al login
     unset($_SESSION['token']);
-    header("Location: ../login.php");
+    header("Location: ../login");
     exit;
 }
 ?>
