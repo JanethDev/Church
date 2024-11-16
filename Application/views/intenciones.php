@@ -75,13 +75,13 @@
                         </tr>
                         <tr class="tr-new-customer">
                             <td> 
-                                <select class="form-control select2" id="createCatIntents" name="catIntents">
+                                <select class="form-control select2" id="createCatIntents" name="createCatIntents">
                                     <option value="">Seleccionar</option>
                                 </select>
                             </td>
-                            <td><input type="date" class="form-control control-customer-new" id="createDateReq" name="dateReq" /></td>
+                            <td><input type="date" class="form-control control-customer-new" id="createDateReq" name="createDateReq" /></td>
                             <td> 
-                                <select class="form-control select2" id="createCatMisas" name="catMisas"> 
+                                <select class="form-control select2" id="createCatMisas" name="createCatMisas"> 
                                     <option value="">Seleccionar</option>
                                 </select>
                             </td>
@@ -101,7 +101,7 @@
                             <td colspan="2"><strong>Descripción </strong></td>
                         </tr>
                         <tr class="tr-new-customer">
-                            <td><input type="text" class="form-control control-customer-new" id="donativo" name="donativo" /></td>
+                            <td><input type="number" class="form-control control-customer-new" id="donativo" name="donativo" step="0.01" min="0"/></td>
                             <td colspan="2">
                                 <textarea class="form-control" id="Description" name="Description" rows="2"></textarea>
                             </td>
@@ -161,6 +161,13 @@ $(document).ready(function() {
     // Escuchar cambios en el campo de fecha y actualizar el select de horas
     $('#dateReq').on('change', function() {
         const selectedDate = new Date($('#dateReq').val());
+        const dayOfWeek = selectedDate.getDay() + 1; // getDay() devuelve 0 para Domingo, +1 para que sea 1 (Lunes) hasta 7 (Domingo)
+        loadMisasForDay(dayOfWeek); // Cargar las horas para el día seleccionado
+    });
+
+    // Escuchar cambios en el campo de fecha y actualizar el select de horas
+    $('#createDateReq').on('change', function() {
+        const selectedDate = new Date($('#createDateReq').val());
         const dayOfWeek = selectedDate.getDay() + 1; // getDay() devuelve 0 para Domingo, +1 para que sea 1 (Lunes) hasta 7 (Domingo)
         loadMisasForDay(dayOfWeek); // Cargar las horas para el día seleccionado
     });
@@ -241,6 +248,9 @@ function initializeDataTables() {
     });
 }
 
+
+
+
 function setTodayDate() {
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
@@ -305,6 +315,32 @@ $.ajax({
     }
 
 });
+
+$.ajax({
+    url: 'api/general/intents.php', 
+    type: 'GET',
+    dataType: 'json',
+    success: function(data) {
+        // Verificar si data es una cadena y convertirla en JSON si es necesario
+        if (typeof data === "string") {
+            data = JSON.parse(data);
+        }
+
+        if (Array.isArray(data)) {
+            // Llenar el select de motivos
+            $.each(data, function(index, item) {
+                $('#createCatIntents').append(new Option(item.intent, item.id));
+            });
+        } else {
+            console.error("Error en la respuesta de la API: ", data.error);
+        }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+        console.error("Error en la solicitud: ", textStatus);
+    }
+
+});
+
 
 
 $('#btnSave').on('click', function() {
