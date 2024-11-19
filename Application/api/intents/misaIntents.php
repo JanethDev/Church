@@ -2,6 +2,7 @@
 require_once('../../init.php');
 require_once('auth/session.php');
 require 'vendor/autoload.php';
+date_default_timezone_set('America/Tijuana');
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -25,15 +26,18 @@ try {
     $timeSelect = isset($_GET['timeSelect']) ? $_GET['timeSelect'] : null;
 
     $filteredData = array_filter($data, function($item) use ($dateReq, $catIntents, $timeSelect) {
-        // Filtrar por fecha
-        $dateMatch = isset($item['date']) && strpos($item['date'], $dateReq) === 0;
-
+        error_log("Filtrando item: " . print_r($item, true));
+        error_log("dateReq: $dateReq, catIntents: $catIntents, timeSelect: $timeSelect");
+    
+        // Normalizar las fechas para comparar solo la parte de fecha
+        $dateMatch = isset($item['date']) && date('Y-m-d', strtotime($item['date'])) === $dateReq;
+    
         // Filtrar por categoría
         $categoryMatch = !$catIntents || (isset($item['intent_id']) && $item['intent_id'] == $catIntents);
-
-        // Filtrar por hora solo si se ha seleccionado una hora específica en timeSelect
+    
+        // Filtrar por hora
         $hourMatch = !$timeSelect || (isset($item['misa_hour']) && $item['misa_hour'] === $timeSelect);
-
+    
         return $dateMatch && $categoryMatch && $hourMatch;
     });
 

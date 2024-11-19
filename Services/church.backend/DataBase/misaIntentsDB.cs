@@ -128,7 +128,7 @@ namespace church.backend.services.DataBase
                         , data.phone
                         , data.donation
                         , data.exchange_rate
-                        , data.decription
+                        , data.description
                         , user_id
                     );
                     using (SqlCommand command = new SqlCommand(query, connection))

@@ -11,6 +11,6 @@
         public string phone { get; set; } = string.Empty;
         public double donation { get; set; } = new double();
         public double exchange_rate { get; set; } = new double();
-        public string decription { get; set; } = string.Empty;
+        public string description { get; set; } = string.Empty;
     }
 }

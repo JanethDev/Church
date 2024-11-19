@@ -9,6 +9,8 @@
     <!-- Bootstrap y CSS Principal -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/Site.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 
     <!-- jQuery y DataTables -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

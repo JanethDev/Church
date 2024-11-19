@@ -201,7 +201,7 @@ namespace church.backend.services.Controllers
         [HttpPost]
         [JwtAuthentication]
         [Route("create/misa_intents")]
-        public IActionResult createDiscount([FromBody] create_misa_intent_request data)
+        public IActionResult createIntent([FromBody] create_misa_intent_request data)
         {
             var claims = HttpContext.Items["Claims"] as IDictionary<string, string>;
             int user_id = int.Parse(claims?["user_id"] ?? "0");

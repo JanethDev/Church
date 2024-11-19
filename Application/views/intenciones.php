@@ -1,3 +1,6 @@
+<?php
+date_default_timezone_set('America/Tijuana');
+?>
 <style>
     .hidden {
         display: none;
@@ -14,7 +17,7 @@
         </div>
 
         <!-- Lista de intenciones -->
-        <div id="IntentionsList" class="visible">
+        <div id="IntentsList" class="visible">
             <div class="table-responsive">
                 <form id="PurchaseRequestCreateForm" enctype="multipart/form-data">
                     <table class="table" style="background-color: white;margin-bottom: 0px;">
@@ -55,6 +58,7 @@
                                 <th>Fecha solicitud</th>
                                 <th>Hora</th>
                                 <th>Fecha intención</th>
+                                <th></th>
                             </tr>
                         </thead>
                     </table>
@@ -63,7 +67,7 @@
         </div>
 
         <!-- Formulario de creación de intenciones -->
-        <div id="IntentionsCreate" class="hidden">
+        <div id="IntentsCreate" class="hidden">
             <div class="table-responsive">
                 <h5>Nueva Intención</h5>
                 <form id="IntentionCreateForm" enctype="multipart/form-data">
@@ -116,9 +120,43 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Editar Intención</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <div class="form-group">
+                        <label for="editPersona">Persona a mencionar</label>
+                        <input type="text" class="form-control" id="editPersona" name="persona">
+                    </div>
+                    <div class="form-group">
+                        <label for="editIntent">Tipo</label>
+                        <input type="text" class="form-control" id="editIntent" name="intent">
+                    </div>
+                    <div class="form-group">
+                        <label for="editDate">Fecha intención</label>
+                        <input type="date" class="form-control" id="editDate" name="date">
+                    </div>
+                    <!-- Agrega más campos según sea necesario -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnUpdate">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
 $(document).ready(function() {
+
     // Inicializar DataTables
     if (typeof $.fn.DataTable !== 'undefined') {
         initializeDataTables();
@@ -126,17 +164,24 @@ $(document).ready(function() {
         console.error('Error: DataTables no está cargado');
     }
 
+    document.getElementById('donativo').addEventListener('blur', function () {
+    // Convierte el valor a número y lo formatea con dos decimales
+        const value = parseFloat(this.value).toFixed(2);
+        // Asigna el valor formateado al input
+        this.value = value;
+    });
+
     // Cambiar entre "Agregar" y "Volver" al hacer clic en el botón
     $('#btnToggleIntention').on('click', function() {
-        if ($('#IntentionsList').is(':visible')) {
+        if ($('#IntentsList').is(':visible')) {
             // Si la lista está visible, mostrar el formulario de creación
-            $('#IntentionsList').hide();
-            $('#IntentionsCreate').show();
+            $('#IntentsList').hide();
+            $('#IntentsCreate').show();
             $(this).text('Volver');
         } else {
             // Si el formulario de creación está visible, volver a la lista
-            $('#IntentionsCreate').hide();
-            $('#IntentionsList').show();
+            $('#IntentsCreate').hide();
+            $('#IntentsList').show();
             $(this).text('Agregar');
         }
     });
@@ -169,7 +214,7 @@ $(document).ready(function() {
     $('#createDateReq').on('change', function() {
         const selectedDate = new Date($('#createDateReq').val());
         const dayOfWeek = selectedDate.getDay() + 1; // getDay() devuelve 0 para Domingo, +1 para que sea 1 (Lunes) hasta 7 (Domingo)
-        loadMisasForDay(dayOfWeek); // Cargar las horas para el día seleccionado
+        loadMisasForDayCreate(dayOfWeek); // Cargar las horas para el día seleccionado
     });
 
     // Establecer la fecha de hoy y cargar horas al cargar la página
@@ -181,6 +226,31 @@ $(document).ready(function() {
 
     // Llama a la función para aplicar la máscara de teléfono en todos los campos de teléfono al cargar la página
     applyPhoneMask();
+
+    $(document).on('click', '.btnEdit', function(event) {
+        event.preventDefault(); // Previene la recarga de la página
+        const id = $(this).data('id'); // Obtener el ID del registro
+
+        // Muestra el modal
+        $('#editModal').modal('show');
+
+        // Cargar los datos en el modal (puedes hacer una solicitud AJAX si es necesario)
+        $.ajax({
+            url: `api/intents/getMisaIntent.php?id=${id}`,
+            type: 'GET',
+            success: function(data) {
+                // Suponiendo que data contiene los datos del registro
+                $('#editPersona').val(data.mention_person);
+                $('#editIntent').val(data.intent);
+                $('#editDate').val(data.date);
+                // Completa con otros campos según corresponda
+            },
+            error: function(error) {
+                console.error("Error al obtener los datos del registro:", error);
+            }
+        });
+    });
+
 });
 
 function initializeDataTables() {
@@ -241,14 +311,19 @@ function initializeDataTables() {
                     return data;
                 }
             },
+            { // Nueva columna
+                "data": null,
+                "render": function(data, type, row) {
+                    return `<button class="btn btn-info btnEdit" data-id="${row.id}"><i class="fas fa-edit"></i></button>`;
+                },
+                "orderable": false
+            }
         ],
         "language": {
             "emptyTable": "No hay registros disponibles"
         }
     });
 }
-
-
 
 
 function setTodayDate() {
@@ -258,11 +333,12 @@ function setTodayDate() {
     const year = today.getFullYear();
     const todayDate = `${year}-${month}-${day}`; // Formato compatible con <input type="date">
     $('#dateReq').val(todayDate);
+    $('#createDateReq').val(todayDate);
 
     // Obtener el día de la semana y cargar las horas correspondientes
     const dayOfWeek = today.getDay() + 1; // getDay() devuelve 0 para Domingo, +1 para que sea 1 (Lunes) hasta 7 (Domingo)
-    console.log(`Día de la semana de hoy: ${dayOfWeek}`);
     loadMisasForDay(dayOfWeek); // Cargar las horas para el día de hoy
+    loadMisasForDayCreate(dayOfWeek); // Cargar las horas para el día de hoy
 }
 
 function loadMisasForDay(dayOfWeek) {
@@ -290,6 +366,33 @@ function loadMisasForDay(dayOfWeek) {
         }
     });
 }
+
+function loadMisasForDayCreate(dayOfWeek) {
+    $.ajax({
+        url: 'api/general/misas.php', // URL que debe recibir el día y devolver las horas correspondientes
+        type: 'GET',
+        dataType: 'json',
+        data: { day_id: dayOfWeek }, // Enviar el día como parámetro
+        success: function(data) {
+           
+            // Limpiar el select de horas antes de llenarlo
+            $('#createCatMisas').empty().append('<option value="">Seleccionar</option>');
+
+            // Llenar el select con las horas correspondientes
+            if (Array.isArray(data)) {
+                $.each(data, function(index, item) {
+                    $('#createCatMisas').append(new Option(item.hour, item.id));
+                });
+            } else {
+                console.error("Error en la respuesta de la API: ", data.error);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error("Error en la solicitud: ", textStatus);
+        }
+    });
+}
+
 
 $.ajax({
     url: 'api/general/intents.php', 
@@ -346,20 +449,23 @@ $.ajax({
 $('#btnSave').on('click', function() {
         // Variables para verificar campos
         const missingFields = []; // Array para almacenar campos faltantes
-        const apellidoPaterno = $('#PSurname').val();
-        const apellidoMaterno = $('#MSurname').val();
-        const nombres = $('#Name').val();
-        const telefonoParticular = $('#CelPhone').val();
-        const correoElectronico = $('#Email').val();
-        const customerId = $('#CustomerID').val();
-        const address = $('#address').val();
-        const house_number = $('#house_number').val();
-        const neighborhood = $('#neighborhood').val();
-        const catStates = $('#catStatesId').val();
-        const catTowns = $('#catTownsId').val();
-        const zip_code = $('#zip_code').val();
-        const dateBirth = $('#DateOfBirth').val();
+        const createCatIntents = $('#createCatIntents').val();
+        const createDateReq = $('#createDateReq').val();
+        const createCatMisas = $('#createCatMisas').val();
+        const persona = $('#persona').val();
+        const solicitante = $('#solicitante').val();
+        const CelPhone = $('#CelPhone').val();
+        const donativo = $('#donativo').val();
+        const Description = $('#Description').val();
 
+        if (!createCatIntents) missingFields.push("Tipo de intención*");
+        if (!createDateReq) missingFields.push("Fecha de intención*");
+        if (!createCatMisas) missingFields.push("Hora*");
+        if (!persona) missingFields.push("Persona mención*");
+        if (!solicitante) missingFields.push("Solicitante*");
+        if (!CelPhone) missingFields.push("Teléfono *");
+        if (!donativo) missingFields.push("Donativo*");
+        
 
         // Si hay campos faltantes, mostrar SweetAlert
         if (missingFields.length > 0) {
@@ -371,9 +477,11 @@ $('#btnSave').on('click', function() {
             return; // Detiene la ejecución si hay campos faltantes
         }
 
+        // Serializa los datos del formulario
+        var formData = new FormData($('#IntentionCreateForm')[0]);
 
         $.ajax({
-            url: 'api/purchases/reservePurchase.php',
+            url: 'api/intents/createMisaIntent.php',
             type: 'POST',
             data: formData,  
             contentType: false,
@@ -400,13 +508,37 @@ $('#btnSave').on('click', function() {
             error: function(jqXHR, textStatus, errorThrown) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error al apartar',
-                    text: 'Error al realizar la reserva: ' + textStatus,
+                    title: 'Error al crear la intencion',
+                    text: 'Por favor contacte a soporte: ' + textStatus,
                 });
             }
         });
         
         
     });
+    $('#btnUpdate').on('click', function() {
+    const formData = $('#editForm').serialize();
+    $.ajax({
+        url: 'api/intents/updateMisaIntent.php',
+        type: 'POST',
+        data: formData,
+        success: function(response) {
+            $('#editModal').modal('hide');
+            $('#intentsList').DataTable().ajax.reload(); // Recargar la tabla
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: 'Los cambios se han guardado correctamente.'
+            });
+        },
+        error: function(error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudieron guardar los cambios. Inténtalo de nuevo.'
+            });
+        }
+    });
+});
 </script>
 
