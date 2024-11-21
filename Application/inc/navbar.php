@@ -67,8 +67,8 @@
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="ciudad">Ciudad</a></li>-->
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="clientes">Clientes</a></li>
                                     <!--<li style="margin-right:15px; margin-left:10px; color:white"><a href="clientes_prospectos">Clientes prospectos</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="cryptType">Criptas</a></li>
-                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="comisionistas">Comisionistas</a></li> -->
+                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="cryptType">Criptas</a></li>-->
+                                    <li style="margin-right:15px; margin-left:10px; color:white"><a href="comisionistas">Promotores</a></li> 
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="cuota_de_mantenimiento">Cuota de mantenimiento</a></li>
                                     <!--<li style="margin-right:15px; margin-left:10px; color:white"><a href="descuentos">Descuentos</a></li>
                                     <li style="margin-right:15px; margin-left:10px; color:white"><a href="descuento_contado">Descuento contado</a></li>

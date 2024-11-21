@@ -133,21 +133,44 @@ date_default_timezone_set('America/Tijuana');
                 <form id="editForm">
                     <div class="form-group">
                         <label for="editPersona">Persona a mencionar</label>
-                        <input type="text" class="form-control" id="editPersona" name="persona">
+                        <input type="text" class="form-control" id="editPersona" name="editPersona">
+                        <input type="hidden" class="form-control" id="editId" name="editId">
+                        <input type="hidden" class="form-control" id="editPhone" name="editPhone">
+                        <input type="hidden" class="form-control" id="editDonation" name="editDonation">
+                        <input type="hidden" class="form-control" id="editRate" name="editRate">
+                        <input type="hidden" class="form-control" id="editStatus" name="editStatus">
                     </div>
+                    
                     <div class="form-group">
-                        <label for="editIntent">Tipo</label>
-                        <input type="text" class="form-control" id="editIntent" name="intent">
+                        <label for="editDate">Tipo de intención</label>
+                        <select class="form-control select2" id="editCatIntents" name="editCatIntents">
+                            <option value="">Seleccionar</option>
+                        </select>
                     </div>
+                    
                     <div class="form-group">
                         <label for="editDate">Fecha intención</label>
-                        <input type="date" class="form-control" id="editDate" name="date">
+                        <input type="date" class="form-control" id="editDate" name="editDate">
+                    </div>  
+                    <div class="form-group">
+                        <label for="editDate">Hora</label>
+                        <select class="form-control select2" id="editCatMisas" name="editCatMisas"> 
+                            <option value="">Seleccionar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPersona">Solicitante</label>
+                        <input type="text" class="form-control" id="editSolicitante" name="editSolicitante">
+                    </div>
+                    <div class="form-group">
+                        <label for="editIntent">Descripción</label>
+                        <textarea class="form-control" id="editDescription" name="editDescription" rows="2"></textarea>
                     </div>
                     <!-- Agrega más campos según sea necesario -->
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                
                 <button type="button" class="btn btn-primary" id="btnUpdate">Guardar Cambios</button>
             </div>
         </div>
@@ -171,6 +194,10 @@ $(document).ready(function() {
         this.value = value;
     });
 
+    $('#editModal').modal('hide');
+    $(document).on('click', '.close', function () {
+        $('#editModal').modal('hide');
+    });
     // Cambiar entre "Agregar" y "Volver" al hacer clic en el botón
     $('#btnToggleIntention').on('click', function() {
         if ($('#IntentsList').is(':visible')) {
@@ -180,9 +207,7 @@ $(document).ready(function() {
             $(this).text('Volver');
         } else {
             // Si el formulario de creación está visible, volver a la lista
-            $('#IntentsCreate').hide();
-            $('#IntentsList').show();
-            $(this).text('Agregar');
+            location.reload();
         }
     });
 
@@ -225,28 +250,115 @@ $(document).ready(function() {
     }
 
     // Llama a la función para aplicar la máscara de teléfono en todos los campos de teléfono al cargar la página
-    applyPhoneMask();
+    applyPhoneMask(); 
+    $('#editDate').on('change', function() {
+        const selectedDate = $(this).val();
+        if (selectedDate) {
+            loadEditIntentsAndMisas(selectedDate);
+        }
+    });
 
     $(document).on('click', '.btnEdit', function(event) {
-        event.preventDefault(); // Previene la recarga de la página
-        const id = $(this).data('id'); // Obtener el ID del registro
+        event.preventDefault();
+        const id = $(this).data('id'); // ID del registro
 
-        // Muestra el modal
+        // Mostrar el modal
         $('#editModal').modal('show');
 
-        // Cargar los datos en el modal (puedes hacer una solicitud AJAX si es necesario)
+        // Obtener los datos del registro
         $.ajax({
-            url: `api/intents/getMisaIntent.php?id=${id}`,
+            url: `api/intents/getMisaIntent.php?idIntent=${id}`,
             type: 'GET',
+            dataType: 'json',
             success: function(data) {
-                // Suponiendo que data contiene los datos del registro
-                $('#editPersona').val(data.mention_person);
-                $('#editIntent').val(data.intent);
-                $('#editDate').val(data.date);
-                // Completa con otros campos según corresponda
+                if (data.length > 0) {
+                    const intentData = data[0]; // Primer resultado de la respuesta
+
+                    // Asignar valores al formulario
+                    $('#editId').val(intentData.id || '');
+                    $('#editPhone').val(intentData.phone || '');
+                    $('#editDonation').val(intentData.donation || '');
+                    $('#editRate').val(intentData.exchange_rate || '');
+                    $('#editStatus').val(intentData.status_id || '');
+                    $('#editPersona').val(intentData.mention_person || '');
+                    $('#editDate').val(intentData.date.split('T')[0] || '');
+                    $('#editSolicitante').val(intentData.applicant || '');
+                    $('#editDescription').val(intentData.decription || '');
+
+                    // Cargar las opciones de intenciones y misas con misa_id
+                    loadEditIntentsAndMisas(intentData.date.split('T')[0], intentData.misa_id);
+                    setTimeout(() => {
+                        $('#editCatIntents').val(intentData.intent_id || '').trigger('change');
+                    }, 300);
+                } else {
+                    console.error('No se encontraron datos para el ID proporcionado');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se encontró información para este ID.',
+                    });
+                }
             },
             error: function(error) {
                 console.error("Error al obtener los datos del registro:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo cargar la información. Inténtalo más tarde.',
+                });
+            }
+        });
+    });
+   
+    $('#btnDownload').on('click', function () {
+        const dateReq = $('#dateReq').val();
+
+        const timeSelectText = $('#catMisas option:selected').text(); // Obtén el texto seleccionado
+        const misaReq = (timeSelectText && timeSelectText !== "Seleccionar") ? $('#catMisas option:selected').text(): ""; // Envía vacío si es "Seleccionar"
+
+
+        if (!dateReq) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Por favor selecciona una fecha para descargar el PDF.',
+            });
+            return;
+        }
+
+        $.ajax({
+            url: 'views/intents/intentsTemplate.php',
+            type: 'POST',
+            data: { dateReq: dateReq, misaReq:misaReq},
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Procesando solicitud...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading(); // Mostrar el loading
+                    }
+                });
+            },
+            xhrFields: {
+                responseType: 'blob', // Importante para manejar archivos
+            },
+            success: function (data) {
+                Swal.close(); // Cierra el Swal al finalizar la solicitud exitosamente
+                const blob = new Blob([data], { type: 'application/pdf' });
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = `intenciones_${dateReq}.pdf`;
+                link.click();
+                window.URL.revokeObjectURL(link.href);
+            },
+            error: function () {
+                Swal.close(); // Asegúrate de cerrar el Swal también en errores
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un problema al generar el PDF. Inténtalo de nuevo.',
+                });
             }
         });
     });
@@ -259,12 +371,15 @@ function initializeDataTables() {
         "serverSide": false,
         "responsive": true,
         "ajax": {
-            "url": "api/intents/misaIntents.php",
+            "url": "api/intents/misaIntentsFilter.php",
             "type": "GET",
             "data": function(d) {
                 // Obtener la fecha seleccionada, o usar la fecha de hoy si no hay selección
-                d.dateReq = $('#dateReq').val() || new Date().toISOString().split('T')[0];
-                
+                d.dateReq = $('#dateReq').val() || (() => {
+                    const today = new Date();
+                    today.setMinutes(today.getMinutes() - today.getTimezoneOffset()); // Ajuste por zona horaria
+                    return today.toISOString().split('T')[0];
+                })();
                 // Obtener la categoría seleccionada
                 d.catIntents = $('#catIntents').val();
 
@@ -328,17 +443,23 @@ function initializeDataTables() {
 
 function setTodayDate() {
     const today = new Date();
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const year = today.getFullYear();
-    const todayDate = `${year}-${month}-${day}`; // Formato compatible con <input type="date">
+
+    // Ajustar el desfase de zona horaria
+    today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+
+    // Formatear la fecha al formato requerido por <input type="date">
+    const todayDate = today.toISOString().split('T')[0];
+
+    // Establecer la fecha en los inputs
     $('#dateReq').val(todayDate);
     $('#createDateReq').val(todayDate);
 
-    // Obtener el día de la semana y cargar las horas correspondientes
-    const dayOfWeek = today.getDay() + 1; // getDay() devuelve 0 para Domingo, +1 para que sea 1 (Lunes) hasta 7 (Domingo)
-    loadMisasForDay(dayOfWeek); // Cargar las horas para el día de hoy
-    loadMisasForDayCreate(dayOfWeek); // Cargar las horas para el día de hoy
+    // Calcular el día de la semana y cargar las horas
+    const dayOfWeek = today.getDay() + 1; // getDay() devuelve 0 para Domingo
+    loadMisasForDay(dayOfWeek); 
+    loadMisasForDayCreate(dayOfWeek);
+   
+  
 }
 
 function loadMisasForDay(dayOfWeek) {
@@ -393,6 +514,34 @@ function loadMisasForDayCreate(dayOfWeek) {
     });
 }
 
+function loadEditIntentsAndMisas(selectedDate, misaId) {
+    const dayOfWeek = new Date(selectedDate).getDay() + 1; // Día de la semana basado en la fecha
+
+    // Cargar las opciones de misas basadas en el día de la semana
+    $.ajax({
+        url: 'api/general/misas.php',
+        type: 'GET',
+        dataType: 'json',
+        data: { day_id: dayOfWeek },
+        success: function(data) {
+            $('#editCatMisas').empty().append('<option value="">Seleccionar</option>');
+            if (Array.isArray(data)) {
+                // Agregar las opciones al select
+                $.each(data, function(index, item) {
+                    $('#editCatMisas').append(new Option(item.hour, item.id));
+                });
+
+                // Seleccionar el valor del misa_id si está definido
+                if (misaId) {
+                    $('#editCatMisas').val(misaId).trigger('change');
+                }
+            }
+        },
+        error: function(error) {
+            console.error("Error cargando horas de misas:", error);
+        }
+    });
+}
 
 $.ajax({
     url: 'api/general/intents.php', 
@@ -444,51 +593,111 @@ $.ajax({
 
 });
 
+$.ajax({
+    url: 'api/general/intents.php', 
+    type: 'GET',
+    dataType: 'json',
+    success: function(data) {
+        // Verificar si data es una cadena y convertirla en JSON si es necesario
+        if (typeof data === "string") {
+            data = JSON.parse(data);
+        }
+
+        if (Array.isArray(data)) {
+            // Llenar el select de motivos
+            $.each(data, function(index, item) {
+                $('#editCatIntents').append(new Option(item.intent, item.id));
+            });
+        } else {
+            console.error("Error en la respuesta de la API: ", data.error);
+        }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+        console.error("Error en la solicitud: ", textStatus);
+    }
+
+});
+
 
 
 $('#btnSave').on('click', function() {
-        // Variables para verificar campos
-        const missingFields = []; // Array para almacenar campos faltantes
-        const createCatIntents = $('#createCatIntents').val();
-        const createDateReq = $('#createDateReq').val();
-        const createCatMisas = $('#createCatMisas').val();
-        const persona = $('#persona').val();
-        const solicitante = $('#solicitante').val();
-        const CelPhone = $('#CelPhone').val();
-        const donativo = $('#donativo').val();
-        const Description = $('#Description').val();
+    // Variables para verificar campos
+    const missingFields = []; // Array para almacenar campos faltantes
+    const createCatIntents = $('#createCatIntents').val();
+    const createDateReq = $('#createDateReq').val();
+    const createCatMisas = $('#createCatMisas').val();
+    const persona = $('#persona').val();
+    const solicitante = $('#solicitante').val();
+    const CelPhone = $('#CelPhone').val();
+    const donativo = $('#donativo').val();
+    const Description = $('#Description').val();
 
-        if (!createCatIntents) missingFields.push("Tipo de intención*");
-        if (!createDateReq) missingFields.push("Fecha de intención*");
-        if (!createCatMisas) missingFields.push("Hora*");
-        if (!persona) missingFields.push("Persona mención*");
-        if (!solicitante) missingFields.push("Solicitante*");
-        if (!CelPhone) missingFields.push("Teléfono *");
-        if (!donativo) missingFields.push("Donativo*");
-        
+    if (!createCatIntents) missingFields.push("Tipo de intención*");
+    if (!createDateReq) missingFields.push("Fecha de intención*");
+    if (!createCatMisas) missingFields.push("Hora*");
+    if (!persona) missingFields.push("Persona mención*");
+    if (!solicitante) missingFields.push("Solicitante*");
+    if (!CelPhone) missingFields.push("Teléfono *");
+    if (!donativo) missingFields.push("Donativo*");
+    
 
-        // Si hay campos faltantes, mostrar SweetAlert
-        if (missingFields.length > 0) {
+    // Si hay campos faltantes, mostrar SweetAlert
+    if (missingFields.length > 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Faltan los siguientes campos: ' + missingFields.join(', '),
+        });
+        return; // Detiene la ejecución si hay campos faltantes
+    }
+
+    // Serializa los datos del formulario
+    var formData = new FormData($('#IntentionCreateForm')[0]);
+
+    $.ajax({
+    url: 'api/intents/createMisaIntent.php',
+    type: 'POST',
+    data: formData,  
+    contentType: false,
+    processData: false,
+    beforeSend: function() {
+        Swal.fire({
+            title: 'Procesando solicitud...',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    },
+    success: function(response) {
+        // Asume que response es un objeto JSON y contiene un campo "message"
+        const intentId = response.message; // Obtén el valor de "message" como el ID
+
+        // Verifica si se obtuvo correctamente el ID
+        if (!intentId) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Faltan los siguientes campos: ' + missingFields.join(', '),
+                text: 'No se pudo obtener el ID de la intención. Por favor, inténtalo de nuevo.',
             });
-            return; // Detiene la ejecución si hay campos faltantes
+            return;
         }
 
-        // Serializa los datos del formulario
-        var formData = new FormData($('#IntentionCreateForm')[0]);
+        // Crear un nuevo FormData para la segunda solicitud
+        const pdfData = new FormData();
+        pdfData.append('id', intentId); // Enviar el ID como "id"
 
+        // Segunda solicitud AJAX para generar y descargar el PDF
         $.ajax({
-            url: 'api/intents/createMisaIntent.php',
+            url: 'views/intents/intentTemplate.php',
             type: 'POST',
-            data: formData,  
+            data: pdfData,  
             contentType: false,
             processData: false,
             beforeSend: function() {
                 Swal.fire({
-                    title: 'Procesando solicitud...',
+                    title: 'Generando PDF...',
                     allowOutsideClick: false,
                     showConfirmButton: false,
                     didOpen: () => {
@@ -496,27 +705,54 @@ $('#btnSave').on('click', function() {
                     }
                 });
             },
-            success: function(response) {
-                
+            xhrFields: {
+                responseType: 'blob', // Importante para manejar archivos
+            },
+            success: function (data) {
+                const blob = new Blob([data], { type: 'application/pdf' });
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = `intencion_${intentId}.pdf`; // Nombre del archivo con el ID
+                link.click();
+                window.URL.revokeObjectURL(link.href);
+
+                // Muestra el mensaje de éxito después de generar el PDF
                 Swal.fire({
                     icon: 'success',
-                    title: 'Documento Generado',
-                    text: 'El PDF se ha descargado correctamente.'
+                    title: 'PDF Generado',
+                    text: 'El recibo ha sido generado correctamente. Puedes encontrarlo en tu carpeta de descargas.',
+                    allowOutsideClick: true // El usuario debe cerrar manualmente
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirigir a otra página o realizar otra acción
+                        window.location.href = 'intenciones';
+                    }
                 });
-                    
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error: function () {
+                Swal.close();
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error al crear la intencion',
-                    text: 'Por favor contacte a soporte: ' + textStatus,
+                    title: 'Error',
+                    text: 'Hubo un problema al generar el PDF. Inténtalo de nuevo.',
                 });
             }
         });
-        
-        
+
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al crear la intención',
+                text: 'Por favor contacte a soporte: ' + textStatus,
+            });
+        }
     });
-    $('#btnUpdate').on('click', function() {
+    
+    
+});
+
+$('#btnUpdate').on('click', function() {
     const formData = $('#editForm').serialize();
     $.ajax({
         url: 'api/intents/updateMisaIntent.php',

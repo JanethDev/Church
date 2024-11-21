@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $jsonData = json_encode($dataIntent, JSON_PRETTY_PRINT);
 
     // Muestra el JSON para depuración
-    echo $jsonData;
+    //echo $jsonData;
 
     // Configuración de Guzzle
     $headers = [
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $body = $response->getBody()->getContents();
         header('Content-Type: application/json');
-        //echo $body;
+        echo json_encode(["message" => $body]);
 
     } catch (RequestException $e) {
         if ($e->hasResponse()) {
