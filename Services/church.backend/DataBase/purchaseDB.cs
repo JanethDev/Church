@@ -198,6 +198,7 @@ namespace church.backend.DataBase
                                                 , data.concept
                                                 , data.typePaymentId
                                                 , data.currencyId
+                                                , data.periodId
                     );
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -386,6 +387,7 @@ namespace church.backend.DataBase
                                     aisleTransfer = reader["aisle_transfer"].ToString()!,
                                 };
                                 temporalPurchar.payments = paymentsByPurchase(temporalPurchar.purchaseId);
+                                temporalPurchar.beneficiaries = consultBeneficiaries(temporalPurchar.purchaseId);
                                 response.data.Add(temporalPurchar);
                             }
                         }
@@ -481,6 +483,7 @@ namespace church.backend.DataBase
                                     aisleTransfer = reader["aisle_transfer"].ToString()!,
                                 };
                                 temporalPurchar.payments = paymentsByPurchase(temporalPurchar.purchaseId);
+                                temporalPurchar.beneficiaries = consultBeneficiaries(temporalPurchar.purchaseId);
                                 response.data.Add(temporalPurchar);
                             }
                         }
@@ -526,6 +529,8 @@ namespace church.backend.DataBase
                                     date = _nv.nullDate(reader["date_payment"].ToString()!),
                                     statusId = _nv.nullInt(reader["cat_status_id"].ToString()!),
                                     status = reader["status"].ToString()!,
+                                    periodId = _nv.nullInt(reader["trans_purchase_payments_period_id"].ToString()!),
+                                    period = reader["period"].ToString()!,
                                 });
                             }
                         }
