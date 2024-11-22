@@ -12,5 +12,7 @@ namespace church.backend.Models.purchase
         public DateTime date { get; set; } = new DateTime();
         public int statusId { get; set; } = new int();
         public string status { get; set; } = string.Empty;
+        public int periodId { get; set; } = new int();
+        public string period { get; set; } = string.Empty;
     }
 }
