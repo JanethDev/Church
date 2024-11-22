@@ -254,16 +254,7 @@ p, td {
 
     
     }
-    .watermark-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        font-size: 55pt;
-        color: rgba(230, 60, 80, 0.3); 
-        transform: translate(-50%, -50%) rotate(-45deg); 
-        z-index: 0; 
-        white-space: nowrap; 
-    }
+
      .content {
             position: relative;
             z-index: 1; /* Asegura que el contenido esté sobre la marca de agua */
@@ -305,7 +296,6 @@ p, td {
     }
     </style>
 </head>
-    <div class='watermark-text'>NO TIENE VALIDEZ</div>
 
 <div class='content'>
 

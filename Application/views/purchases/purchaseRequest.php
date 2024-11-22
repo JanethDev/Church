@@ -95,9 +95,9 @@ require_once('auth/session.php');
                             <td>NOMBRES*</td>
                         </tr>
                         <tr class="tr-new-customer">
-                            <td><input type="text" class="form-control control-customer-new" id="PSurname" name="PSurname" disabled /></td>
-                            <td><input type="text" class="form-control control-customer-new" id="MSurname" name="MSurname" disabled /></td>
-                            <td><input type="text" class="form-control control-customer-new" id="Name" name="Name" disabled/></td>
+                            <td><input type="text" class="form-control control-customer-new" id="PSurname" name="PSurname" readonly /></td>
+                            <td><input type="text" class="form-control control-customer-new" id="MSurname" name="MSurname" readonly  /></td>
+                            <td><input type="text" class="form-control control-customer-new" id="Name" name="Name" readonly /></td>
                         </tr>
                     </table>
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
@@ -109,9 +109,9 @@ require_once('auth/session.php');
                             
                         </tr>
                         <tr>
-                            <td ><input type="text" class="form-control" id="address" name="address" value="" disabled/></td>
-                            <td ><input type="text" class="form-control" id="house_number" name="house_number" value="" disabled/></td>
-                            <td ><input type="text" class="form-control" id="apt_number" name="apt_number" value="" disabled/></td>
+                            <td ><input type="text" class="form-control" id="address" name="address" value="" readonly /></td>
+                            <td ><input type="text" class="form-control" id="house_number" name="house_number" value="" readonly /></td>
+                            <td ><input type="text" class="form-control" id="apt_number" name="apt_number" value="" readonly /></td>
                             
                         </tr>
                         <tr>
@@ -120,8 +120,8 @@ require_once('auth/session.php');
                             
                         </tr>
                         <tr>
-                            <td colspan="2"><input type="text" class="form-control" id="neighborhood" name="neighborhood" value="" disabled/></td>
-                            <td ><input type="text" class="form-control" id="zip_code" name="zip_code" value="" disabled /></td>
+                            <td colspan="2"><input type="text" class="form-control" id="neighborhood" name="neighborhood" value="" readonly /></td>
+                            <td ><input type="text" class="form-control" id="zip_code" name="zip_code" value="" readonly  /></td>
                             
                         </tr>
                         <tr>
@@ -132,12 +132,12 @@ require_once('auth/session.php');
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" class="form-control" id="catStatesId" name="catStatesId" value="" disabled/>
+                                <input type="text" class="form-control" id="catStatesId" name="catStatesId" value="" readonly />
                             <td>
-                                <input type="text" class="form-control" id="Deputation" name="Deputation" value="" disabled/>
+                                <input type="text" class="form-control" id="Deputation" name="Deputation" value="" readonly />
                             </td>
                             <td>
-                                <input type="text" class="form-control" id="catTownsId" name="catTownsId" value="" disabled/>
+                                <input type="text" class="form-control" id="catTownsId" name="catTownsId" value="" readonly />
                             </td>
                             
                         </tr>
@@ -148,35 +148,35 @@ require_once('auth/session.php');
                             <td>CORREO ELECTRONICO*</td>  
                         </tr>
                         <tr>
-                            <td><input type="text" class="form-control phone control-customer" id="CelPhone" name="CelPhone" disabled/></td>
-                            <td><input type="text" class="form-control control-customer" id="Email" name="Email" disabled/></td>
+                            <td><input type="text" class="form-control phone control-customer" id="CelPhone" name="CelPhone" readonly /></td>
+                            <td><input type="text" class="form-control control-customer" id="Email" name="Email" readonly /></td>
                         </tr>
                     </table>
                     <table class="table table-bordered" style="background-color: white">
                         <tr>
                             <td style="width:25%">Razón Social</td>
-                            <td><input type="text" class="form-control" id="social_reason" name="social_reason" disabled/></td>
+                            <td><input type="text" class="form-control" id="social_reason" name="social_reason" readonly /></td>
                         </tr>
                         <tr>
                             <td style="width:25%">R.F.C o CURP</td>
-                            <td><input type="text" class="form-control" id="RFCCURP" name="RFCCURP" disabled></td>
+                            <td><input type="text" class="form-control" id="RFCCURP" name="RFCCURP" readonly ></td>
                         </tr>
                         <tr>
                             <td style="width:25%">FECHA DE NACIMIENTO</td>
-                            <td><input type="date" class="form-control datepicker" id="DateOfBirth" name="DateOfBirth" value="" disabled/></td>
+                            <td><input type="date" class="form-control datepicker" id="DateOfBirth" name="DateOfBirth" value="" readonly /></td>
                         </tr>
                         <tr>
                             <td style="width:25%">LUGAR DE NACIMIENTO</td>
-                            <td><input type="text" class="form-control" id="CityOfBirth" name="CityOfBirth" value="" disabled/></td>
+                            <td><input type="text" class="form-control" id="CityOfBirth" name="CityOfBirth" value="" readonly /></td>
                         </tr>
                         <tr>
                             <td style="width:25%">ESTADO CIVIL</td>
-                            <td><input type="text" class="form-control" id="CivilStatus" name="CivilStatus" value="" disabled/>
+                            <td><input type="text" class="form-control" id="CivilStatus" name="CivilStatus" value="" readonly />
                             </td>
                         </tr>
                         <tr>
                             <td style="width:25%">OCUPACION</td>
-                            <td><input type="text" class="form-control" id="Occupation" name="Occupation" value="" disabled/></td>
+                            <td><input type="text" class="form-control" id="Occupation" name="Occupation" value="" readonly /></td>
                         </tr>
                         </table>
                     </div>
@@ -187,19 +187,19 @@ require_once('auth/session.php');
                         <tr><td colspan="3" style="text-align:center"><strong>DATOS DE LA EMPRESA DONDE PRESTA SUS SERVICIO</strong></td></tr>
                         <tr>
                             <td>NOMBRE DE LA COMPAÑIA</td>
-                            <td style="width:70%"><input type="text" class="form-control" id="Company" name="Company" value="" disabled/></td>
+                            <td style="width:70%"><input type="text" class="form-control" id="Company" name="Company" value="" readonly /></td>
                         </tr>
                     </table>
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
                         <tr>
                             <td style="width:70%">DOMICILIO</td>
                             <td>TELEFONO</td>
-                            <td><input type="text" class="form-control phone" id="PhoneCompany" name="PhoneCompany" value="" disabled/></td>
+                            <td><input type="text" class="form-control phone" id="PhoneCompany" name="PhoneCompany" value="" readonly /></td>
                         </tr>
                         <tr>
-                            <td style="width:70%"><input type="text" class="form-control" id="AddressCompany" name="AddressCompany" value="" disabled/></td>
+                            <td style="width:70%"><input type="text" class="form-control" id="AddressCompany" name="AddressCompany" value="" readonly /></td>
                             <td>EXT.</td>
-                            <td><input type="text" class="form-control" id="ExtPhoneCompany" name="ExtPhoneCompany" value="" disabled/></td>
+                            <td><input type="text" class="form-control" id="ExtPhoneCompany" name="ExtPhoneCompany" value="" readonly /></td>
                         </tr>
                     </table>
                     <table class="table table-bordered" style="background-color: white">
@@ -210,13 +210,13 @@ require_once('auth/session.php');
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" class="form-control" id="StateAddressCompany" name="StateAddressCompany" value="" disabled/>
+                                <input type="text" class="form-control" id="StateAddressCompany" name="StateAddressCompany" value="" readonly />
                             </td>
                             <td>
-                                <input type="text" class="form-control" id="MunicipalityAddressCompany" name="MunicipalityAddressCompany" value="" disabled/>
+                                <input type="text" class="form-control" id="MunicipalityAddressCompany" name="MunicipalityAddressCompany" value="" readonly />
                             </td>
                             <td>
-                                <input type="text" class="form-control" id="CityAddressCompany" name="CityAddressCompany" value="" disabled/>
+                                <input type="text" class="form-control" id="CityAddressCompany" name="CityAddressCompany" value="" readonly />
                             </td>
                         </tr>
                         <tr>
@@ -226,7 +226,7 @@ require_once('auth/session.php');
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">$</span>
                                     </div>
-                                    <input type="text" class="form-control" id="Income" name="Income" value="" aria-describedby="basic-addon1" disabled/>
+                                    <input type="text" class="form-control" id="Income" name="Income" value="" aria-describedby="basic-addon1" readonly />
                                 </div>
                             </td>
                         </tr>
@@ -235,17 +235,17 @@ require_once('auth/session.php');
                         <tr><td colspan="4" style="text-align:center"><strong>REFERENCIAS</strong></td></tr>
                         <tr>
                             <td>1*</td>
-                            <td><input type="text" class="form-control control-reference" id="ReferenceCustomer1" name="ReferenceCustomer1" value="" disabled/>
-                            <input type="hidden" class="form-control control-beneficiary" id="idReference1" name="idReference1" value="" disabled/></td>
+                            <td><input type="text" class="form-control control-reference" id="ReferenceCustomer1" name="ReferenceCustomer1" value="" readonly />
+                            <input type="hidden" class="form-control control-beneficiary" id="idReference1" name="idReference1" value="" readonly /></td>
                             <td>TEL.*</td>
-                            <td><input type="text" class="form-control control-reference phone" id="ReferenceCustomerPhone1" name="ReferenceCustomerPhone1" value="" disabled/>
-                            <input type="hidden" class="form-control control-beneficiary" id="idReference2" name="idReference2" value="" disabled/></td>
+                            <td><input type="text" class="form-control control-reference phone" id="ReferenceCustomerPhone1" name="ReferenceCustomerPhone1" value="" readonly />
+                            <input type="hidden" class="form-control control-beneficiary" id="idReference2" name="idReference2" value="" readonly /></td>
                         </tr>
                         <tr>
                             <td>2</td>
-                            <td><input type="text" class="form-control control-reference" id="ReferenceCustomer2" name="ReferenceCustomer2" value="" disabled/></td>
+                            <td><input type="text" class="form-control control-reference" id="ReferenceCustomer2" name="ReferenceCustomer2" value="" readonly /></td>
                             <td>TEL.</td>
-                            <td><input type="text" class="form-control control-reference phone" id="ReferenceCustomerPhone2" name="ReferenceCustomerPhone2" value="" disabled/></td>
+                            <td><input type="text" class="form-control control-reference phone" id="ReferenceCustomerPhone2" name="ReferenceCustomerPhone2" value="" readonly /></td>
                         </tr>
                     </table>
   
@@ -522,11 +522,11 @@ $(document).ready(function() {
             data.beneficiaries.forEach((beneficiary) => {
                 beneficiariesTable.append(`
                     <tr class="tr-beneficiary">
-                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryName[]" value="${beneficiary.name}" disabled /></td>
-                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiarySurnames[]" value="${beneficiary.surnames}" disabled /></td>
-                        <td><input type="date" class="form-control datepicker control-beneficiary" name="BeneficiaryBirthdate[]" value="${beneficiary.birthdate}" disabled /></td>
-                        <td><input type="text" class="form-control control-beneficiary phone" name="BeneficiaryCelPhone[]" value="${beneficiary.phone}" disabled /></td>
-                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryRelationship[]" value="${beneficiary.relationship}" disabled /></td>
+                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryName[]" value="${beneficiary.name}" readonly  /></td>
+                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiarySurnames[]" value="${beneficiary.surnames}" readonly  /></td>
+                        <td><input type="date" class="form-control datepicker control-beneficiary" name="BeneficiaryBirthdate[]" value="${beneficiary.birthdate}" readonly  /></td>
+                        <td><input type="text" class="form-control control-beneficiary phone" name="BeneficiaryCelPhone[]" value="${beneficiary.phone}" readonly  /></td>
+                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryRelationship[]" value="${beneficiary.relationship}" readonly  /></td>
                     </tr>
                 `);
             });
@@ -633,8 +633,8 @@ $(document).ready(function() {
     // Botón de regresar
     $('#btnPurchase').click(function (e) {
         e.preventDefault(); // Previene el comportamiento por defecto del botón
-        var formData = new FormData($('#PurchaseRequestCreateForm')[0]);
 
+        var formData = new FormData($('#PurchaseRequestCreateForm')[0]);
         // SweetAlert para confirmar la cancelación
         Swal.fire({
             title: '¿Deseas confirmar la compra?',
