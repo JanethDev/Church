@@ -9,5 +9,6 @@ namespace church.backend.Models.purchase
         public int number { get; set; } = new int();
         public DateTime date { get; set; } = new DateTime();
         public int statusId { get; set; } = new int();
+        public int periodId { get; set; } = new int();
     }
 }
