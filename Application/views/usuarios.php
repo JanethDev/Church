@@ -8,7 +8,7 @@ date_default_timezone_set('America/Tijuana');
 </style>
 <div class="card">
     <div class="card-header card-header-green">
-        <h2>Usuarios</h2>
+        <h2>Intenciones</h2>
     </div>
     <div class="card-body">
         <div style="text-align: right;">
@@ -20,14 +20,44 @@ date_default_timezone_set('America/Tijuana');
         <div id="IntentsList" class="visible">
             <div class="table-responsive">
                 <form id="PurchaseRequestCreateForm" enctype="multipart/form-data">
+                    <table class="table" style="background-color: white;margin-bottom: 0px;">
+                        <tr>
+                            <td><strong>Nombre</strong></td>
+                            <td><strong>Rol</strong></td>
+                        </tr>
+                        <tr class="tr-new-customer">
+                            <td> 
+                                <select class="form-control select2" id="catIntents" name="catIntents">
+                                    <option value="">Seleccionar</option>
+                                </select>
+                            </td>
+                            <td><input type="date" class="form-control control-customer-new" id="dateReq" name="dateReq" /></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Estatus</strong></td>
+                            <td><strong></strong></td>
+                        </tr>
+                        <tr class="tr-new-customer">
+                            <td>
+                                <select class="form-control select2" id="catMisas" name="catMisas">
+                                    <option value="">Seleccionar</option>
+                                </select>
+                            </td>
+                            <td>
+                                <!--<button type="button" class="btn btn-danger" id="btnDownload">Descargar</button>-->
+                                <button type="button" class="btn btn-primary" id="btnClear">Limpiar</button>
+                                <button type="button" class="btn btn-warning" id="btnSearch">Buscar</button>
+                            </td>
+                        </tr>
+                    </table><br>
                     <table class="table table-striped table-bordered" id="intentsList">
                         <thead>
                             <tr>
-                                <th>Estado</th>
-                                <th>Apellidos</th>
-                                <th>Nombre</th>
-                                <th>Rol</th>
-                                <th>Catedral</th>
+                                <th>Persona a mencionar</th>
+                                <th>Tipo</th>
+                                <th>Fecha solicitud</th>
+                                <th>Hora</th>
+                                <th>Fecha intención</th>
                                 <th></th>
                             </tr>
                         </thead>

@@ -391,7 +391,7 @@ require_once('auth/session.php');
 
                     <table class="table table-bordered" id="economicConditions" style="background-color: white;margin-bottom: 0px;">
                         <tr>
-                            <td colspan="4" style="text-align:center"><strong>CONDICIONES ECONOMICAS DE LA OPERACION</strong></td>
+                            <td colspan="5" style="text-align:center"><strong>CONDICIONES ECONOMICAS DE LA OPERACION</strong></td>
                         </tr>
                         <tr>
                             <td>PLAN DE VENTA</td>

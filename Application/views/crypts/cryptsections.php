@@ -20,6 +20,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                 }
             }
         }
+
+        // Verificar si la zona es AH01U01
+        $isReverseOrder = false;
+        foreach ($positions as $pos) {
+            if (isset($pos['zone']) && $pos['zone'] === "AH01U01") {
+                $isReverseOrder = true;
+                break;
+            }
+        }
 ?>
 <div class="table-container">
     <div class="row">
@@ -69,8 +78,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                 return substr($position['position'], 0, 1);
             }, $positions));
 
-            // Ordenar las letras alfabéticamente
-            sort($letters);
+            // Ordenar las letras según la zona
+            if ($isReverseOrder) {
+                rsort($letters); // Orden inverso (Z a A)
+            } else {
+                sort($letters); // Orden normal (A a Z)
+            }
             ?>
 
             <?php foreach ($letters as $letter): ?>
@@ -79,39 +92,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                     <?php for ($k = 1; $k <= $maxColumns; $k++): ?>
                         <?php 
                         $positionFound = false;
+                        $currentPosition = null;
+
                         foreach ($positions as $pos) {
                             $positionNumber = (int) filter_var($pos['position'], FILTER_SANITIZE_NUMBER_INT);
                             if ($pos['position'][0] == $letter && $positionNumber == $k) {
                                 $positionFound = true;
+                                $currentPosition = $pos;
                                 break;
                             }
                         }
                         ?>
                         <?php if ($positionFound): ?>
                             <td class="<?php 
-                                    // Si el estado es 'disponible' o es 'apartado' y places_shared < 4, se marca como disponible
-                                    echo ($pos['status'] == 'disponible' || ($pos['status'] == 'apartado' && $pos['places_shared'] < 4)) 
+                                    echo ($currentPosition['status'] == 'disponible' || 
+                                        ($currentPosition['status'] == 'apartado' && $currentPosition['places_shared'] < 4)) 
                                         ? 'disponible' 
                                         : 'no-disponible'; 
                                 ?>"
-                                data-id="<?= $pos['id'] ?>"
-                                data-full-position="<?= htmlspecialchars($pos['full_position']) ?>"
-                                data-zone="<?= htmlspecialchars($pos['zone']) ?>"
-                                data-position-name="<?= htmlspecialchars($pos['position']) ?>"
-                                data-is-shared="<?= $pos['is_shared'] ?>"
-                                data-places-shared="<?= $pos['places_shared'] ?>"
-                                data-price="<?= $pos['price'] ?>" 
-                                data-price-shared="<?= $pos['price_shared'] ?>"
-                                data-status-id="<?= $pos['status_id'] ?>"
-                                data-level="<?= $pos['levelNumber'] ?>"
-                                data-aisle="<?= htmlspecialchars($pos['aisle']); ?>"
-                                data-status="<?= htmlspecialchars($pos['status']) ?>">
+                                data-id="<?= $currentPosition['id'] ?>"
+                                data-full-position="<?= htmlspecialchars($currentPosition['full_position']) ?>"
+                                data-zone="<?= htmlspecialchars($currentPosition['zone']) ?>"
+                                data-position-name="<?= htmlspecialchars($currentPosition['position']) ?>"
+                                data-is-shared="<?= $currentPosition['is_shared'] ?>"
+                                data-places-shared="<?= $currentPosition['places_shared'] ?>"
+                                data-price="<?= $currentPosition['price'] ?>" 
+                                data-price-shared="<?= $currentPosition['price_shared'] ?>"
+                                data-status-id="<?= $currentPosition['status_id'] ?>"
+                                data-level="<?= $currentPosition['levelNumber'] ?>"
+                                data-aisle="<?= htmlspecialchars($currentPosition['aisle']); ?>"
+                                data-status="<?= htmlspecialchars($currentPosition['status']) ?>">
                                 <div class="td-inner">
                                     <?php
-                                    if ($pos['is_shared'] && $pos['status'] == 'disponible') {
+                                    if ($currentPosition['is_shared'] && $currentPosition['status'] == 'disponible') {
                                         $imgSrc = 'assets/img/cuadro-compartida.png';
                                     } else {
-                                        switch ($pos['status']) {
+                                        switch ($currentPosition['status']) {
                                             case 'disponible':
                                                 $imgSrc = 'assets/img/cuadro.png';
                                                 break;
@@ -130,8 +146,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['response'])) {
                                         }
                                     }
                                     ?>
-                                    <img src="<?= $imgSrc ?>" alt="<?= $pos['status'] ?>"></img>
-                                    <span class="position-name"><?= $pos['position'] ?></span>
+                                    <img src="<?= $imgSrc ?>" alt="<?= $currentPosition['status'] ?>"></img>
+                                    <span class="position-name"><?= $currentPosition['position'] ?></span>
                                 </div>
                             </td>
                         <?php else: ?>

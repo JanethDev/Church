@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         try {
             // Realiza la solicitud GET a la API para buscar al cliente
-            $response = $client->request('GET', 'purchase/by/id', [
+            $response = $client->request('GET', 'confirm/purchase', [
                 'query' => [
                     'puschaseId' => $purchase, // Aquí va el parámetro de búsqueda
                 ],

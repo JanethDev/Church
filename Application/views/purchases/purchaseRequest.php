@@ -13,8 +13,10 @@
 <?php
 require_once '../../init.php';
 require_once('auth/session.php');
+
+
     // Recibe los valores enviados a través de AJAX
-    $CustomerId = isset($_POST['customerId']) ? $_POST['customerId'] : '0';
+    $purchaseId= isset($_POST['purchaseId']) ? $_POST['purchaseId'] : '0';
     $fechaUltima = new DateTime();
 
     // Suma los meses de las mensualidades a la fecha actual
@@ -65,29 +67,20 @@ require_once('auth/session.php');
                         <tr>
                             
                             <td>VENDEDOR</td>
-                            
+                            <td>
+                                <?php echo($name); ?>
+                            </td>
                         </tr>
                         <tr>
                             
                             <td>SERVIDOR</td>
                             
-                        </tr>
-                        <tr>
-                            
                             <td>
                                 <?php echo($name); ?>
                             </td>
                             
-
                         </tr>
-                        <tr>
-                            
-                            <td>
-                                <?php echo($name); ?>
-                            </td>
-                            
-
-                        </tr>
+                       
                     </table>
                 </div>
             </div>
@@ -95,22 +88,16 @@ require_once('auth/session.php');
                 <div class="col-md-12 col-sm-6 col-xs-12">
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
                         <tr><td colspan="3" style="text-align:center;"><strong>DATOS DEL SOLICITANTE</strong></td></tr>
-                        <tr>
-                            <td colspan="3">
-                                <button type="button" class="btn btn-success" id="btnNewCustomer" style="margin-left:5px;">NUEVO CLIENTE</button>
-                               
-                            </td>
-                        </tr>
-                       
+                        
                         <tr class="tr-new-customer" >
                             <td>APELLIDO PATERNO*</td>
                             <td>APELLIDO MATERNO</td>
                             <td>NOMBRES*</td>
                         </tr>
                         <tr class="tr-new-customer">
-                            <td><input type="text" class="form-control control-customer-new" id="PSurname" name="PSurname" /></td>
-                            <td><input type="text" class="form-control control-customer-new" id="MSurname" name="MSurname" /></td>
-                            <td><input type="text" class="form-control control-customer-new" id="Name" name="Name" /></td>
+                            <td><input type="text" class="form-control control-customer-new" id="PSurname" name="PSurname" disabled /></td>
+                            <td><input type="text" class="form-control control-customer-new" id="MSurname" name="MSurname" disabled /></td>
+                            <td><input type="text" class="form-control control-customer-new" id="Name" name="Name" disabled/></td>
                         </tr>
                     </table>
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
@@ -122,9 +109,9 @@ require_once('auth/session.php');
                             
                         </tr>
                         <tr>
-                            <td ><input type="text" class="form-control" id="address" name="address" value="" /></td>
-                            <td ><input type="text" class="form-control" id="house_number" name="house_number" value="" /></td>
-                            <td ><input type="text" class="form-control" id="apt_number" name="apt_number" value="" /></td>
+                            <td ><input type="text" class="form-control" id="address" name="address" value="" disabled/></td>
+                            <td ><input type="text" class="form-control" id="house_number" name="house_number" value="" disabled/></td>
+                            <td ><input type="text" class="form-control" id="apt_number" name="apt_number" value="" disabled/></td>
                             
                         </tr>
                         <tr>
@@ -133,8 +120,8 @@ require_once('auth/session.php');
                             
                         </tr>
                         <tr>
-                            <td colspan="2"><input type="text" class="form-control" id="neighborhood" name="neighborhood" value="" /></td>
-                            <td ><input type="text" class="form-control" id="zip_code" name="zip_code" value="" /></td>
+                            <td colspan="2"><input type="text" class="form-control" id="neighborhood" name="neighborhood" value="" disabled/></td>
+                            <td ><input type="text" class="form-control" id="zip_code" name="zip_code" value="" disabled /></td>
                             
                         </tr>
                         <tr>
@@ -145,16 +132,12 @@ require_once('auth/session.php');
                         </tr>
                         <tr>
                             <td>
-                                <select class="form-control select2" id="catStatesId" name="catStatesId">
-                                    <option value="">Seleccione un estado</option>
-                                </select>
+                                <input type="text" class="form-control" id="catStatesId" name="catStatesId" value="" disabled/>
                             <td>
-                                <input type="text" class="form-control" id="Deputation" name="Deputation" value="" />
+                                <input type="text" class="form-control" id="Deputation" name="Deputation" value="" disabled/>
                             </td>
                             <td>
-                                <select class="form-control select2" id="catTownsId" name="catTownsId">
-                                    <option value="">Seleccione una ciudad</option>
-                                </select>
+                                <input type="text" class="form-control" id="catTownsId" name="catTownsId" value="" disabled/>
                             </td>
                             
                         </tr>
@@ -165,37 +148,35 @@ require_once('auth/session.php');
                             <td>CORREO ELECTRONICO*</td>  
                         </tr>
                         <tr>
-                            <td><input type="text" class="form-control phone control-customer" id="CelPhone" name="CelPhone" /></td>
-                            <td><input type="text" class="form-control control-customer" id="Email" name="Email" /></td>
+                            <td><input type="text" class="form-control phone control-customer" id="CelPhone" name="CelPhone" disabled/></td>
+                            <td><input type="text" class="form-control control-customer" id="Email" name="Email" disabled/></td>
                         </tr>
                     </table>
                     <table class="table table-bordered" style="background-color: white">
                         <tr>
                             <td style="width:25%">Razón Social</td>
-                            <td><input type="text" class="form-control" id="social_reason" name="social_reason" /></td>
+                            <td><input type="text" class="form-control" id="social_reason" name="social_reason" disabled/></td>
                         </tr>
                         <tr>
                             <td style="width:25%">R.F.C o CURP</td>
-                            <td><input type="text" class="form-control" id="RFCCURP" name="RFCCURP"></td>
+                            <td><input type="text" class="form-control" id="RFCCURP" name="RFCCURP" disabled></td>
                         </tr>
                         <tr>
                             <td style="width:25%">FECHA DE NACIMIENTO</td>
-                            <td><input type="date" class="form-control datepicker" id="DateOfBirth" name="DateOfBirth" value="" /></td>
+                            <td><input type="date" class="form-control datepicker" id="DateOfBirth" name="DateOfBirth" value="" disabled/></td>
                         </tr>
                         <tr>
                             <td style="width:25%">LUGAR DE NACIMIENTO</td>
-                            <td><input type="text" class="form-control" id="CityOfBirth" name="CityOfBirth" value="" /></td>
+                            <td><input type="text" class="form-control" id="CityOfBirth" name="CityOfBirth" value="" disabled/></td>
                         </tr>
                         <tr>
                             <td style="width:25%">ESTADO CIVIL</td>
-                            <td><select class="form-control select2" id="CivilStatus" name="CivilStatus">
-                                    <option value="">Estado civil</option>
-                                </select>
+                            <td><input type="text" class="form-control" id="CivilStatus" name="CivilStatus" value="" disabled/>
                             </td>
                         </tr>
                         <tr>
                             <td style="width:25%">OCUPACION</td>
-                            <td><input type="text" class="form-control" id="Occupation" name="Occupation" value="" /></td>
+                            <td><input type="text" class="form-control" id="Occupation" name="Occupation" value="" disabled/></td>
                         </tr>
                         </table>
                     </div>
@@ -206,19 +187,19 @@ require_once('auth/session.php');
                         <tr><td colspan="3" style="text-align:center"><strong>DATOS DE LA EMPRESA DONDE PRESTA SUS SERVICIO</strong></td></tr>
                         <tr>
                             <td>NOMBRE DE LA COMPAÑIA</td>
-                            <td style="width:70%"><input type="text" class="form-control" id="Company" name="Company" value="" /></td>
+                            <td style="width:70%"><input type="text" class="form-control" id="Company" name="Company" value="" disabled/></td>
                         </tr>
                     </table>
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
                         <tr>
                             <td style="width:70%">DOMICILIO</td>
                             <td>TELEFONO</td>
-                            <td><input type="text" class="form-control phone" id="PhoneCompany" name="PhoneCompany" value="" /></td>
+                            <td><input type="text" class="form-control phone" id="PhoneCompany" name="PhoneCompany" value="" disabled/></td>
                         </tr>
                         <tr>
-                            <td style="width:70%"><input type="text" class="form-control" id="AddressCompany" name="AddressCompany" value="" /></td>
+                            <td style="width:70%"><input type="text" class="form-control" id="AddressCompany" name="AddressCompany" value="" disabled/></td>
                             <td>EXT.</td>
-                            <td><input type="text" class="form-control" id="ExtPhoneCompany" name="ExtPhoneCompany" value="" /></td>
+                            <td><input type="text" class="form-control" id="ExtPhoneCompany" name="ExtPhoneCompany" value="" disabled/></td>
                         </tr>
                     </table>
                     <table class="table table-bordered" style="background-color: white">
@@ -229,17 +210,13 @@ require_once('auth/session.php');
                         </tr>
                         <tr>
                             <td>
-                                <select class="form-control select2" id="StateAddressCompany" name="StateAddressCompany">
-                                    <option value="">Seleccione un estado</option>
-                                </select>
+                                <input type="text" class="form-control" id="StateAddressCompany" name="StateAddressCompany" value="" disabled/>
                             </td>
                             <td>
-                                <input type="text" class="form-control" id="MunicipalityAddressCompany" name="MunicipalityAddressCompany" value="" />
+                                <input type="text" class="form-control" id="MunicipalityAddressCompany" name="MunicipalityAddressCompany" value="" disabled/>
                             </td>
                             <td>
-                                <select class="form-control select2" id="CityAddressCompany" name="CityAddressCompany">
-                                    <option value="">Seleccione una ciudad</option>
-                                </select>
+                                <input type="text" class="form-control" id="CityAddressCompany" name="CityAddressCompany" value="" disabled/>
                             </td>
                         </tr>
                         <tr>
@@ -249,7 +226,7 @@ require_once('auth/session.php');
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">$</span>
                                     </div>
-                                    <input type="text" class="form-control" id="Income" name="Income" value="" aria-describedby="basic-addon1" />
+                                    <input type="text" class="form-control" id="Income" name="Income" value="" aria-describedby="basic-addon1" disabled/>
                                 </div>
                             </td>
                         </tr>
@@ -258,44 +235,41 @@ require_once('auth/session.php');
                         <tr><td colspan="4" style="text-align:center"><strong>REFERENCIAS</strong></td></tr>
                         <tr>
                             <td>1*</td>
-                            <td><input type="text" class="form-control control-reference" id="ReferenceCustomer1" name="ReferenceCustomer1" value="" />
-                            <input type="hidden" class="form-control control-beneficiary" id="idReference1" name="idReference1" value="" /></td>
+                            <td><input type="text" class="form-control control-reference" id="ReferenceCustomer1" name="ReferenceCustomer1" value="" disabled/>
+                            <input type="hidden" class="form-control control-beneficiary" id="idReference1" name="idReference1" value="" disabled/></td>
                             <td>TEL.*</td>
-                            <td><input type="text" class="form-control control-reference phone" id="ReferenceCustomerPhone1" name="ReferenceCustomerPhone1" value="" />
-                            <input type="hidden" class="form-control control-beneficiary" id="idReference2" name="idReference2" value="" /></td>
+                            <td><input type="text" class="form-control control-reference phone" id="ReferenceCustomerPhone1" name="ReferenceCustomerPhone1" value="" disabled/>
+                            <input type="hidden" class="form-control control-beneficiary" id="idReference2" name="idReference2" value="" disabled/></td>
                         </tr>
                         <tr>
                             <td>2</td>
-                            <td><input type="text" class="form-control control-reference" id="ReferenceCustomer2" name="ReferenceCustomer2" value="" /></td>
+                            <td><input type="text" class="form-control control-reference" id="ReferenceCustomer2" name="ReferenceCustomer2" value="" disabled/></td>
                             <td>TEL.</td>
-                            <td><input type="text" class="form-control control-reference phone" id="ReferenceCustomerPhone2" name="ReferenceCustomerPhone2" value="" /></td>
+                            <td><input type="text" class="form-control control-reference phone" id="ReferenceCustomerPhone2" name="ReferenceCustomerPhone2" value="" disabled/></td>
                         </tr>
                     </table>
-                    <table class="table table-bordered" id="tableBeneficiary" style="background-color: white;margin-bottom: 0px;">
-                        <tr><td colspan="6" style="text-align:center"><strong>BENEFICIARIOS</strong></td></tr>
-                        <tr>
-                            <td>Nombres</td>
-                            <td>Apellidos</td>
-                            <td>Fecha nac.</td>
-                            <td>Teléfono</td>
-                            <td>Parentesco</td>
-                            <td><button class="btn btn-success" id="btnAddBeneficiary" type="button">+</button></td>
-                        </tr>
-                        
-                        <tr class="tr tr-beneficiary">
-                            <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryName" value="" /></td>
-                            <td><input type="text" class="form-control control-beneficiary" name="BeneficiarySurnames" value="" /></td>
-                            <td><input type="date" class="form-control datepicker control-beneficiary" name="BeneficiaryBirthdate" value="" /></td>
-                            <td><input type="text" class="form-control control-beneficiary phone" name="BeneficiaryCelPhone" value="" /></td>
-                            <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryRelationship" value="" /><input type="hidden" name="BeneficiaryCustomerID" value="0" /></td>
-                            <td><button class="btn btn-danger btn-remove-beneficiary" type="button">-</button></td>
-                        </tr>
-                        
+  
+                    <table class="table table-bordered" id="tableBeneficiary" style="background-color: white;margin-bottom: 0px;"> 
+                       
+                        <thead> 
+                            <tr><td colspan="6" style="text-align:center"><strong>BENEFICIARIOS</strong></td></tr>
+                            <tr>
+                                <td>Nombres</td>
+                                <td>Apellidos</td>
+                                <td>Fecha nac.</td>
+                                <td>Teléfono</td>
+                                <td>Parentesco</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Las filas se generarán dinámicamente aquí -->
+                        </tbody>
+                    
                     </table>
 
                     <table class="table table-bordered" id="economicConditions" style="background-color: white;margin-bottom: 0px;">
                         <tr>
-                            <td colspan="4" style="text-align:center"><strong>CONDICIONES ECONOMICAS DE LA OPERACION</strong></td>
+                            <td colspan="5" style="text-align:center"><strong>CONDICIONES ECONOMICAS DE LA OPERACION</strong></td>
                         </tr>
                         <tr>
                             <td>PLAN DE VENTA</td>
@@ -310,10 +284,7 @@ require_once('auth/session.php');
                             <td><label id="levelLabel"></label></td>
                             <td><label id="areaLabel"></label></td>
                             <td><label id="zoneLabel"></label></td>
-                            <input type="hidden" name="cryptId" id="cryptId" value="" />
-                            <input type="hidden" name="cryptSpaces" id="cryptSpaces" value="" />
-                            <input type="hidden" name="discountId" id="discountId" value="" />
-                            <input type="hidden" name="federalTax" id="federalTax" value="0" />
+                           
                         </tr>
                     </table>
 
@@ -388,15 +359,15 @@ require_once('auth/session.php');
                         </tr>
                         <tr>
                             <td colspan="">
-                                <input type="checkbox" id="ckMaintenance" class="check-box" style="width: 30px; height: 30px" />
+                                
                                 <label style="position:absolute;margin-top:4px;margin-left:15px"> 
-                                    <span id="maintenance">$ </span> <span id="maintenanceIsShared"> Incluido</span> 
+                                    <span id="maintenance">$ </span> <span id="maintenanceIsShared"> M.N </span> 
                                 </label> 
                                 <input type="hidden" name="inMaintenance" id="CheckMaintenanceFee" value="False" />
                             </td>
                             <td>
-                                <input type="checkbox" id="ckAshDeposit" class="check-box" style="width: 30px; height: 30px;" />
-                                <label style="position: absolute; margin-top: 4px; margin-left: 15px">$ <span id="ashDeposit"></span> M.N.</label>
+                               
+                                <label style="position: absolute; margin-top: 4px; margin-left: 15px"> <span id="ashDeposit"></span> M.N.</label>
                                 <input type="hidden" name="inAshDeposit" id="CheckAshDepositFee" value="False" />
                             </td>
                             <td>
@@ -408,57 +379,17 @@ require_once('auth/session.php');
                             </td>
                         </tr>
                     </table>
-                    <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
-                        <tr>
-                            <td class="text-center align-middle" rowspan="7">FORMA DEL PAGO INICIAL*</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"></td>
-                            <td>CANTIDAD</td>
-                            <td>No. DE CHEQUE</td>
-                            <td>No. DE CUENTA</td>
-                            <td>BANCO</td>
-                            <!--<td>Comprobante</td>-->
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" id="TypePay1" class="typepay" name="TypePay" value="1"></td>
-                            <td>CHEQUE</td>
-                            <td><input type="number" id="amount_check" class="form-control" name="amount_check" placeholder="Cantidad" disabled></td>
-                            <td><input type="text" id="check_number" class="form-control" name="check_number" placeholder="No. de Cheque" disabled></td>
-                            <td><input type="text" id="account_number" class="form-control" name="account_number" placeholder="No. de Cuenta" disabled></td>
-                            <td><input type="text" id="bank" class="form-control" name="bank" placeholder="Banco" disabled></td>
-                            <!--<td></td>  No input file para Cheque -->
-                        </tr>
-                        <tr style="margin-bottom:5px">
-                            <td><input type="checkbox" id="TypePay2" class="typepay" name="TypePay" value="2"></td>
-                            <td>T. DE CREDITO/DEBITO</td>
-                            <td><input type="number" id="amount_card" class="form-control" name="amount_card" placeholder="Cantidad" disabled></td>
-                            <td><input type="text" id="card_number" class="form-control" name="card_number" placeholder="No. de Cheque" disabled></td>
-                            <td><input type="text" id="account_card" class="form-control" name="account_card" placeholder="No. de Cuenta" disabled></td>
-                            <td><input type="text" id="bank_card" class="form-control" name="bank_card" placeholder="Banco" disabled></td>
-                             <!--<td></td> No input file para T. de Crédito/Debito -->
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" id="TypePay3" class="typepay" name="TypePay" value="3"></td>
-                            <td>TRANSFERENCIA</td>
-                            <td><input type="number" id="amount_transfer" class="form-control" name="amount_transfer" placeholder="Cantidad" disabled></td>
-                            <td colspan="3"></td>
-                            <!--<td><input type="file" class="form-control typepay3" id="TicketTransfer" name="TicketTransfer" disabled></td> Input file para Transferencia -->
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" id="TypePay5" class="typepay" name="TypePay" value="5"></td>
-                            <td>DEPOSITO EN EFECTIVO</td>
-                            <td><input type="number" id="amount_cash_deposit" class="form-control" name="amount_cash_deposit" placeholder="Cantidad" disabled></td>
-                            <td colspan="3"></td>
-                             <!-- <td><input type="file" class="form-control typepay5" id="TicketCashDeposit" name="TicketCashDeposit" disabled></td>Input file para Depósito en Efectivo -->
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" id="TypePay4" class="typepay" name="TypePay" value="4"></td>
-                            <td>EFECTIVO</td>
-                            <td><input type="number" id="amount_cash" class="form-control" name="amount_cash" placeholder="Cantidad" disabled></td>
-                            <td colspan="4"></td>
-                           
-                        </tr>
+                    <table class="table table-bordered" id="tablePayments" style="background-color: white;margin-bottom: 0px;">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">A PAGAR</th>
+                                <th>FORMA DE PAGO INICIAL</th>
+                                <th>CANTIDAD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Filas de pagos generadas dinámicamente -->
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -470,67 +401,24 @@ require_once('auth/session.php');
 <div class="row" style="padding-top:15px;">
     <div class="col-md-2 col-sm-2 col-xs-6">
         <button class="btn btn-primary" style="width:100%;" id="btnRegresar">Volver</button>
+
+    </div>
+    <div class="col-md-2 col-sm-2 col-xs-6">
+        <button class="btn btn-danger" style="float:right;width:100%;" id="btnCancel">Cancelar compra</button>
+
     </div>
     <div class="offset-md-6 col-md-2 col-sm-2 col-xs-6">
-        <button class="btn btn-default" style="float:right;width:100%;" id="btnPurchase">Confirmar compra</button>
-        <button class="btn btn-danger" style="float:right;width:100%;" id="btnCancel">Cancelar compra</button>
-    </div>
+        <button class="btn btn-success" style="float:right;width:100%;" id="btnPurchase">Confirmar compra</button>
+       
+    
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
 <script>
 $(document).ready(function() {
-    $('.select2').select2();
-    const customerID = <?php echo $customerId; ?>;
-   
-    $.ajax({
-        url: 'api/customers/getCustomerData.php', // Cambia esto por la URL de tu API que devuelva los datos del cliente
-        type: 'POST',
-        data: { customerID: customerID },
-        dataType: 'json',
-        success: function(data) {
-            if (data && data.customer) {
-                // Poblamos los campos del formulario con los datos recibidos
-                $('#PSurname').val(data.customer.PSurname);
-                $('#MSurname').val(data.customer.MSurname);
-                $('#Name').val(data.customer.Name);
-                $('#address').val(data.customer.address);
-                $('#house_number').val(data.customer.house_number);
-                $('#apt_number').val(data.customer.apt_number);
-                $('#neighborhood').val(data.customer.neighborhood);
-                $('#zip_code').val(data.customer.zip_code);
-                $('#Deputation').val(data.customer.Deputation);
-                $('#CelPhone').val(data.customer.CelPhone);
-                $('#Email').val(data.customer.Email);
-                $('#social_reason').val(data.customer.social_reason);
-                $('#RFCCURP').val(data.customer.RFCCURP);
-                $('#DateOfBirth').val(data.customer.DateOfBirth);
-                $('#CityOfBirth').val(data.customer.CityOfBirth);
-                $('#CivilStatus').val(data.customer.CivilStatus);
-                $('#Occupation').val(data.customer.Occupation);
-                
-                // Llenar selects de Estado y Ciudad si están disponibles en los datos
-                if (data.customer.catStatesId) {
-                    $('#catStatesId').val(data.customer.catStatesId).trigger('change');
-                }
-                if (data.customer.catTownsId) {
-                    $('#catTownsId').val(data.customer.catTownsId).trigger('change');
-                }
-                
-                // Puedes ajustar más campos si tienes datos adicionales.
-            } else {
-                console.error('No se encontraron datos para el cliente especificado.');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error al obtener los datos del cliente:', error);
-        }
-    });
-    
-    $('#btnRegresar').click(function(e) {
-        e.preventDefault(); // Evita que el botón envíe un formulario o recargue la página
-        window.location.href = 'cotizaciones'; // Redirige sin parámetros
-    });
 
+    const purchaseId = <?= $purchaseId; ?>;
+   
     function applyPhoneMask() {
         $('.phone').inputmask("(999) 999-9999"); // Aplica la máscara de teléfono
     }
@@ -550,555 +438,277 @@ $(document).ready(function() {
         rightAlign: false,
         removeMaskOnSubmit: true // Esto quita la máscara al enviar el formulario si es necesario.
     });
-
-    $('#ckOtherFee').change(function() {
-        if ($(this).is(':checked')) {
-            // Mostrar el input para ingresar el monto
-            $('#otherFeeAmount').show().addClass('d-inline-block');
-            $('#CheckOtherFee').val($('#otherFeeAmount').val()); // Asignar el valor ingresado en el campo oculto
-        } else {
-            // Ocultar el input y limpiar el valor
-            $('#otherFeeAmount').hide().removeClass('d-inline-block');
-            $('#otherFeeAmount').val(''); // Limpiar el valor del input
-            $('#CheckOtherFee').val('False'); // Cambiar el valor del campo hidden a False
-        }
-    });
-
-    // Aplicar la máscara de entrada para números
-    $('#otherFeeAmount').inputmask({
-        alias: 'numeric',
-        groupSeparator: ',',
-        autoGroup: true,
-        digits: 2,
-        radixPoint: '.',
-        digitsOptional: false,
-        placeholder: "0",
-        rightAlign: false,
-        removeMaskOnSubmit: true // Esto quita la máscara al enviar el formulario si es necesario.
-    });
-    
-
-   
-    $('#otherFeeAmount').on('input', function() {
-        var amount = parseFloat($(this).val().replace(/,/g, ''));
-        
-        // Validar si el monto es cero, negativo o NaN
-        if (amount <= 0 || isNaN(amount)) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'El monto no puede ser cero o negativo.',
-            });
-            $(this).val(''); // Limpiar el valor si es incorrecto
-            $('#CheckOtherFee').val('False'); // Cambiar el valor del campo hidden a False si el monto es inválido
-        } else {
-            // Solo si el checkbox está marcado y el valor es válido, actualizar el campo hidden
-            if ($('#ckOtherFee').is(':checked')) {
-                $('#CheckOtherFee').val(amount); // Asignar el valor al campo hidden
-            }
-        }
-    });
-    $('#mensuales_checkbox').prop('checked', true);
-        calculatePaymentAmount();  // Llama a la función para calcular y mostrar el monto inicial
-
-        // El resto de tu código, incluyendo el listener de cambio en los checkboxes
-        $('input[name="payment_type"]').change(function() {
-            // Cambia el chequeo de otros checkboxes según el tipo de pago seleccionado
-            if ($(this).attr('id') === 'mensuales_checkbox') {
-                $('#semanales_checkbox').prop('checked', false);
-            } else {
-                $('#mensuales_checkbox').prop('checked', false);
-            }
-
-            // Recalcula el monto según la opción seleccionada
-            calculatePaymentAmount();
-        });
-    
-
-    function calculatePaymentAmount() {
-        var paymentType = $('input[name="payment_type"]:checked').val();
-        var totalFinal = parseFloat(<?= round($saldo, 2); ?>); // Redondear saldo a dos decimales en PHP
-        var semanasDiferencia = <?= $semanasDiferencia; ?>;
-        var mensualidades = parseFloat(<?= round($mensualidades, 2); ?>); // Redondear mensualidad a dos decimales en PHP
-
-        if (paymentType === 'semanales') {
-            var totalPorSemana = Math.round(totalFinal / semanasDiferencia);
-            $('#payment_amount').text(totalPorSemana.toFixed(2)); // Redondear a entero y mostrar como XXXX.00
-        } else {
-            $('#payment_amount').text(Math.round(mensualidades).toFixed(2)); // Redondear a entero y mostrar como XXXX.00
-        }
-    }
-
-    // Seleccionar "mensuales" por defecto y calcular el monto
-    $('#mensuales_checkbox').prop('checked', true);
-    calculatePaymentAmount();  // Calcular el valor inicial
-
-    // Al cambiar cualquiera de los checkboxes
-    $('input[name="payment_type"]').change(function() {
-        if ($(this).attr('id') === 'mensuales_checkbox') {
-            $('#semanales_checkbox').prop('checked', false);
-        } else {
-            $('#mensuales_checkbox').prop('checked', false);
-        }
-
-        // Calcular el monto de acuerdo a la selección
-        calculatePaymentAmount();
-    });
-
-    function formatDateToYMD(dateString) {
-        var parts = dateString.split('/');
-        // Cambia el orden de la fecha a YYYY-MM-DD
-        return `${parts[2]}-${parts[1]}-${parts[0]}`;
-    }
-
-    $.ajax({
-        url: 'api/general/stateTowns.php', 
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            if (Array.isArray(data)) {
-                // Llenar el select de estados
-                $.each(data, function(index, item) {
-                    $('#StateAddressCompany').append(new Option(item.state.state_name, item.state.id));
-                    $('#catStatesId').append(new Option(item.state.state_name, item.state.id));
-                });
-            } else {
-                console.error("Error en la respuesta de la API: ", data.error);
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.error("Error en la solicitud: ", textStatus);
-        }
-    }); 
-    
-
-    // Obtener ciudades según el estado seleccionado
-    $('#catStatesId').change(function() {
-        const stateId = $(this).val();
-        $('#catTownsId').empty().append(new Option("Seleccione una ciudad", ""));
-
-        if (stateId) {
-            // Buscar las ciudades en el JSON que se obtuvieron previamente
-            $.ajax({
-                url: 'api/general/stateTowns.php', // Vuelve a llamar a la API para obtener la lista completa
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    if (Array.isArray(data)) {
-                        // Filtrar las ciudades del estado seleccionado
-                        const towns = data.find(item => item.state.id == stateId)?.towns_list || [];
-                        $.each(towns, function(index, town) {
-                            $('#catTownsId').append(new Option(town.town_name, town.id));
-                        });
-                    } else {
-                        console.error("Error en la respuesta de la API: ", data.error);
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error("Error en la solicitud: ", textStatus);
-                }
-            });
-        }
-    });
-
-    // Obtener ciudades según el estado seleccionado
-    $('#StateAddressCompany').change(function() {
-        const stateId = $(this).val();
-        $('#CityAddressCompany').empty().append(new Option("Seleccione una ciudad", ""));
-
-        if (stateId) {
-            // Buscar las ciudades en el JSON que se obtuvieron previamente
-            $.ajax({
-                url: 'api/general/stateTowns.php', // Vuelve a llamar a la API para obtener la lista completa
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    if (Array.isArray(data)) {
-                        // Filtrar las ciudades del estado seleccionado
-                        const towns = data.find(item => item.state.id == stateId)?.towns_list || [];
-                        $.each(towns, function(index, town) {
-                            $('#CityAddressCompany').append(new Option(town.town_name, town.id));
-                        });
-                    } else {
-                        console.error("Error en la respuesta de la API: ", data.error);
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error("Error en la solicitud: ", textStatus);
-                }
-            });
-        }
-    });
-    // Manejar el evento de eliminación de beneficiarios
-    $('#tableBeneficiary').on('click', '.btn-remove-beneficiary', function() {
-        // Contar el número de filas en la tabla, excluyendo la cabecera
-        var rowCount = $('#tableBeneficiary tr.tr-beneficiary').length;
-
-        // Si hay más de una fila, permitir la eliminación
-        if (rowCount > 1) {
-            $(this).closest('tr').remove(); // Eliminar la fila correspondiente
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se puede eliminar el único beneficiario.',
-            });
-        }
-
-        // Después de eliminar, actualizamos el número de filas
-        actualizarContadorBeneficiarios();
-    });
-
-    // Función para actualizar el contador de beneficiarios
-    function actualizarContadorBeneficiarios() {
-        var rowCount = $('#tableBeneficiary tr.tr-beneficiary').length;
-
-        // Mostrar el botón de agregar si hay menos de 4 beneficiarios
-        if (rowCount < 4) {
-            $('#btnAddBeneficiary').prop('disabled', false); // Habilitar el botón de agregar
-        } else {
-            $('#btnAddBeneficiary').prop('disabled', true); // Deshabilitar el botón si ya hay 4
-        }
-    }
-
-    function getBeneficiarios() {
-        const beneficiarios = [];
-        
-        $('#tableBeneficiary .tr-beneficiary').each(function() {
-            const idBeneficiary = $(this).find('input[name="idBeneficiary"]').val();
-            const name = $(this).find('input[name="BeneficiaryName"]').val();
-            const surnames = $(this).find('input[name="BeneficiarySurnames"]').val();
-            const birthdate = $(this).find('input[name="BeneficiaryBirthdate"]').val();
-            const phone = $(this).find('input[name="BeneficiaryCelPhone"]').val();
-            const relationship = $(this).find('input[name="BeneficiaryRelationship"]').val();
-
-            // Solo agrega beneficiarios que tengan un nombre
-            if (name) {
-                beneficiarios.push({
-                    idBeneficiary,
-                    name,
-                    surnames,
-                    birthdate,
-                    phone,
-                    relationship
-                });
-            }
-        });
-        
-        return beneficiarios;
-    }
-
-    const totalFinal = 1000;
-    const enganche = 1000;
-    let maintenanceCost = 0; // Ajusta según tus necesidades
-    const ashDepositCost = 920; // Usa tu constante ya definida
-    let otherFeeAmount = 0;
-    const selectedPaymentValue = 1000;
-
-    // Función para actualizar el total del pago inicial
-    function updateInitialPayment() {
-        let initialPayment = selectedPaymentValue === 1 ? Math.round(totalFinal) : Math.round(enganche);
-
-        if ($('#ckMaintenance').is(':checked')) {
-            initialPayment += Math.round(maintenanceCost);
-        }
-        if ($('#ckAshDeposit').is(':checked')) {
-            initialPayment += Math.round(ashDepositCost);
-        }
-        if ($('#ckOtherFee').is(':checked')) {
-            const otherFeeValue = parseFloat($('#otherFeeAmount').val()) || 0;
-            initialPayment += Math.round(otherFeeValue);
-        }
-
-        $('#initialPaymentLabel').text(`$${initialPayment.toFixed(2)} M.N.`);
-    }
-
-    // Listeners para checkboxes y campo de monto "Otro"
-    $('#ckMaintenance, #ckAshDeposit, #ckOtherFee').change(updateInitialPayment);
-    $('#otherFeeAmount').on('input', updateInitialPayment);
-
-
-    // Ocultar "Incluido" al inicio y asegurar que el costo esté oculto
-    $('#maintenanceIsShared').hide();
-    $('#maintenance').hide();
-
-   
-// Manejar la lógica según el tipo de cripta seleccionada
-    if (isShared === 'Individual') {
-        // Si es una cripta individual, bloqueamos el checkbox, lo marcamos y mostramos que está incluido
-        $('#ckMaintenance').prop('checked', true);
-        $('#ckMaintenance').prop('disabled', true);
-        $('#maintenanceIsShared').show();  // Mostrar "Incluido"
-        $('#maintenance').hide();  // Ocultar el precio ya que es costo 0
-        $('#CheckMaintenanceFee').val(0);  // Asignar valor 0 al campo oculto
-    } else {
-        // Si no es individual, permitimos marcar/desmarcar el checkbox
-        $.ajax({
-            url: 'api/purchases/maintenance.php', // Cambia esto a la ruta correcta de tu archivo
-            type: 'GET',
-            dataType: 'json', // Espera una respuesta en JSON
-            success: function(data) {
-                // Aquí puedes manejar la respuesta
-                if (data.error) {
-                    $('#resultado').html("Error: " + data.error);
-                } else {
-                    // Almacena el costo de mantenimiento según el tipo de cripta
-                    if (isShared === 'Familiar') {
-                        maintenanceCost = data.cost; 
-                    } else {
-                        maintenanceCost = 0;  
-                    }
-
-                    // Mostrar el costo de mantenimiento formateado
-                    $('#maintenance').text(formatPrice(maintenanceCost)).show(); // Mostrar el costo con formato
-                }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // Manejar errores de la solicitud
-                $('#resultado').html("Error en la solicitud: " + textStatus);
-            }
-        });
-
-        // Mostrar el campo para el mantenimiento
-        $('#maintenanceIsShared').hide();  // Ocultar el texto "Incluido"
-        $('#ckMaintenance').prop('checked', false);
-        $('#ckMaintenance').prop('disabled', false);
-        $('#CheckMaintenanceFee').val(maintenanceCost);  // Asignar el valor del costo al campo oculto
-    }
-
-    // Actualizar el contenido y el valor del campo oculto cuando el checkbox es seleccionado
-    $('#ckMaintenance').change(function() {
-        if ($(this).is(':checked')) {
-            // Asignar el costo al campo oculto
-            $('#CheckMaintenanceFee').val(maintenanceCost); // Asignar costo al campo oculto
-        } else {
-            // Limpiar el campo oculto si no está seleccionado
-            $('#CheckMaintenanceFee').val('False'); // Restablecer campo oculto
-        }
-    });
-
-    // Manejar el checkbox de depósito de cenizas
-    $('#ckAshDeposit').change(function() {
-        if ($(this).is(':checked')) {
-            // Mostrar costo en la etiqueta y asignar el valor al campo oculto
-            $('#ashDeposit').text(ashDepositCost); // Mostrar costo de cenizas
-            $('#CheckAshDepositFee').val(ashDepositCost); // Asignar costo al campo oculto
-        } else {
-            // Limpiar el contenido y el campo oculto si no está seleccionado
-            $('#ashDeposit').text(''); // Limpiar costo
-            $('#CheckAshDepositFee').val('False'); // Restablecer campo oculto
-        }
-    });
-    
-
-    $('.typepay').change(function() {
-        var row = $(this).closest('tr'); // Obtiene la fila actual
-
-        // Variables de referencia para total final y enganche
-        const totalFinal = Math.round(parseFloat($('#totalAmountLabel').text().replace(/[^0-9.-]+/g, "")) * 100) || 0;
-        const enganche = Math.round(parseFloat($('#initialPaymentLabel').text().replace(/[^0-9.-]+/g, "")) * 100) || 0;
-
-        // Obtener el valor seleccionado para el plan de pago
-        var selectedPaymentValue = parseInt($('#paymentPlanLabel').val());
-
-        // Habilitar o deshabilitar los inputs según el estado del checkbox
-        if ($(this).is(':checked')) {
-            // Contar los checkboxes seleccionados
-            var checkedCount = $('.typepay:checked').length;
-
-            // Si se seleccionan más de 2, deseleccionar el checkbox actual
-            if (checkedCount > 2) {
-                $(this).prop('checked', false);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: "Solo puedes seleccionar un máximo de 2 opción."
-                });
-            } else {
-                // Habilitar los inputs de la fila actual
-                row.find('input[type="number"], input[type="text"]').prop('disabled', false);
-
-                // Dividir la cantidad si hay 2 seleccionados
-                if (checkedCount === 2) {
-                    var totalAmount = selectedPaymentValue === 1 ? totalFinal : enganche;
-                    var dividedAmount = (totalAmount / 2); // Divide la cantidad sin redondear
-
-                    // Asigna el valor dividido a los inputs de los checkboxes seleccionados
-                    $('.typepay:checked').each(function() {
-                        $(this).closest('tr').find('input[type="number"]').val((dividedAmount / 100).toFixed(2));
-                    });
-                } else {
-                    // Si hay solo un checkbox seleccionado, asigna el total
-                    var totalAmount = selectedPaymentValue === 1 ? totalFinal : enganche;
-                    row.find('input[type="number"]').val((totalAmount / 100).toFixed(2));
-                }
-
-                // Habilitar el input de archivo si es Transferencia o Depósito en Efectivo
-                if ($(this).val() === "3" || $(this).val() === "5") {
-                    row.find('input[type="file"]').prop('disabled', false);
-                }
-            }
-        } else {
-            // Deshabilitar los inputs de la fila actual
-            row.find('input[type="number"], input[type="text"]').prop('disabled', true).val(''); // Limpiar valores
-
-            // Deshabilitar el input de archivo si no es Transferencia o Depósito en Efectivo
-            if ($(this).val() === "3" || $(this).val() === "5") {
-                row.find('input[type="file"]').prop('disabled', true);
-            }
-        }
-
-        // Actualizar montos si se edita uno de los campos para mantener la suma correcta
-        $('input[type="number"]').on('input', function() {
-            var checkedCount = $('.typepay:checked').length;
-
-            // Si hay dos métodos seleccionados, recalcular el monto restante
-            if (checkedCount === 2) {
-                var totalAmount = selectedPaymentValue === 1 ? totalFinal : enganche;
-
-                // Obtener el otro campo seleccionado para actualizar
-                var otherInput = $('.typepay:checked').not($(this).closest('tr').find('input[type="checkbox"]')).closest('tr').find('input[type="number"]');
-
-                // Calcular el monto restante y actualizar el otro input
-                var currentAmount = Math.round(parseFloat($(this).val()) * 100) || 0;
-                var remainingAmount = (totalAmount - currentAmount) / 100;
-                otherInput.val(remainingAmount.toFixed(2));
-            }
-        });
-    });
-
-
-    
-        
-    
-        let beneficiaryCount = 1; // Contador de beneficiarios (comenzamos con 1 ya que ya hay una fila inicial)
-
-    $('#btnAddBeneficiary').on('click', function() {
-        // Contar el número de filas en la tabla, excluyendo la cabecera
-        var rowCount = $('#tableBeneficiary tr.tr-beneficiary').length;
-
-        applyPhoneMask(); 
-
-        // Verificar si el número de filas es menor a 4
-        if (rowCount < 4) {
-            // Crear una nueva fila con los campos vacíos
-            const newRow = `
-                <tr class="tr tr-beneficiary">
-                    <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryName" value="" /></td>
-                    <td><input type="text" class="form-control control-beneficiary" name="BeneficiarySurnames" value="" /></td>
-                    <td><input type="date" class="form-control datepicker control-beneficiary" name="BeneficiaryBirthdate" value="" /></td>
-                    <td><input type="text" class="form-control control-beneficiary phone" name="BeneficiaryCelPhone" value="" /></td>
-                    <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryRelationship" value="" /><input type="hidden" name="BeneficiaryCustomerID" value="0" /></td>
-                    <td><button class="btn btn-danger btn-remove-beneficiary" type="button">-</button></td>
-                </tr>
-            `;
-            $('#tableBeneficiary').append(newRow); // Agregar la nueva fila
-
-            // Actualizar el contador después de agregar
-            actualizarContadorBeneficiarios();
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pueden agregar más de 4 beneficiarios.',
-            });
-        }
-    });
-
-    $.ajax({
-        url: 'api/general/civilStatus.php', 
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            if (Array.isArray(data)) {
-                // Llenar el select de estado civil
-                $.each(data, function(index, item) {
-                    $('#CivilStatus').append(new Option(item.civilStatus, item.id));
-                });
-            } else {
-                console.error("Error en la respuesta de la API: ", data.error);
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.error("Error en la solicitud: ", textStatus);
-        }
-    });
-
-   
-    $('#CivilStatus').change(function() {
-        const selectedCivilStatusId = $(this).val();
-    });
-   
-    function validatePaymentAmounts(total, enganche) {
-        let sum = 0;
-        if ($('#amount_check').is(':enabled')) {
-            sum += Math.round(parseFloat($('#amount_check').val()) || 0);
-        }
-        if ($('#amount_card').is(':enabled')) {
-            sum += Math.round(parseFloat($('#amount_card').val()) || 0);
-        }
-        if ($('#amount_transfer').is(':enabled')) {
-            sum += Math.round(parseFloat($('#amount_transfer').val()) || 0);
-        }
-        if ($('#amount_cash_deposit').is(':enabled')) {
-            sum += Math.round(parseFloat($('#amount_cash_deposit').val()) || 0);
-        }
-        if ($('#amount_cash').is(':enabled')) {
-            sum += Math.round(parseFloat($('#amount_cash').val()) || 0);
-        }
-
-        sum = parseFloat(sum.toFixed(2));
-        total = parseFloat(total.toFixed(2));
-        enganche = parseFloat(enganche.toFixed(2));
-
-        if (selectedPaymentValue === 1 && sum > total) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'La suma de los montos no puede exceder el total final.',
-            });
-            return false;
-        } else if (selectedPaymentValue !== 1 && sum > enganche) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'La suma de los montos no puede exceder el enganche.',
-            });
-            return false;
-        }
-
-        return true;
-    }
-    var diaPrimerPago = "<?php echo $diaPrimerPago; ?>";
-    var mesPrimerPago = "<?php echo $mesPrimerPago; ?>";
-    var yPrimerPago = "<?php echo $yPrimerPago; ?>";
-
-    var diaUltimoPago = "<?php echo $diaUltimoPago; ?>";
-    var mesUltimoPago = "<?php echo $mesUltimoPago; ?>";
-    var yUltimoPago = "<?php echo $yUltimoPago; ?>";
-  
-
-    // IDs de ejemplo: ajusta según tus valores
-    const purchaseId = 260;
-    const customerId = 6267;
-
-    // Realizar la llamada AJAX para obtener los datos del cliente y de la compra
-    $.ajax({
+     // Llamada AJAX para obtener los datos del cliente y de la compra
+     $.ajax({
         type: "POST",
-        url: "purchaseById.php",
-        data: { purchaseId: purchaseId, customerId: customerId },
+        url: "api/purchases/purchaseById.php",
+        data: { purchaseId: purchaseId},
         success: function(response) {
-            const data = JSON.parse(response);
-            if (data.length > 0) {
-                populateForm(data[0]);  // Llama a la función para asignar valores al formulario
-            } else {
-                console.error('No se encontraron datos para el cliente y compra especificados.');
+            try {
+                const data = JSON.parse(response);
+                if (data.length > 0) {
+                    populateForm(data[0]); // Llama a la función para asignar valores al formulario
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Datos no encontrados',
+                        text: 'No se encontraron datos para el cliente y compra especificados.',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            } catch (error) {
+                console.error('Error al procesar los datos:', error);
             }
         },
         error: function(xhr, status, error) {
-            console.error('Error en la solicitud: ' + error);
+            console.error('Error en la solicitud:', error);
         }
     });
+
+    // Realizar la llamada AJAX para obtener los datos del cliente y de la compra
+    function populateForm(data) {
+        $('#PSurname').val(data.customerPsurname);
+        $('#MSurname').val(data.customerMsurname);
+        $('#Name').val(data.customerName);
+        $('#address').val(data.customerAddress);
+        $('#house_number').val(data.houseNumber || ''); // Si no existe, deja vacío
+        $('#apt_number').val(data.aptNumber || '');
+        $('#neighborhood').val(data.customerNeighborhood || '');
+        $('#zip_code').val(data.customerZipCode || '');
+        $('#catStatesId').val(data.customerStateId || '');
+        $('#catTownsId').val(data.customerTownId || '');
+        $('#Deputation').val(data.customerMunicipality || '');
+        $('#CelPhone').val(data.customerPhone);
+        $('#Email').val(data.customerEmail);
+        $('#social_reason').val(data.customerSocialReason || '');
+        $('#RFCCURP').val(data.customerRFC || '');
+        $('#DateOfBirth').val(data.customerBirthdate || '');
+        $('#CityOfBirth').val(data.birthPlace || '');
+        $('#CivilStatus').val(data.civilStatus || '');
+        $('#Occupation').val(data.occupation || '');
+        $('#Company').val(data.businessName || '');
+        $('#AddressCompany').val(data.businessAddress || '');
+        $('#PhoneCompany').val(data.businessPhone || '');
+        $('#ExtPhoneCompany').val(data.businessExt || '');
+        $('#StateAddressCompany').val(data.businessState || '');
+        $('#MunicipalityAddressCompany').val(data.businessMunicipality || '');
+        $('#CityAddressCompany').val(data.businessCity || '');
+        $('#Income').val(data.averageIncome || '');
+
+        // Referencias
+        $('#ReferenceCustomer1').val(data.referencePerson1 || '');
+        $('#ReferenceCustomerPhone1').val(data.referencePersonPhone1 || '');
+        $('#ReferenceCustomer2').val(data.referencePerson2 || '');
+        $('#ReferenceCustomerPhone2').val(data.referencePersonPhone2 || '');
+
+        // Condiciones económicas
+        $('#paymentPlanLabelDesc').text(data.paymentPlan || '');
+        $('#cryptKeyLabel').text(data.fullPosition || '');
+        $('#levelLabel').text(data.level || '');
+        $('#areaLabel').text(data.area || '');
+        $('#zoneLabel').text(data.zone || '');
+        $('#totalAmountLabel').text(formatCurrency(data.cryptPrice || 0));
+        $('#appliedDiscountLabel').text(formatCurrency(data.discountAmount || 0));
+        $('#initialPaymentLabel').text(formatCurrency(data.initialPayment || 0));
+        $('#balanceLabel').text(formatCurrency(data.balance || 0));
+        $('#maintenance').text(formatCurrency(data.maintenanceFee || 0));
+        $('#ashDeposit').text(formatCurrency(data.ashDeposit || 0));
+
+        // Beneficiarios
+        const beneficiariesTable = $('#tableBeneficiary tbody');
+        beneficiariesTable.empty(); // Limpia la tabla antes de agregar contenido
+
+        if (data.beneficiaries && data.beneficiaries.length > 0) {
+            data.beneficiaries.forEach((beneficiary) => {
+                beneficiariesTable.append(`
+                    <tr class="tr-beneficiary">
+                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryName[]" value="${beneficiary.name}" disabled /></td>
+                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiarySurnames[]" value="${beneficiary.surnames}" disabled /></td>
+                        <td><input type="date" class="form-control datepicker control-beneficiary" name="BeneficiaryBirthdate[]" value="${beneficiary.birthdate}" disabled /></td>
+                        <td><input type="text" class="form-control control-beneficiary phone" name="BeneficiaryCelPhone[]" value="${beneficiary.phone}" disabled /></td>
+                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryRelationship[]" value="${beneficiary.relationship}" disabled /></td>
+                    </tr>
+                `);
+            });
+        } else {
+            // Caso en que no hay beneficiarios registrados
+            beneficiariesTable.append(`
+                <tr>
+                    <td colspan="5" class="text-center">No se registró ningún beneficiario</td>
+                </tr>
+            `);
+        }
+
+        // Pagos
+        const paymentsTable = $('#tablePayments tbody');
+        paymentsTable.empty();
+        if (data.payments && data.payments.length > 0) {
+            data.payments.slice(0, 2).forEach((payment) => {
+                paymentsTable.append(`
+                    <tr>
+                        <td>A PAGAR</td>
+                        <td>${payment.typePayment || 'N/A'}</td>
+                        <td>${formatCurrency(payment.paymentAmount || 0)} M.N.</td>
+                    </tr>
+                `);
+            });
+        } else {
+            paymentsTable.append(`
+                <tr>
+                    <td colspan="3" class="text-center">No se registraron métodos de pago</td>
+                </tr>
+            `);
+        }
+
+
+    }
+
+    // Función para formatear valores como moneda
+    function formatCurrency(value) {
+        return `$${parseFloat(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    }
+
+    // Botón de regresar
+    $('#btnRegresar').click(function(e) {
+        e.preventDefault(); // Evita recargar la página
+        window.location.href = 'cotizaciones'; // Redirige a cotizaciones
+    });
+    // Botón de regresar
+    $('#btnCancel').click(function (e) {
+        e.preventDefault(); // Previene el comportamiento por defecto del botón
+
+        // SweetAlert para confirmar la cancelación
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "La cotización será cancelada y no podrá ser recuperada.",
+            icon: 'warning',
+            showCancelButton: true, // Muestra el botón de cancelar
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#315D7C',
+            confirmButtonText: 'Sí, cancelar',
+            cancelButtonText: 'No, volver'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Si el usuario confirma, realiza la solicitud AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "api/purchases/purchaseCancel.php",
+                    data: { purchaseId: purchaseId },
+                    success: function (response) {
+                        try {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Cotización cancelada',
+                                text: 'La cotización ha sido cancelada con éxito.',
+                                confirmButtonText: 'Aceptar',
+                                allowOutsideClick: false
+                            }).then(() => {
+                                // Redirige a otra página o refresca la tabla según sea necesario
+                                window.location.href = 'cotizaciones'; // Redirige a la página de cotizaciones
+                            });
+                        
+                        } catch (error) {
+                            console.error('Error al procesar los datos:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Ocurrió un error inesperado. Intenta nuevamente.',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error en la solicitud:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error en la solicitud',
+                            text: 'No se pudo realizar la operación. Intenta más tarde.',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }
+                });
+            }
+        });
+    });
+    // Botón de regresar
+    $('#btnPurchase').click(function (e) {
+        e.preventDefault(); // Previene el comportamiento por defecto del botón
+        var formData = new FormData($('#PurchaseRequestCreateForm')[0]);
+
+        // SweetAlert para confirmar la cancelación
+        Swal.fire({
+            title: '¿Deseas confirmar la compra?',
+            text: "La cotización pasará a ser una venta confirmada.",
+            icon: 'question',
+            showCancelButton: true, // Muestra el botón de cancelar
+            confirmButtonColor: '#CCA369 ',
+            cancelButtonColor: '#315D7C',
+            confirmButtonText: 'Confirmar compra',
+            cancelButtonText: 'No, volver'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Si el usuario confirma, realiza la solicitud AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "api/purchases/purchaseConfirm.php",
+                    data: { purchaseId: purchaseId },
+                    success: function(response) {
+                        const purchaseId = response.purchaseId; // Obtén `purchaseId` de la respuesta
+                        formData.append('purchaseId', purchaseId); // Añade `purchaseId` a formData
+
+                        // Segunda solicitud AJAX para generar y descargar el PDF
+                        $.ajax({
+                            url: 'views/purchases/purchaseTemplate.php',
+                            type: 'POST',
+                            data: formData,  
+                            contentType: false,
+                            processData: false,
+                            xhrFields: {
+                                responseType: 'blob'  // Recibir el archivo como blob
+                            },
+                            success: function(blob) {
+                                const url = URL.createObjectURL(blob);
+                                const link = document.createElement('a');
+                                link.href = url;
+                                link.download = 'Cotizacion.pdf';
+                                link.click();
+
+                                // Liberar el objeto URL después de la descarga
+                                URL.revokeObjectURL(url);
+                                
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Documento Generado',
+                                    text: 'El PDF se ha descargado correctamente.'
+                                });
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Error al generar el PDF: ' + textStatus
+                                });
+                            }
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error en la solicitud:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error en la solicitud',
+                            text: 'No se pudo realizar la operación. Intenta más tarde.',
+                            confirmButtonText: 'Aceptar',
+                            allowOutsideClick: false
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+
+
+
 });
 
 </script>

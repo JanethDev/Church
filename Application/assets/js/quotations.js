@@ -31,6 +31,14 @@ $(document).ready(function() {
     });
 });
 
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    if (isNaN(date)) return 'N/A'; // Si la fecha no es válida, mostrar "N/A"
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses son 0-indexados
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
 // Función para inicializar DataTables en las tablas correspondientes
 function initializeDataTables() {
     $('#quotationsTable').DataTable({
@@ -49,7 +57,12 @@ function initializeDataTables() {
             { "data": "fullPosition" },
             { "data": "zone", "defaultContent": "N/A" },
             { "data": "aisle", "defaultContent": "N/A" },
-            { "data": "datePurchase" },
+            {
+                "data": "datePurchase",
+                "render": function(data, type, row) {
+                    return formatDate(data); // Formatear la fecha
+                }
+            },
             { "data": "customerNumber" },
             { "data": "customerName" },
             {
@@ -77,7 +90,12 @@ function initializeDataTables() {
             { "data": "fullPosition" },
             { "data": "zone", "defaultContent": "N/A" },
             { "data": "aisle", "defaultContent": "N/A" },
-            { "data": "datePurchase" },
+            {
+                "data": "datePurchase",
+                "render": function(data, type, row) {
+                    return formatDate(data); // Formatear la fecha
+                }
+            },
             { "data": "customerNumber" },
             { "data": "customerName" },
             {
