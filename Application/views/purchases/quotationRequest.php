@@ -740,7 +740,7 @@ $(document).ready(function() {
                     results: response.map(function(customer) {
                         return {
                             id: customer.id,
-                            text: customer.name + ' ' + customer.father_last_name + ' - ' + customer.phone,
+                            text: customer.name + ' ' + customer.father_last_name + ' - ' + (customer.customerNumber === 0 ? 'Prospecto' : customer.customerNumber),
                             customerNumber: customer.customerNumber,
                             email: customer.email,
                             name: customer.name,
@@ -1118,36 +1118,112 @@ $(document).ready(function() {
     const selectedPaymentValue = parseInt(<?php echo json_encode($selectedPaymentValue); ?>);
 
     // Función para actualizar el total del pago inicial
-    function updateInitialPayment() {
-        let initialPayment = selectedPaymentValue === 1 ? totalFinal : enganche;
+function validatePaymentAmounts() {
+    let sum = 0;
 
-        if ($('#ckMaintenance').is(':checked')) {
-            initialPayment += maintenanceCost;
-        }
-        if ($('#ckAshDeposit').is(':checked')) {
-            initialPayment += ashDepositCost;
-        }
-        if ($('#ckOtherFee').is(':checked')) {
-            const otherFeeValue = parseFloat($('#otherFeeAmount').val()) || 0;
-            initialPayment += otherFeeValue;
-        }
-
-        // Actualizar totalFinal en tiempo real si es de contado
-        if (selectedPaymentValue === 1) {
-            totalFinal = initialPayment;
-            $('#totalAmountLabel').text(`$${totalFinal.toFixed(2)} M.N.`);
-        }
-
-        // Actualizar enganche y el valor mostrado
-        enganche = initialPayment;
-        $('#initialPaymentLabel').text(`$${initialPayment.toFixed(2)} M.N.`);
-
-        validatePaymentAmounts(); // Llama a la validación con el nuevo valor
+    // Sumar los montos de cada método de pago habilitado y redondear a enteros
+    if ($('#amount_check').is(':enabled')) {
+        sum += Math.round(parseFloat($('#amount_check').val()) || 0);
+    }
+    if ($('#amount_card').is(':enabled')) {
+        sum += Math.round(parseFloat($('#amount_card').val()) || 0);
+    }
+    if ($('#amount_transfer').is(':enabled')) {
+        sum += Math.round(parseFloat($('#amount_transfer').val()) || 0);
+    }
+    if ($('#amount_cash_deposit').is(':enabled')) {
+        sum += Math.round(parseFloat($('#amount_cash_deposit').val()) || 0);
+    }
+    if ($('#amount_cash').is(':enabled')) {
+        sum += Math.round(parseFloat($('#amount_cash').val()) || 0);
     }
 
-    // Listeners para checkboxes y campo de monto "Otro"
-    $('#ckMaintenance, #ckAshDeposit, #ckOtherFee').change(updateInitialPayment);
-    $('#otherFeeAmount').on('input', updateInitialPayment);
+    // Asegurar que sum sea un número entero
+    sum = Math.round(sum);
+
+    // Validar montos dependiendo del plan de pago
+    if (selectedPaymentValue === 1) { // Si es de contado
+        return sum === Math.round(totalFinal); // Comparar enteros
+    } else { // Si es a crédito
+        return sum === Math.round(enganche); // Comparar enteros
+    }
+}
+
+// Redondear valores mostrados en pantalla
+function updateInitialPayment() {
+    let initialPayment = selectedPaymentValue === 1 ? totalFinal : enganche;
+
+    if ($('#ckMaintenance').is(':checked')) {
+        initialPayment += maintenanceCost;
+    }
+    if ($('#ckAshDeposit').is(':checked')) {
+        initialPayment += ashDepositCost;
+    }
+    if ($('#ckOtherFee').is(':checked')) {
+        const otherFeeValue = parseFloat($('#otherFeeAmount').val()) || 0;
+        initialPayment += otherFeeValue;
+    }
+
+    // Convertir a entero
+    initialPayment = Math.round(initialPayment);
+
+    // Actualizar totalFinal en tiempo real si es de contado
+    if (selectedPaymentValue === 1) {
+        totalFinal = initialPayment;
+        $('#totalAmountLabel').text(`$${totalFinal} M.N.`);
+    }
+
+    // Actualizar enganche y el valor mostrado
+    enganche = initialPayment;
+    $('#initialPaymentLabel').text(`$${initialPayment} M.N.`);
+}
+
+    // Evento change para checkbox de mantenimiento
+    $('#ckMaintenance').change(function () {
+        if ($(this).is(':checked')) {
+            $('#CheckMaintenanceFee').val(maintenanceCost); // Asignar costo
+        } else {
+            $('#CheckMaintenanceFee').val('False'); // Resetear valor
+        }
+        updateInitialPayment(); // Recalcular el total
+    });
+
+    // Evento change para checkbox de depósito de cenizas
+    $('#ckAshDeposit').change(function () {
+        if ($(this).is(':checked')) {
+            $('#CheckAshDepositFee').val(ashDepositCost); // Asignar costo
+        } else {
+            $('#CheckAshDepositFee').val('False'); // Resetear valor
+        }
+        updateInitialPayment(); // Recalcular el total
+    });
+
+    // Evento change para checkbox "Otro" y su input asociado
+    $('#ckOtherFee').change(function () {
+        if ($(this).is(':checked')) {
+            $('#otherFeeAmount').show().addClass('d-inline-block');
+        } else {
+            $('#otherFeeAmount').hide().removeClass('d-inline-block').val(''); // Ocultar y limpiar
+            $('#CheckOtherFee').val('False'); // Resetear valor
+        }
+        updateInitialPayment(); // Recalcular el total
+    });
+
+    // Evento input para actualizar el valor de "Otro"
+    $('#otherFeeAmount').on('input', function () {
+        const amount = parseFloat($(this).val().replace(/,/g, '')) || 0;
+        if (amount <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'El monto no puede ser cero o negativo.',
+            });
+            $(this).val('');
+        } else {
+            $('#CheckOtherFee').val(amount);
+        }
+        updateInitialPayment(); // Recalcular el total
+    });
 
 
     // Ocultar "Incluido" al inicio y asegurar que el costo esté oculto
@@ -1363,49 +1439,7 @@ $(document).ready(function() {
         const selectedCivilStatusId = $(this).val();
     });
    
-    function validatePaymentAmounts() {
-        let sum = 0;
-
-        console.log('Validando montos de pago...');
-
-        // Obtener los montos de cada método de pago habilitado
-        if ($('#amount_check').is(':enabled')) {
-            sum += parseFloat($('#amount_check').val()) || 0;
-        }
-        if ($('#amount_card').is(':enabled')) {
-            sum += parseFloat($('#amount_card').val()) || 0;
-        }
-        if ($('#amount_transfer').is(':enabled')) {
-            sum += parseFloat($('#amount_transfer').val()) || 0;
-        }
-        if ($('#amount_cash_deposit').is(':enabled')) {
-            sum += parseFloat($('#amount_cash_deposit').val()) || 0;
-        }
-        if ($('#amount_cash').is(':enabled')) {
-            sum += parseFloat($('#amount_cash').val()) || 0;
-        }
-
-        sum = parseFloat(sum.toFixed(2));
-
-        // Verificar que la suma no exceda el monto requerido
-        if (selectedPaymentValue === 1 && sum !== totalFinal) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'La suma de los montos debe ser igual al total final.',
-            });
-            return false;
-        } else if (selectedPaymentValue !== 1 && sum !== enganche) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'La suma de los montos debe ser igual al enganche.',
-            });
-            return false;
-        }
-
-        return true;
-    }
+  
     var diaPrimerPago = "<?php echo $diaPrimerPago; ?>";
     var mesPrimerPago = "<?php echo $mesPrimerPago; ?>";
     var yPrimerPago = "<?php echo $yPrimerPago; ?>";
@@ -1493,15 +1527,23 @@ $(document).ready(function() {
         $('#balanceLabel').text(`$${balance.toFixed(2)} M.N.`);
 
 
-        console.log(initialPayment);
+        //console.log(initialPayment);
         
         const enganche = initialPayment;
         const totalFinal = totalAmount;
         
 
         // Validar montos de los métodos de pago seleccionados
-        if (!validatePaymentAmounts(totalFinal, enganche)) {
-            return; // Detener la ejecución si la validación falla
+        if (!validatePaymentAmounts()) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: selectedPaymentValue === 1
+                    ? 'La suma de los montos debe ser igual al total final.'
+                    : 'La suma de los montos debe ser igual al enganche.'
+            });
+            return;
+        // Detener la ejecución si la validación falla
         }
 
         // Serializa los datos del formulario
