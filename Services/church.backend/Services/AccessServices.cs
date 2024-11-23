@@ -340,6 +340,11 @@ namespace church.backend.services.Services
             return _accessDB.SearchCustomer(value);
         }
 
+        public list_customer ListCustomer()
+        {
+            return _accessDB.ListCustomer();
+        }
+
         private async Task SendValidateEmail(string email, string code)
         {
             var httpClient = _httpClientFactory.CreateClient();
