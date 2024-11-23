@@ -120,9 +120,28 @@ namespace church.backend.Controllers
         [HttpGet]
         [JwtAuthentication]
         [Route("customer/search")]
-        public IActionResult makeLogin([FromQuery] string value)
+        public IActionResult SearchCustomer([FromQuery] string value)
         {
             list_customer client = _AccessServices.SearchCustomer(value);
+            if (client.code != 1)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, client.message);
+            }
+            return Ok(client.customers);
+        }
+
+        /// <summary>
+        /// Busqueda de clientes activos
+        /// </summary>
+        /// <returns>Consulta todos los clientes con que se encuentren activos</returns>
+        /// <response code="200">Devuelve Listado de clientes</response>
+        /// <response code="400">Retorna algun error de consulta</response>
+        [HttpGet]
+        [JwtAuthentication]
+        [Route("customer/list")]
+        public IActionResult ListCustomer()
+        {
+            list_customer client = _AccessServices.ListCustomer();
             if (client.code != 1)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, client.message);
