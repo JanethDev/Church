@@ -199,6 +199,25 @@ namespace church.backend.Controllers
             return Ok(response.data);
         }
 
+        /// <summary>
+        /// Devuelve la lista las compras que estan siendo pagadas
+        /// </summary>
+        /// <returns>Devuelve la lista las compras en proceso de pago</returns>
+        /// <response code="200">lista las compras en proceso de pago</response>
+        /// <response code="400">Retorna algun error</response>
+        [HttpGet]
+        [JwtAuthentication]
+        [Route("purchase/inprocess")]
+        public IActionResult PurchaseInProcess()
+        {
+            PurchaseResponse response = _PurchaseServices.ConsultPurchaceByStatus((int)purchase_status.proceso);
+            if (response.code != 1)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, response.message);
+            }
+            return Ok(response.data);
+        }
+
 
         /// <summary>
         /// Devuelve la lista las compras por id
