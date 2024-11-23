@@ -1,434 +1,694 @@
 using church.backend.Models.register;
-using church.backend.services.DataBase;
-using church.backend.services.JsonWebToken;
 using church.backend.services.Models;
 using church.backend.services.Models.access;
+using church.backend.services.Models.enums;
 using church.backend.services.Models.register;
-using System.Text.RegularExpressions;
+using church.backend.Utilities;
+using System.Data.SqlClient;
 
-namespace church.backend.services.Services
+namespace church.backend.services.DataBase
 {
-    public class AccessServices
+    public class accessDB
     {
-        private readonly accessDB _accessDB;
+        private readonly string DataBaseConection;
         private readonly IConfiguration _configuration;
-        private readonly JwtService _jwtService;
-        private readonly IHttpClientFactory _httpClientFactory;
-        public AccessServices(IConfiguration configuration, accessDB accessDB, IHttpClientFactory httpClientFactory, JwtService jwtService)
+        private readonly NullValues _nv;
+        public accessDB(IConfiguration configuration, NullValues nv)
         {
+            DataBaseConection = configuration["connectionStrings:database:dev"]!;
             _configuration = configuration;
-            _accessDB = accessDB;
-            _httpClientFactory = httpClientFactory;
-            _jwtService = jwtService;
+            _nv = nv;
         }
 
-        public GeneralResponse login(string email, string password)
+        public login_response login(string email,string password)
         {
-            if (string.IsNullOrWhiteSpace(email)) {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es necesario enviar un correo"
-                };
-            }
-            if (!ValidateEmail(email))
+            try
             {
-                return new GeneralResponse()
+                login_response response = new login_response();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
                 {
-                    code = -1,
-                    message = "El correo enviado no es válido"
-                };
+                    string query = string.Format(_configuration["queries:access:employeeLogin"]!
+                                                , email
+                                                , password
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                try
+                                {
+                                    response = new login_response()
+                                    {
+                                        code = int.Parse(reader["code"].ToString()!),
+                                        message = reader["message"].ToString()!,
+                                        data = new user()
+                                        {
+                                            id = int.Parse(reader["cat_user_id"].ToString()!),
+                                            email = reader["email"].ToString()!,
+                                            name = $"{reader["name"]} {reader["psurname"]} {reader["msurname"]}",
+                                            role_id = int.Parse(reader["cat_roles_id"].ToString()!),
+                                            role = reader["role"].ToString()!,
+                                        }
+                                    };
+                                }
+                                catch {
+                                    response = new login_response()
+                                    {
+                                        code = int.Parse(reader["code"].ToString()!),
+                                        message = reader["message"].ToString()!
+                                    };
+                                }
+                            }
+                        }
+                    }
+                }
+                return response;
             }
-            if (string.IsNullOrWhiteSpace(password))
+            catch (Exception ex)
             {
-                return new GeneralResponse()
+                return new login_response()
                 {
                     code = -1,
-                    message = "Es necesario enviar una contraseña"
+                    message = ex.Message
                 };
             }
-
-            login_response response = _accessDB.login(email, password);
-            
-            if (response.code != 1)
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = response.message
-                };
-            }
-
-            return new GeneralResponse() {
-                code = 1,
-                message = _jwtService.GenerateToken(response.data)
-            };
         }
 
         public GeneralResponse ChangePassword(int user_id, string password)
         {
-            if (string.IsNullOrWhiteSpace(password)) {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es encesario enviar una contraseña"
-                };
-            }
-            if (password.Length<8)
+            try
             {
-                return new GeneralResponse()
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
                 {
-                    code = -1,
-                    message = "Es encesario enviar una contraseña por lo menos 8 caracteres"
-                };
-            }
-            return _accessDB.ChangePassword(user_id, password);
-        }
-
-        public async Task<GeneralResponse> SetTempPassword(string email)
-        {
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es necesario enviar un correo"
-                };
-            }
-            if (!ValidateEmail(email))
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "El correo enviado no es válido"
-                };
-            }
-            string temp = GetRandomAlphanumericPassword();
-            GeneralResponse response = _accessDB.SetTempPassword(email, temp);
-            if(response.code != 1)
-            {
+                    string query = string.Format(_configuration["queries:access:updatePassword"]!
+                                                , user_id
+                                                , password
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read()) {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
                 return response;
             }
-
-            //await SendTemporalPassword(email, temp);
-            return response;
+            catch (Exception ex)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = ex.Message
+                };
+            }
         }
 
-        public GeneralResponse createEmployee(create_employee_request data)
+        public GeneralResponse SetTempPassword(string email, string temp)
         {
-            if (data.role_id < 0) {
-                return new GeneralResponse()
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
                 {
-                    code = -1,
-                    message = "Es necesario enviar un rol para el usaurio"
-                };
+                    string query = string.Format(_configuration["queries:access:recoverPassword"]!
+                                                , email
+                                                , temp
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read()) {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
             }
-            if (string.IsNullOrWhiteSpace(data.email))
+            catch (Exception ex)
             {
                 return new GeneralResponse()
                 {
                     code = -1,
-                    message = "Es necesario enviar un correo"
+                    message = ex.Message
                 };
             }
-            if (!ValidateEmail(data.email))
+        }
+
+        public GeneralResponse createEmployee(create_employee_request data) 
+        {
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:access:createUserEmployee"]!
+                        , data.email
+                        , data.password
+                        , data.role_id
+                        , (int)user_status.Activo
+                        , data.name
+                        , data.father_last_name
+                        , data.mother_last_name
+                        , data.phone
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
             {
                 return new GeneralResponse()
                 {
                     code = -1,
-                    message = "El correo enviado no es válido"
+                    message = ex.Message
                 };
             }
-            if (string.IsNullOrWhiteSpace(data.name))
+        }
+
+        public GeneralResponse updateCustomerNumber(int customerId) 
+        {
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:access:updateCustomerNumber"]!
+                        , customerId
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
             {
                 return new GeneralResponse()
                 {
                     code = -1,
-                    message = "Es necesario enviar un nombre"
+                    message = ex.Message
                 };
             }
-            if (string.IsNullOrWhiteSpace(data.father_last_name))
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es necesario enviar un apellido"
-                };
-            }
-            if (string.IsNullOrWhiteSpace(data.father_last_name))
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es necesario enviar un apellido"
-                };
-            }
-            if (string.IsNullOrWhiteSpace(data.phone))
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es necesario enviar su número de teléfono"
-                };
-            }
-            data.password = GetRandomAlphanumericPassword();
-            return _accessDB.createEmployee(data);
         }
 
         public GeneralResponse createCustomer(create_customer_request data)
         {
-            if (data.catStatesId < 0)
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:access:createCustomer"]!
+                        , data.email
+                        , data.password
+                        , 7 //customer role
+                        , (int)user_status.Activo
+                        , data.name
+                        , data.father_last_name
+                        , data.mother_last_name
+                        , data.phone
+                        , data.rfc
+                        , data.zip_code
+                        , data.address
+                        , data.catStatesId
+                        , data.catTownsId
+                        , data.social_reason
+                        , data.birthdate.ToString("yyyy-MM-dd")
+                        , data.birth_place
+                        , data.civil_status
+                        , data.occupation
+                        , data.business_name
+                        , data.business_address
+                        , data.business_phone
+                        , data.business_ext
+                        , data.deputation
+                        , data.average_income
+                        , data.business_city
+                        , data.business_municipality
+                        , data.business_state
+                        , data.house_number
+                        , data.apt_number
+                        , data.neighborhood
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
             {
                 return new GeneralResponse()
                 {
                     code = -1,
-                    message = "Es necesario enviar un estado"
+                    message = ex.Message
                 };
             }
-            if (data.catTownsId < 0)
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es necesario enviar una ciudad"
-                };
-            }
-            if (string.IsNullOrWhiteSpace(data.email))
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es necesario enviar un correo"
-                };
-            }
-            if (!ValidateEmail(data.email))
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "El correo enviado no es válido"
-                };
-            }
-            if (string.IsNullOrWhiteSpace(data.name))
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es necesario enviar un nombre"
-                };
-            }
-            if (string.IsNullOrWhiteSpace(data.father_last_name))
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es necesario enviar un apellido"
-                };
-            }
-            if (string.IsNullOrWhiteSpace(data.father_last_name))
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es necesario enviar un apellido"
-                };
-            }
-            if (string.IsNullOrWhiteSpace(data.phone))
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es necesario enviar su número de teléfono"
-                };
-            }
-            return _accessDB.createCustomer(data);
         }
 
         public GeneralResponse updateCustomer(customer_response data, int user_id)
         {
-            if (user_id <= 0)
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:access:updateCustomer"]!
+                        , user_id
+                        , data.name
+                        , data.father_last_name
+                        , data.mother_last_name
+                        , data.phone
+                        , data.email
+                        , data.rfc
+                        , data.zip_code
+                        , data.address
+                        , data.catStatesId
+                        , data.catTownsId
+                        , data.social_reason
+                        , data.birthdate.ToString("yyyy-MM-dd")
+                        , data.birth_place
+                        , data.civil_status
+                        , data.occupation
+                        , data.business_name
+                        , data.business_address
+                        , data.business_phone
+                        , data.business_ext
+                        , data.deputation
+                        , data.average_income
+                        , data.business_city
+                        , data.business_municipality
+                        , data.business_state
+                        , data.house_number
+                        , data.apt_number
+                        , data.neighborhood
+                        , data.id
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
             {
                 return new GeneralResponse()
                 {
                     code = -1,
-                    message = "Es necesario enviar un id de usaurio"
+                    message = ex.Message
                 };
             }
-
-            return _accessDB.updateCustomer(data, user_id);
         }
-        public GeneralResponse createBeneficiaries(BeneficiarieRequest data, int user_id)
-        {
-            if (data.customerId < 0)
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es necesario enviar un id de cliente para los beneficiarios"
-                };
-            }
-            if (user_id < 0)
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es necesario enviar un id de usuario"
-                };
-            }
-            data.user_id = user_id;
-            return _accessDB.createBeneficiaries(data);
-        }
 
-        public GeneralResponse deleteBeneficiaries(int beneficiarieId, int user_id)
+        public GeneralResponse createBeneficiaries(BeneficiarieRequest data)
         {
-            if (beneficiarieId < 0)
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:access:createBeneficiaries"]!
+                        , data.customerId
+                        , data.name
+                        , data.lastname                       
+                        , data.birthdate.ToString("yyyy-MM-dd")
+                        , data.phone
+                        , data.relationship
+                        , data.user_id
+                        , data.type
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
             {
                 return new GeneralResponse()
                 {
                     code = -1,
-                    message = "Es necesario enviar un id de beneficiario"
+                    message = ex.Message
                 };
             }
-            if (user_id < 0)
-            {
-                return new GeneralResponse()
-                {
-                    code = -1,
-                    message = "Es necesario enviar un id de usuario"
-                };
-            }
-            return _accessDB.deleteBeneficiaries(beneficiarieId,user_id);
         }
 
         public GeneralResponse updateBeneficiaries(Beneficiarie data, int user_id)
         {
-            if (user_id < 0)
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:access:updateBeneficiaries"]!
+                        , data.id
+                        , data.name
+                        , data.lastname
+                        , data.birthdate.ToString("yyyy-MM-dd")
+                        , data.phone
+                        , data.relationship
+                        , user_id
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
             {
                 return new GeneralResponse()
                 {
                     code = -1,
-                    message = "Es necesario enviar un id de usuario"
+                    message = ex.Message
                 };
             }
-            return _accessDB.updateBeneficiaries(data,user_id);
+        }
+
+        public GeneralResponse deleteBeneficiaries(int beneficiarieId, int user_id)
+        {
+            try
+            {
+                GeneralResponse response = new GeneralResponse();
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:access:deleteBeneficiaries"]!
+                        , beneficiarieId
+                        , user_id
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response = new GeneralResponse()
+                                {
+                                    code = int.Parse(reader["code"].ToString()!),
+                                    message = reader["message"].ToString()!
+                                };
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse()
+                {
+                    code = -1,
+                    message = ex.Message
+                };
+            }
         }
 
         public BeneficiarieResponse consultBeneficiaries(int customerId)
         {
-            if (customerId < 0)
+            try
+            {
+                BeneficiarieResponse response = new BeneficiarieResponse(){code = 1};
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = string.Format(_configuration["queries:access:beneficiariesByCustomer"]!
+                        , customerId
+                    );
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response.data.Add(new Beneficiarie(){
+                                    id = _nv.nullInt(reader["id"].ToString()!),
+                                    name = reader["name"].ToString()!,
+                                    lastname = reader["lastname"].ToString()!,
+                                    birthdate = _nv.nullDate(reader["birthdate"].ToString()!),
+                                    phone = reader["phone"].ToString()!,
+                                    relationship = reader["relationship"].ToString()!,
+                                    type = _nv.nullInt(reader["type"].ToString()!),
+                                    typeDescription = reader["type_desciption"].ToString()!,
+                                });                             
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
             {
                 return new BeneficiarieResponse()
                 {
                     code = -1,
-                    message = "Es necesario enviar un id de cliente de los beneficiarios"
+                    message = ex.Message
                 };
             }
-            return _accessDB.consultBeneficiaries(customerId);
         }
 
         public list_customer SearchCustomer(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
+            try
+            {
+                list_customer response = new list_customer() { code = 1};
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
+                {
+                    string query = @"SELECT 
+	                     cus.*
+	                     , st.state
+	                     , tw.town
+                      FROM [cat_customers] cus
+                      LEFT JOIN cat_states st ON st.id = cus.cat_states_id
+                      LEFT JOIN cat_towns tw ON tw.id = cus.cat_towns_id
+                      WHERE (cus.phone like '%{0}%'
+                      OR cus.[name] like '%{0}%'
+                      OR cus.msurname like '%{0}%'
+                      OR cus.psurname like '%{0}%'
+                      OR cus.customer_number like '%{0}%')
+                      --AND cus.cat_status_id = '{1}'";
+                    query = string.Format(query, value, (int)user_status.Activo);
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response.customers.Add(new customer_response()
+                                {
+                                    id = _nv.nullInt(reader["id"].ToString()!),
+                                    customerNumber = _nv.nullInt(reader["customer_number"].ToString()!),
+                                    name = reader["name"].ToString()!,
+                                    father_last_name = reader["psurname"].ToString()!,
+                                    mother_last_name = reader["msurname"].ToString()!,
+                                    phone = reader["phone"].ToString()!,
+                                    email = reader["email"].ToString()!,
+                                    rfc = reader["rfc"].ToString()!,
+                                    zip_code = _nv.nullInt(reader["cp_code"].ToString()!),
+                                    address = reader["address"].ToString()!,
+                                    catStatesId = _nv.nullInt(reader["cat_states_id"].ToString()!),
+                                    state = reader["state"].ToString()!,
+                                    catTownsId = _nv.nullInt(reader["cat_towns_id"].ToString()!),
+                                    town = reader["town"].ToString()!,
+                                    social_reason = reader["social_reason"].ToString()!,
+                                    birthdate = _nv.nullDate(reader["birthdate"].ToString()!),
+                                    birth_place  = reader["birth_place"].ToString()!,
+                                    civil_status = reader["civil_status"].ToString()!,
+                                    occupation = reader["occupation"].ToString()!,
+                                    business_name = reader["business_name"].ToString()!,
+                                    business_address = reader["business_address"].ToString()!,
+                                    business_city = reader["business_city"].ToString()!,
+                                    business_municipality = reader["business_ municipality"].ToString()!,
+                                    business_state = reader["business_state"].ToString()!,
+                                    business_phone = reader["business_phone"].ToString()!,
+                                    business_ext = reader["business_ext"].ToString()!,
+                                    deputation = reader["deputation"].ToString()!,
+                                    average_income = _nv.nullDouble(reader["average_income"].ToString()??"0"),
+                                    house_number = reader["house_number"].ToString()!,
+                                    apt_number = reader["apt_number"].ToString()!,
+                                    neighborhood = reader["neighborhood"].ToString()!,
+                                });
+                            }
+                        }
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
             {
                 return new list_customer()
                 {
                     code = -1,
-                    message = "Es necesario enviar un valor de busqueda"
+                    message = ex.Message
                 };
             }
-
-            return _accessDB.SearchCustomer(value);
         }
 
         public list_customer ListCustomer()
         {
-            return _accessDB.ListCustomer();
-        }
-
-        private async Task SendValidateEmail(string email, string code)
-        {
-            var httpClient = _httpClientFactory.CreateClient();
-            string htmlBody;
-            using (var reader = new StreamReader("Templates/validateTemplate.html"))
+            try
             {
-                htmlBody = reader.ReadToEnd();
-            }
-
-            htmlBody = htmlBody.Replace("{Code}", code);
-            /*var content = new SendgridRequest
-            {
-                personalizations = new List<Personalization>
+                list_customer response = new list_customer() { code = 1 };
+                using (SqlConnection connection = new SqlConnection(DataBaseConection))
                 {
-                    new Personalization
+                    string query = @"SELECT 
+	                     cus.*
+	                     , st.state
+	                     , tw.town
+                      FROM [cat_customers] cus
+                      LEFT JOIN cat_states st ON st.id = cus.cat_states_id
+                      LEFT JOIN cat_towns tw ON tw.id = cus.cat_towns_id
+                      --AND cus.cat_status_id = '{0}'";
+                    query = string.Format(query, (int)user_status.Activo);
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        to = new List<To> { new To { email = email } },
-                        subject = "Validación de cuenta"
-                    }
-                },
-                content = new List<Content> { new Content { type = "text/html", value = htmlBody } },
-                from = new From { email = _configuration["SendGrid:mail"], name = "EFT Móvil" }
-            };*/
-            var request = new HttpRequestMessage(HttpMethod.Post, _configuration["SendGrid:url"]);
-            //request.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
-            request.Headers.Add("Authorization", $"Bearer {_configuration["SendGrid:key"]}");
-            await httpClient.SendAsync(request);
-        }
-       
-        private async Task SendTemporalPassword(string email, string password)
-        {
-            var httpClient = _httpClientFactory.CreateClient();
-            string htmlBody;
-            using (var reader = new System.IO.StreamReader("Templates/password.html"))
-            {
-                htmlBody = reader.ReadToEnd();
-            }
-
-            htmlBody = htmlBody.Replace("{Code}", password);
-            /*var content = new SendgridRequest
-            {
-                personalizations = new List<Personalization>
-                {
-                    new Personalization
-                    {
-                        to = new List<To> { new To { email = email } },
-                        subject = "Recuperación de contraseña"
-                    }
-                },
-                content = new List<Content> { new Content { type = "text/html", value = htmlBody } },
-                from = new From { email = _configuration["SendGrid:mail"], name = "EFT Móvil" }
-            };*/
-            var request = new HttpRequestMessage(HttpMethod.Post, _configuration["SendGrid:url"]);
-            //request.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
-            request.Headers.Add("Authorization", $"Bearer {_configuration["SendGrid:key"]}");
-            await httpClient.SendAsync(request);
-        }
-
-        private string GetRandomAlphanumericPassword()
-        {
-            Random random = new Random();
-            const string chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; // NO [i, l, 1, 0, o] por confusión en los clientes
-            var stringChars = new char[8];
-            for (int i = 0; i < stringChars.Length; i++)
-            {
-                stringChars[i] = chars[random.Next(chars.Length)];
-            }
-            return new String(stringChars);
-        }
-
-        public static bool ValidateEmail(string email)
-        {
-            string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-            if (Regex.IsMatch(email, pattern))
-            {
-                if (!email.Contains(".."))
-                {
-                    if (!email.StartsWith(".") && !email.EndsWith("."))
-                    {
-                        return true;
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                response.customers.Add(new customer_response()
+                                {
+                                    id = _nv.nullInt(reader["id"].ToString()!),
+                                    customerNumber = _nv.nullInt(reader["customer_number"].ToString()!),
+                                    name = reader["name"].ToString()!,
+                                    father_last_name = reader["psurname"].ToString()!,
+                                    mother_last_name = reader["msurname"].ToString()!,
+                                    phone = reader["phone"].ToString()!,
+                                    email = reader["email"].ToString()!,
+                                    rfc = reader["rfc"].ToString()!,
+                                    zip_code = _nv.nullInt(reader["cp_code"].ToString()!),
+                                    address = reader["address"].ToString()!,
+                                    catStatesId = _nv.nullInt(reader["cat_states_id"].ToString()!),
+                                    state = reader["state"].ToString()!,
+                                    catTownsId = _nv.nullInt(reader["cat_towns_id"].ToString()!),
+                                    town = reader["town"].ToString()!,
+                                    social_reason = reader["social_reason"].ToString()!,
+                                    birthdate = _nv.nullDate(reader["birthdate"].ToString()!),
+                                    birth_place = reader["birth_place"].ToString()!,
+                                    civil_status = reader["civil_status"].ToString()!,
+                                    occupation = reader["occupation"].ToString()!,
+                                    business_name = reader["business_name"].ToString()!,
+                                    business_address = reader["business_address"].ToString()!,
+                                    business_city = reader["business_city"].ToString()!,
+                                    business_municipality = reader["business_ municipality"].ToString()!,
+                                    business_state = reader["business_state"].ToString()!,
+                                    business_phone = reader["business_phone"].ToString()!,
+                                    business_ext = reader["business_ext"].ToString()!,
+                                    deputation = reader["deputation"].ToString()!,
+                                    average_income = _nv.nullDouble(reader["average_income"].ToString() ?? "0"),
+                                    house_number = reader["house_number"].ToString()!,
+                                    apt_number = reader["apt_number"].ToString()!,
+                                    neighborhood = reader["neighborhood"].ToString()!,
+                                });
+                            }
+                        }
                     }
                 }
+                return response;
             }
-            return false;
+            catch (Exception ex)
+            {
+                return new list_customer()
+                {
+                    code = -1,
+                    message = ex.Message
+                };
+            }
         }
     }
 }
