@@ -59,10 +59,15 @@ try {
         }
 
         if (!empty($fechaSolicitud)) {
-            // Convertir la fecha al formato deseado
-            $fechaFormateada = DateTime::createFromFormat('Y-m-d', $fechaSolicitud)->format('d/m/Y');
+            // Ajustar el formato para incluir la "T" entre la fecha y la hora
+            $fechaObj = DateTime::createFromFormat('Y-m-d\TH:i:s', $fechaSolicitud);
+            if ($fechaObj) {
+                $fechaFormateada = $fechaObj->format('d/m/Y'); // Convertir al formato deseado
+            } else {
+                $fechaFormateada = 'Formato de fecha inválido'; // Manejo de error si el formato no es válido
+            }
         } else {
-            $fechaFormateada = 'Fecha no disponible'; // Manejo de error si la fecha está vacía
+            $fechaFormateada = 'Fecha no disponible'; // Manejo de caso vacío
         }
 
 

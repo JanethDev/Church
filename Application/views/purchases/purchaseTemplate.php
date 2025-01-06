@@ -1,8 +1,8 @@
 <?php
 require '../../vendor/autoload.php';
 
-$CustomerSelect = $_POST['CustomerSelect'];
-$CustomerID = $_POST['CustomerID'];
+
+$purchaseId = $_POST['purchaseId'];
 $UserID = $_POST['UserID'];
 $UserName = $_POST['UserName'];
 $PSurname = $_POST['PSurname'];
@@ -14,11 +14,11 @@ $apt_number = $_POST['apt_number'];
 $neighborhood = $_POST['neighborhood'];
 $zip_code = $_POST['zip_code'];
 $catStatesId = $_POST['catStatesId'];
-$Deputation = $_POST['Deputation'];  // Verifica si este campo tiene valor o está vacío
+$Deputation = $_POST['Deputation'];
 $catTownsId = $_POST['catTownsId'];
 $CelPhone = $_POST['CelPhone'];
 $Email = $_POST['Email'];
-$social_reason = $_POST['social_reason'];  // Puede que no tenga valor
+$social_reason = $_POST['social_reason'];
 $RFCCURP = $_POST['RFCCURP'];
 $DateOfBirth = $_POST['DateOfBirth'];
 $CityOfBirth = $_POST['CityOfBirth'];
@@ -30,27 +30,23 @@ $AddressCompany = $_POST['AddressCompany'];
 $ExtPhoneCompany = $_POST['ExtPhoneCompany'];
 $StateAddressCompany = $_POST['StateAddressCompany'];
 $MunicipalityAddressCompany = $_POST['MunicipalityAddressCompany'];
-$CityAddressCompany = $_POST['CityAddressCompany'];  // Puede que no tenga valor
+$CityAddressCompany = $_POST['CityAddressCompany'];
 $Income = $_POST['Income'];
-$stateName = $_POST['stateName'];
-$townName = $_POST['townName'];
-$stateCompanyName = $_POST['stateCompanyName'];
-$cityCompanyName = $_POST['cityCompanyName'];
-$CivilStatusName = $_POST['CivilStatusName'];
-
-// Referencias del cliente
 $ReferenceCustomer1 = $_POST['ReferenceCustomer1'];
+$idReference1 = $_POST['idReference1'];
 $ReferenceCustomerPhone1 = $_POST['ReferenceCustomerPhone1'];
-$ReferenceCustomer2 = $_POST['ReferenceCustomer2'];  // Puede que no tenga valor
-$ReferenceCustomerPhone2 = $_POST['ReferenceCustomerPhone2'];  // Puede que no tenga valor
-
-// Datos de la cripta
-$cryptId = $_POST['cryptId'];
-$cryptSpaces = $_POST['cryptSpaces'];
-$discountId = $_POST['discountId'];
-$federalTax = $_POST['federalTax'];
-
-$planVenta = $_POST['planVenta'];
+$idReference2 = $_POST['idReference2'];
+$ReferenceCustomer2 = $_POST['ReferenceCustomer2'];
+$ReferenceCustomerPhone2 = $_POST['ReferenceCustomerPhone2'];
+$paymentPlanLabelDesc = $_POST['paymentPlanLabelDesc'];
+$cryptKeyLabel = $_POST['cryptKeyLabel'];
+$levelLabel = $_POST['levelLabel'];
+$areaLabel = $_POST['areaLabel'];
+$zoneLabel = $_POST['zoneLabel'];
+$payment_type = $_POST['payment_type'];
+$inMaintenance = $_POST['inMaintenance'];
+$inAshDeposit = $_POST['inAshDeposit'];
+$tuition = "";
 
 // Beneficiarios (arreglo)
 $beneficiaries = [];
@@ -67,9 +63,6 @@ if (isset($_POST['beneficiaries'])) {
     }
 }
 
-$purchaseId = $_POST['purchaseId'];
-
-$TypePay = $_POST['TypePay'] ?? null;  // Tipo de pago
 $monto = 0;
 $paymentTypeDescription = '';
 $check_number = $account_number = $bank = ''; // Inicializamos en vacío
@@ -113,12 +106,7 @@ foreach ($payments as $payment) {
 if (count($montos) > 1) {
     $paymentTypeDescription = 'MIXTO';
 }
-// Otros datos de la operación
-$paymentPlan = $_POST['paymentPlan'];
-$cryptKey = $_POST['cryptKey'];
-$level = $_POST['level'];
-$area = $_POST['area'];
-$zone = $_POST['zone'];
+
 
 
 function getNumericValue($key, $default = 0.0) {
@@ -375,7 +363,7 @@ p, td {
                         <p class='s1' style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>CONTRATO No.</p>
                     </td>
                     <td style='width:100pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                        <p class='s1' style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>N/A</p>
+                        <p class='s1' style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>$tuition</p>
                     </td>
                 </tr>
                 <tr style='height:10pt'>
@@ -510,7 +498,7 @@ p, td {
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
                 style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $townName</p>
+                $catTownsId</p>
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
@@ -520,7 +508,7 @@ p, td {
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
                 style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $stateName</p>
+                $catStatesId</p>
         </td>
     </tr>
     <tr style='height:10pt'>
@@ -591,7 +579,7 @@ p, td {
             colspan='3'>
             <p class='s1'
                 style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $CivilStatusName</p>
+                $CivilStatus</p>
         </td>
     </tr>
     <tr style='height:10pt'>
@@ -874,28 +862,28 @@ $html .= "</table>
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
                 style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $planVenta</p>
+                $paymentPlanLabelDesc</p>
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
                 style='padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $cryptKey</p>
+                $cryptKeyLabel</p>
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
-                style='padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>$level</p>
+                style='padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>$levelLabel</p>
         </td>
         <td 
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
                 style='padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $area</p>
+                $areaLabel</p>
         </td>
         <td
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-            <p style='text-indent: 0pt;text-align: left;'>$zone</p>
+            <p style='text-indent: 0pt;text-align: left;'>$zoneLabel</p>
         </td>
     </tr>
     <tr style='height:10pt'>
@@ -917,18 +905,18 @@ $html .= "</table>
             >
             <p class='s1'
                 style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $$totalAmount M.N.</p>
+                $ M.N.</p>
         </td>
         <td colspan='2' style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'
             >
             <p class='s1'
                 style='padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                $$initialPayment M.N.</p>
+                $ M.N.</p>
         </td>
         <td colspan='2'
             style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
             <p class='s1'
-                style='padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>$$balance
+                style='padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>$
                 M.N.</p>
         </td>
     </tr>";
@@ -943,20 +931,19 @@ if (($TypePay)!= 1) {
             <p class='s2'
                 style='padding-top: 1pt;text-indent: 0pt;line-height: 6pt;text-align: center;'>
                 EL SALDO SERÁ LIQUIDADO EN &nbsp;
-                <strong>{$planVenta}</strong> 
+                <strong></strong> 
                 &nbsp;EN ABONOS:
                 
-                <!-- Checkbox para abonos mensuales (seleccionado por defecto si $paymentType es 'mensuales') -->
-                &nbsp;&nbsp;<input style='vertical-align: middle; transform: scale(0.8);' type='checkbox' name='payment_type' value='mensuales' id='mensuales_checkbox' " . 
-                ($paymentType === 'mensuales' ? 'checked' : '') . ">&nbsp;MENSUALES
+                <!-- Checkbox para abonos mensuales (seleccionado por defecto si  es 'mensuales') -->
+                &nbsp;&nbsp;<input style='vertical-align: middle; transform: scale(0.8);' type='checkbox' name='payment_type' value='mensuales' id='mensuales_checkbox' 
+                MENSUALES
                 
                 <!-- Checkbox para abonos semanales -->
-                &nbsp;&nbsp;<input style='vertical-align: middle; transform: scale(0.8);' type='checkbox' name='payment_type' value='semanales' id='semanales_checkbox' " . 
-                ($paymentType === 'semanales' ? 'checked' : '') . ">&nbsp;SEMANALES
+                &nbsp;&nbsp;<input style='vertical-align: middle; transform: scale(0.8);' type='checkbox' name='payment_type' value='semanales' id='semanales_checkbox' 
                 
                 <!-- Mostrar el valor calculado como texto -->
                 &nbsp;&nbsp;POR LA CANTIDAD DE: 
-                &nbsp;$ &nbsp;$paymentAmountMes M.N.
+                &nbsp;$ &nbsp; M.N.
             </p>
         </td>
     </tr>";
@@ -1071,15 +1058,7 @@ if (($TypePay)!= 1) {
                 style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
                 DEPÓSITO DE CENÍZAS</p>
         </td>";
-        if ($inOtherFee !== 'False' && is_numeric($inOtherFee) && $inOtherFee > 0) {
-            $html .= "
-            <td
-                style='background-color:#b0d5f7; border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-                <p class='s1'
-                    style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-                    OTRO </p>
-            </td>";
-        }
+
 
     
     $html .= "</tr><tr style='height:10pt'>";
@@ -1118,16 +1097,6 @@ if ($inAshDeposit !== 'False' && is_numeric($inAshDeposit) && $inAshDeposit > 0)
     </td>";
 }
 
-// Condición para inOtherFee
-if ($inOtherFee !== 'False' && is_numeric($inOtherFee) && $inOtherFee > 0) {
-    $html .= "
-    <td style='border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt'>
-        <p class='s1' style='padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 6pt;text-align: left;'>
-            APLICA - " . number_format($inOtherFee, 2) . " M.N.
-        </p>
-    </td>";
-}
-
 $html .= "</tr>";
 $html .= "</table>
 <p style='text-indent: 0pt;text-align: left;'><br /></p>
@@ -1150,10 +1119,10 @@ $html .= "</table>
         <tr style='height:10pt'>
             <td style='border:solid 1pt;'>
                 <p class='s1' style='padding-top: 1pt; padding-left: 2pt; text-indent: 0pt; line-height: 6pt; text-align: left;'>
-                    $paymentTypeDescription</p>
+                    </p>
             </td>
             <td style='border:solid 1pt;'>
-                <p class='s1' style='padding-top: 1pt; padding-left: 2pt; text-indent: 0pt; line-height: 6pt; text-align: left;'>$$initialPayment M.N.</p>
+                <p class='s1' style='padding-top: 1pt; padding-left: 2pt; text-indent: 0pt; line-height: 6pt; text-align: left;'>$ M.N.</p>
             </td>
             
         </tr>

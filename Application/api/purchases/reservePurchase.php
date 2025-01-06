@@ -16,6 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formattedPhone2 = preg_replace('/\D/', '', $referencePersonPhone2);
     $phone = preg_replace('/\D/', '', $customerPhone);
 
+
+    $period = $_POST['payment_type'];
+
+    if($period =='mensuales'){
+        $period = 2;
+    }else{
+        $period = 1;
+    }
+
     $dataPurchase = [
         'tuition' => '',
         'cryptId' => isset($_POST['cryptId']) ? (int)$_POST['cryptId'] : null,
@@ -40,10 +49,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'concept' => $payment['concept'] ?? null,
                 'typePaymentId' => isset($payment['typePaymentId']) ? (int)$payment['typePaymentId'] : null,
                 'currencyId' => isset($payment['currencyId']) ? (int)$payment['currencyId'] : null,
+                'number' => 1,
+                'date' => date("Y-m-d"),
+                'statusId' => 2012,
+                'periodId' => $period
             ];
         }
     }
     $dataPurchase['payments'] = $payments;
+
+    // Agregar otherFee después de integrar los pagos
+    $dataPurchase['otherFee'] = (isset($_POST['inOtherFee']) && $_POST['inOtherFee'] !== 'False' && is_numeric($_POST['inOtherFee']))
+    ? (float)$_POST['inOtherFee']
+    : 0;
+
+    // Agregar otros campos adicionales si es necesario
+    $dataPurchase['cryptTransferId'] = 0;
+    $dataPurchase['userPromotorId'] = 0;
+
+
+    //print_r($dataPurchase['payments']);
 
     // Configuración de Guzzle
     $headers = [
@@ -265,7 +290,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'relationship' => "N/A"
                 ];
                 try {
-                    $url = $referenceId ? 'customer/update/beneficiarie' : 'customer/create/references';
+                    $url = $referenceId ? 'customer/update/beneficiarie' : 'customer/create/beneficiarie';
                     $client->request('POST', $url, [
                         'headers' => $headers,
                         'body' => json_encode($referenceData)
@@ -297,6 +322,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Ahora realiza la solicitud POST para la compra
     $jsonData = json_encode($dataPurchase, JSON_PRETTY_PRINT);
+    //header('Content-Type: application/json');
+    //echo $jsonData;
     try {
         $response = $client->request('POST', 'purchase/reserve', [
             'headers' => $headers,

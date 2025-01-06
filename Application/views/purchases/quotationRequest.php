@@ -299,7 +299,7 @@ require_once('auth/session.php');
             <div class="row">
                 <div class="col-md-12 col-sm-6 col-xs-12">
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
-                        <tr><td colspan="3" style="text-align:center"><strong>DATOS DE LA EMPRESA DONDE PRESTA SUS SERVICIO</strong></td></tr>
+                        <tr><td colspan="3" style="text-align:center"><strong>DATOS DE LA EMPRESA DONDE PRESTA SUS SERVICIOS</strong></td></tr>
                         <tr>
                             <td>NOMBRE DE LA COMPAÑIA</td>
                             <td style="width:70%"><input type="text" class="form-control" id="Company" name="Company" value="" /></td>
@@ -580,8 +580,14 @@ require_once('auth/session.php');
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
 $(document).ready(function() {
+
+    const ORIGINAL_TOTAL_FINAL = <?= round($totalFinal); ?>; // Mantén el valor original de totalFinal
+    const ORIGINAL_ENGANCHE = <?= round($enganche); ?>;     // Mantén el valor original de enganche
+
     $('.select2').select2();
     $('#btnNewCustomer').click(function() {
         $('.tr-search-customer').hide(); // Ocultar la búsqueda de cliente
@@ -1151,8 +1157,10 @@ function validatePaymentAmounts() {
 
 // Redondear valores mostrados en pantalla
 function updateInitialPayment() {
-    let initialPayment = selectedPaymentValue === 1 ? totalFinal : enganche;
+    // Resetea el valor inicial del pago al valor original
+    let initialPayment = selectedPaymentValue === 1 ? ORIGINAL_TOTAL_FINAL : ORIGINAL_ENGANCHE;
 
+    // Agrega los valores adicionales si las casillas están marcadas
     if ($('#ckMaintenance').is(':checked')) {
         initialPayment += maintenanceCost;
     }
@@ -1164,47 +1172,30 @@ function updateInitialPayment() {
         initialPayment += otherFeeValue;
     }
 
-    // Convertir a entero
-    initialPayment = Math.round(initialPayment);
+    // Actualiza los valores mostrados en pantalla
+    $('#initialPaymentLabel').text(`$${initialPayment.toFixed(2)} M.N.`);
 
-    // Actualizar totalFinal en tiempo real si es de contado
-    if (selectedPaymentValue === 1) {
-        totalFinal = initialPayment;
-        $('#totalAmountLabel').text(`$${totalFinal} M.N.`);
-    }
-
-    // Actualizar enganche y el valor mostrado
-    enganche = initialPayment;
-    $('#initialPaymentLabel').text(`$${initialPayment} M.N.`);
+    // Si necesitas actualizar variables globales (opcional)
+    enganche = initialPayment; 
 }
 
     // Evento change para checkbox de mantenimiento
     $('#ckMaintenance').change(function () {
-        if ($(this).is(':checked')) {
-            $('#CheckMaintenanceFee').val(maintenanceCost); // Asignar costo
-        } else {
-            $('#CheckMaintenanceFee').val('False'); // Resetear valor
-        }
-        updateInitialPayment(); // Recalcular el total
+        $('#CheckMaintenanceFee').val($(this).is(':checked') ? maintenanceCost : 0);
+            updateInitialPayment(); // Recalcular el total
     });
 
-    // Evento change para checkbox de depósito de cenizas
     $('#ckAshDeposit').change(function () {
-        if ($(this).is(':checked')) {
-            $('#CheckAshDepositFee').val(ashDepositCost); // Asignar costo
-        } else {
-            $('#CheckAshDepositFee').val('False'); // Resetear valor
-        }
+        $('#CheckAshDepositFee').val($(this).is(':checked') ? ashDepositCost : 0);
         updateInitialPayment(); // Recalcular el total
     });
 
-    // Evento change para checkbox "Otro" y su input asociado
     $('#ckOtherFee').change(function () {
         if ($(this).is(':checked')) {
             $('#otherFeeAmount').show().addClass('d-inline-block');
         } else {
             $('#otherFeeAmount').hide().removeClass('d-inline-block').val(''); // Ocultar y limpiar
-            $('#CheckOtherFee').val('False'); // Resetear valor
+            $('#CheckOtherFee').val(0); // Usar 0 para representar la ausencia de costo
         }
         updateInitialPayment(); // Recalcular el total
     });
@@ -1671,8 +1662,16 @@ function updateInitialPayment() {
                         Swal.fire({
                             icon: 'success',
                             title: 'Documento Generado',
-                            text: 'El PDF se ha descargado correctamente.'
-                        });
+                            text: 'El PDF se ha generado correctamente.',
+                            allowOutsideClick: true,
+                            confirmButtonText: 'Aceptar'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Redirige a la página de cotizaciones
+                                    window.location.href = 'cotizaciones';
+                                }
+                            });
+                                                
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         Swal.fire({

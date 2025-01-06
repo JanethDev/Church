@@ -97,7 +97,10 @@ require_once('auth/session.php');
                         <tr class="tr-new-customer">
                             <td><input type="text" class="form-control control-customer-new" id="PSurname" name="PSurname" readonly /></td>
                             <td><input type="text" class="form-control control-customer-new" id="MSurname" name="MSurname" readonly  /></td>
-                            <td><input type="text" class="form-control control-customer-new" id="Name" name="Name" readonly /></td>
+                            <td><input type="text" class="form-control control-customer-new" id="Name" name="Name" readonly />
+                                <input type="hidden" name="UserName" id="UserName" value="<?php echo($name); ?>" />
+                                <input type="hidden" name="purchaseId" id="purchaseId" value="">
+                            </td>
                         </tr>
                     </table>
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
@@ -184,7 +187,7 @@ require_once('auth/session.php');
             <div class="row">
                 <div class="col-md-12 col-sm-6 col-xs-12">
                     <table class="table table-bordered" style="background-color: white;margin-bottom: 0px;">
-                        <tr><td colspan="3" style="text-align:center"><strong>DATOS DE LA EMPRESA DONDE PRESTA SUS SERVICIO</strong></td></tr>
+                        <tr><td colspan="3" style="text-align:center"><strong>DATOS DE LA EMPRESA DONDE PRESTA SUS SERVICIOS</strong></td></tr>
                         <tr>
                             <td>NOMBRE DE LA COMPAÑIA</td>
                             <td style="width:70%"><input type="text" class="form-control" id="Company" name="Company" value="" readonly /></td>
@@ -279,11 +282,27 @@ require_once('auth/session.php');
                             <td>ZONA</td>
                         </tr>
                         <tr>
-                            <td><label id="paymentPlanLabel" style="display: none;"></label ><label id="paymentPlanLabelDesc"></label></td>
-                            <td><label id="cryptKeyLabel"></label><label></label></td>
-                            <td><label id="levelLabel"></label></td>
-                            <td><label id="areaLabel"></label></td>
-                            <td><label id="zoneLabel"></label></td>
+                            <td>
+                                <label id="paymentPlanLabel" style="display: none;"></label>
+                                <label id="paymentPlanLabelDesc">Mensualidades</label>
+                                <input type="hidden" name="paymentPlanLabelDesc">
+                            </td>
+                            <td>
+                                <label id="cryptKeyLabel">Clave de Cripta</label>
+                                <input type="hidden" name="cryptKeyLabel">
+                            </td>
+                            <td>
+                                <label id="levelLabel">Nivel 1</label>
+                                <input type="hidden" name="levelLabel">
+                            </td>
+                            <td>
+                                <label id="areaLabel">Área A</label>
+                                <input type="hidden" name="areaLabel">
+                            </td>
+                            <td>
+                                <label id="zoneLabel">Zona B</label>
+                                <input type="hidden" name="zoneLabel">
+                            </td>
                            
                         </tr>
                     </table>
@@ -371,10 +390,11 @@ require_once('auth/session.php');
                                 <input type="hidden" name="inAshDeposit" id="CheckAshDepositFee" value="False" />
                             </td>
                             <td>
-                                <input type="checkbox" id="ckOtherFee" class="check-box" style="width: 30px; height: 30px;" />
+                                
                                 <label style="margin-left: 15px">
-                                    $ <input type="number" id="otherFeeAmount" class="form-control" placeholder="Ingresa la cantidad" style="width:150px; display:none; margin-left: 15px;" step="0.01" min="0" />M.N.</label>
-                                <input type="hidden" name="inOtherFee" id="CheckOtherFee" value="False" />
+                                 <input type="number" id="otherFeeAmount" class="form-control" placeholder="Ingresa la cantidad" style="width:150px; display:none; margin-left: 15px;" step="0.01" min="0" />M.N.
+                                </label>
+                                
                                 
                             </td>
                         </tr>
@@ -418,7 +438,7 @@ require_once('auth/session.php');
 $(document).ready(function() {
 
     const purchaseId = <?= $purchaseId; ?>;
-   
+    $('#purchaseId').val(purchaseId);
     function applyPhoneMask() {
         $('.phone').inputmask("(999) 999-9999"); // Aplica la máscara de teléfono
     }
@@ -467,6 +487,7 @@ $(document).ready(function() {
 
     // Realizar la llamada AJAX para obtener los datos del cliente y de la compra
     function populateForm(data) {
+
         $('#PSurname').val(data.customerPsurname);
         $('#MSurname').val(data.customerMsurname);
         $('#Name').val(data.customerName);
@@ -482,7 +503,8 @@ $(document).ready(function() {
         $('#Email').val(data.customerEmail);
         $('#social_reason').val(data.customerSocialReason || '');
         $('#RFCCURP').val(data.customerRFC || '');
-        $('#DateOfBirth').val(data.customerBirthdate || '');
+        $('#DateOfBirth').val(formatDate(data.customerBirthdate || ''));
+
         $('#CityOfBirth').val(data.birthPlace || '');
         $('#CivilStatus').val(data.civilStatus || '');
         $('#Occupation').val(data.occupation || '');
@@ -504,12 +526,41 @@ $(document).ready(function() {
         // Condiciones económicas
         $('#paymentPlanLabelDesc').text(data.paymentPlan || '');
         $('#cryptKeyLabel').text(data.fullPosition || '');
-        $('#levelLabel').text(data.level || '');
-        $('#areaLabel').text(data.area || '');
-        $('#zoneLabel').text(data.zone || '');
+
+        var cryptId = data.cryptId;
+
+        if (cryptId) {
+
+            $.ajax({
+                type: "GET",
+                url: "api/crypts/byId.php",
+                data: { id: cryptId },
+                success: function(response) {
+                    try {
+                        const data = JSON.parse(response);
+                        console.log("Respuesta de la API:", data);
+
+                        // Verifica que la respuesta contenga un arreglo y tenga al menos un elemento
+                        if (Array.isArray(data) && data.length > 0) {
+                            populateFormCrypt(data[0]); // Pasar el primer elemento del arreglo
+                        } else {
+                            console.warn("Datos vacíos o no válidos:", data);
+                        }
+                    } catch (error) {
+                        console.error("Error al procesar los datos del crypt:", error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error en la solicitud:", error);
+                }
+            });
+        } else {
+            console.warn('cryptId no válido:', cryptId);
+        }
+        $('#zoneLabel').text(data.fullPosition ? data.fullPosition.charAt(0) : '');
         $('#totalAmountLabel').text(formatCurrency(data.cryptPrice || 0));
         $('#appliedDiscountLabel').text(formatCurrency(data.discountAmount || 0));
-        $('#initialPaymentLabel').text(formatCurrency(data.initialPayment || 0));
+
         $('#balanceLabel').text(formatCurrency(data.balance || 0));
         $('#maintenance').text(formatCurrency(data.maintenanceFee || 0));
         $('#ashDeposit').text(formatCurrency(data.ashDeposit || 0));
@@ -520,24 +571,38 @@ $(document).ready(function() {
 
         if (data.beneficiaries && data.beneficiaries.length > 0) {
             data.beneficiaries.forEach((beneficiary) => {
+                // Asegúrate de que beneficiary tiene las propiedades esperadas
                 beneficiariesTable.append(`
                     <tr class="tr-beneficiary">
-                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryName[]" value="${beneficiary.name}" readonly  /></td>
-                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiarySurnames[]" value="${beneficiary.surnames}" readonly  /></td>
-                        <td><input type="date" class="form-control datepicker control-beneficiary" name="BeneficiaryBirthdate[]" value="${beneficiary.birthdate}" readonly  /></td>
-                        <td><input type="text" class="form-control control-beneficiary phone" name="BeneficiaryCelPhone[]" value="${beneficiary.phone}" readonly  /></td>
-                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryRelationship[]" value="${beneficiary.relationship}" readonly  /></td>
+                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryName[]" value="${beneficiary.name}" readonly /></td>
+                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiarySurnames[]" value="${beneficiary.lastname}" readonly /></td>
+                        <td><input type="date" class="form-control datepicker control-beneficiary" name="BeneficiaryBirthdate[]" value="${formatDate(beneficiary.birthdate)}" readonly /></td>
+                        <td><input type="text" class="form-control control-beneficiary phone" name="BeneficiaryCelPhone[]" value="${beneficiary.phone}" readonly /></td>
+                        <td><input type="text" class="form-control control-beneficiary" name="BeneficiaryRelationship[]" value="${beneficiary.relationship}" readonly /></td>
                     </tr>
                 `);
             });
         } else {
-            // Caso en que no hay beneficiarios registrados
+            // Si no hay beneficiarios, mostrar mensaje
             beneficiariesTable.append(`
                 <tr>
                     <td colspan="5" class="text-center">No se registró ningún beneficiario</td>
                 </tr>
             `);
         }
+         // Función para calcular la suma de paymentAmount
+       
+
+        // Calcula la suma total
+        const totalPaymentAmount = calculateTotalPaymentAmount(data);
+
+        // Formatea el total como moneda
+        const formattedTotal = `$${totalPaymentAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} M.N.`;
+
+
+        // Muestra el total en el label correspondiente
+        $('#initialPaymentLabel').text(formattedTotal);
+
 
         // Pagos
         const paymentsTable = $('#tablePayments tbody');
@@ -560,6 +625,14 @@ $(document).ready(function() {
             `);
         }
 
+
+    }
+
+        // Realizar la llamada AJAX para obtener los datos del cliente y de la compra
+    function populateFormCrypt(data) {
+
+            $('#levelLabel').text(data.levelNumber);
+            $('#areaLabel').text(data.aisle);
 
     }
 
@@ -635,6 +708,14 @@ $(document).ready(function() {
         e.preventDefault(); // Previene el comportamiento por defecto del botón
 
         var formData = new FormData($('#PurchaseRequestCreateForm')[0]);
+        formData.append('paymentPlanLabelDesc', $('#paymentPlanLabelDesc').text().trim());
+        formData.append('cryptKeyLabel', $('#cryptKeyLabel').text().trim());
+        formData.append('levelLabel', $('#levelLabel').text().trim());
+        formData.append('areaLabel', $('#areaLabel').text().trim());
+        formData.append('zoneLabel', $('#zoneLabel').text().trim());
+
+
+
         // SweetAlert para confirmar la cancelación
         Swal.fire({
             title: '¿Deseas confirmar la compra?',
@@ -653,7 +734,7 @@ $(document).ready(function() {
                     url: "api/purchases/purchaseConfirm.php",
                     data: { purchaseId: purchaseId },
                     success: function(response) {
-                        const purchaseId = response.purchaseId; // Obtén `purchaseId` de la respuesta
+                         // Obtén `purchaseId` de la respuesta
                         formData.append('purchaseId', purchaseId); // Añade `purchaseId` a formData
 
                         // Segunda solicitud AJAX para generar y descargar el PDF
@@ -667,20 +748,27 @@ $(document).ready(function() {
                                 responseType: 'blob'  // Recibir el archivo como blob
                             },
                             success: function(blob) {
-                                const url = URL.createObjectURL(blob);
-                                const link = document.createElement('a');
-                                link.href = url;
-                                link.download = 'Cotizacion.pdf';
-                                link.click();
+                                if (blob instanceof Blob) {
+                                    const url = URL.createObjectURL(blob);
+                                    const link = document.createElement('a');
+                                    link.href = url;
+                                    link.download = 'Cotizacion.pdf';
+                                    link.click();
 
-                                // Liberar el objeto URL después de la descarga
-                                URL.revokeObjectURL(url);
-                                
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Documento Generado',
-                                    text: 'El PDF se ha descargado correctamente.'
-                                });
+                                    URL.revokeObjectURL(url);
+
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Documento Generado',
+                                        text: 'El PDF se ha descargado correctamente.',
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'El servidor no devolvió un archivo válido.',
+                                    });
+                                }
                             },
                             error: function(jqXHR, textStatus, errorThrown) {
                                 Swal.fire({
@@ -707,7 +795,19 @@ $(document).ready(function() {
     });
 
 
+function calculateTotalPaymentAmount(data) {
+    // Verifica que exista el array de pagos
+    if (data[0]?.payments?.length > 0) {
+        return data[0].payments.reduce((total, payment) => total + (payment.paymentAmount || 0), 0);
+    }
+    return 0; // Si no hay pagos, devuelve 0
+}
 
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    // Ajusta el formato a yyyy-MM-dd
+    return date.toISOString().split('T')[0];
+}
 
 });
 
